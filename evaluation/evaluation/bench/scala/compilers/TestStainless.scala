@@ -1,0 +1,13 @@
+package bench.compilers
+
+object TestStainless:
+  def main(args: Array[String]): Unit =
+    try
+      StainlessCompiler.compile(
+        Seq("bench-sources/stainless/mergeSortBounds.scala"),
+        Seq("-P:stainless:verify:yes", "-P:stainless:check-measures:no"),
+        "out"
+      )
+      println("SUCCESS")
+    catch case e: Exception =>
+      println(s"FAILED: ${e.getMessage}")

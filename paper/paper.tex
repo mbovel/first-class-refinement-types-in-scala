@@ -697,6 +697,16 @@ We have shown that refinement types can be integrated as first-class citizens in
 
 On the theoretical side, we provide the first mechanized soundness proof that combines refinement types with union and intersection types, bounded polymorphism with lower and upper bounds, and positive equi-recursive types. The proof uses a fuel-bounded definitional interpreter with semantic typing in Rocq, and establishes partial-correctness type safety for a core calculus that captures key features of Scala's type system. On the practical side, the prototype adds refinement types to an industrial-strength compiler with modest changes ($\approx$2\,500 lines), a self-contained e-graph solver requiring no external dependencies, and compilation overhead that remains low.
 
+\section*{Data-Availability Statement}
+
+Three artifacts will be made available upon publication.
+
+\begin{itemize}
+  \item \textbf{Mechanization.} The full mechanization in Rocq, including the formalization of the language, type system, semantics, and soundness proof. A preliminary version has been attached as supplementary material. The final version will be published in a public GitHub repository.
+  \item \textbf{Compiler implementation.} A fork is published on Maven and can be used from any SBT project. We will provide instructions for using the fork. In the meantime, we have attached a patch file with the implementation as supplementary material, applying on top of Dotty commit \texttt{d5b79ba5de41b2a93bf5656f03df306213a48cef}.
+  \item \textbf{Benchmarks.} The benchmark programs used to evaluate compilation overhead and expressiveness, along with scripts for running the benchmarks and collecting results. The benchmarks are JMH suites that programmatically call our Dotty fork, Stainless, and Schmid's prototype on similar programs. This will also be public on GitHub and include our results and instructions for running the benchmarks and reproducing them, including pre-built JAR files for the Schmid and Stainless implementations to minimize setup overhead. We will also add more benchmarks targeting the Schmid and Stainless implementations to expand the comparison. For now, we have attached the JMH benchmark code and tested programs as supplementary material (without the pre-built JARs).
+\end{itemize}
+
 \FloatBarrier
 
 %%
