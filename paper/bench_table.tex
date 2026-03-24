@@ -1,0 +1,27 @@
+\begin{figure*}[t]
+\centering
+\captionsetup{font=small}
+\footnotesize
+\begin{tabular}{l rrrrr rrrrr rrrrr}
+\toprule
+ & \multicolumn{5}{c}{First-class} & \multicolumn{5}{c}{Schmid} & \multicolumn{5}{c}{Stainless} \\
+\cmidrule(lr){2-6} \cmidrule(lr){7-11} \cmidrule(lr){12-16} 
+Benchmark & LoC & Base & Time & $\Delta$ & $\Delta$\% & LoC & Base & Time & $\Delta$ & $\Delta$\% & LoC & Base & Time & $\Delta$ & $\Delta$\% \\
+\midrule
+\texttt{fansi} & $824$ & $369$ & $407$ & $38$ & $10\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{fibMemo} & $15$ & $169$ & $192$ & $22$ & $13\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{hofsafety1} & $3$ & $105$ & $113$ & $7$ & $7\%$ & $5$ & $172$ & $301$ & $128$ & $75\%$ & --- & --- & --- & --- & --- \\
+\texttt{list1} & $3$ & $144$ & $152$ & $8$ & $6\%$ & $5$ & $187$ & $336$ & $149$ & $79\%$ & --- & --- & --- & --- & --- \\
+\texttt{list2} & $3$ & $138$ & $148$ & $10$ & $7\%$ & $5$ & $185$ & $375$ & $189$ & $102\%$ & --- & --- & --- & --- & --- \\
+\texttt{matrix} & $42$ & $175$ & $237$ & $62$ & $35\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{matrixDims} & $14$ & $148$ & $166$ & $18$ & $12\%$ & $8$ & $327$ & --- & --- & --- & $19$ & $180$ & $235$ & $55$ & $31\%$ \\
+\texttt{maximum} & $11$ & $166$ & $200$ & $34$ & $20\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{maximumBig} & $15$ & $182$ & $293$ & $111$ & $61\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{postuple} & $2$ & $91$ & $101$ & $9$ & $10\%$ & $4$ & $351$ & $410$ & $59$ & $17\%$ & $7$ & $202$ & $208$ & $6$ & $3\%$ \\
+\texttt{range} & $15$ & $187$ & $224$ & $37$ & $20\%$ & --- & --- & --- & --- & --- & $28$ & $225$ & --- & --- & --- \\
+\texttt{vec} & $15$ & $131$ & $161$ & $30$ & $23\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+\bottomrule
+\end{tabular}
+\caption{Compilation time benchmarks (ms/op, single-shot). Each platform shows unchecked (baseline) and checked times, with absolute and relative overhead. Note to reviewers: these results are preliminary and noisy. We will rerun with more iterations for the final version and show error margins. We also expect more values for Stainless to be added.}
+\label{fig:bench-table}
+\end{figure*}

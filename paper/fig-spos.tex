@@ -1,0 +1,30 @@
+\begin{figure}[t]
+\small
+\noindent\textbf{Strict positivity} \hfill \fbox{$\textsf{spos}(X, A)$}
+
+\vspace{0.5em}
+\begin{math}
+\begin{array}{r@{\;}c@{\;}l}
+  \textsf{spos}(X, A) &\triangleq& \mathrm{True} \quad \text{if $A$ is a base type or type variable}
+  \\[0.3em]
+  \textsf{spos}(X, \Pi x{:}A.\, B) &\triangleq& X \notin A \land \textsf{spos}(X, B)
+  \\[0.3em]
+  \textsf{spos}(X, \forall (Y :> L <: U).\, B) &\triangleq& X \notin L \land X \notin U \land \textsf{spos}(X, B)
+  \\[0.3em]
+  \textsf{spos}(X, \mu Y.\, A) &\triangleq& \textsf{spos}(Y, A) \land X \notin A
+  \\[0.3em]
+  \textsf{spos}(X, \Sigma x{:}A.\, B) &\triangleq& \textsf{spos}(X, A) \land \textsf{spos}(X, B)
+  \\[0.3em]
+  \textsf{spos}(X, A + B) &\triangleq& \textsf{spos}(X, A) \land \textsf{spos}(X, B)
+  \\[0.3em]
+  \textsf{spos}(X, \{x : A \mid p\}) &\triangleq& \textsf{spos}(X, A)
+  \\[0.3em]
+  \textsf{spos}(X, A \lor B) &\triangleq& X \notin A \land X \notin B
+  \\[0.3em]
+  \textsf{spos}(X, A \land B) &\triangleq& \textsf{spos}(X, A) \land \textsf{spos}(X, B)
+\end{array}
+\end{math}
+
+\vspace{0.5em}
+\caption{Strict positivity. $\textsf{spos}(X, A)$ holds when $X$ appears only in strictly positive positions in $A$: never to the left of a function arrow, and never in the bounds of a universal type. Union types require $X$ to be entirely absent (needed for the distributing lemma).}\label{fig:spos}
+\end{figure}

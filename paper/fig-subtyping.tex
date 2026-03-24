@@ -1,0 +1,81 @@
+\begin{figure*}[t]
+\small
+\typicallabel{S-RefineBase}
+
+\noindent\textbf{Semantic subtyping rules} \hfill \fbox{$\Gamma \vDash A <: B$}
+
+\begin{multicols}{2}
+
+\infax[S-Refl]
+{\Gamma \vDash A <: A}
+
+\infrule[S-Trans]
+{\Gamma \vDash A <: B \andalso \Gamma \vDash B <: C}
+{\Gamma \vDash A <: C}
+
+\infax[S-Top]
+{\Gamma \vDash A <: \top}
+
+\infax[S-Bot]
+{\Gamma \vDash \bot <: A}
+
+\infrule[S-Fun]
+{\Gamma \vDash B_1 <: A_1 \andalso \Gamma, x : A_1 \vDash A_2 <: B_2}
+{\Gamma \vDash \Pi x{:}A_1.\, A_2 <: \Pi x{:}B_1.\, B_2}
+
+\infrule[S-Sigma]
+{\Gamma \vDash A_1 <: B_1 \andalso \Gamma, x : A_1 \vDash A_2 <: B_2}
+{\Gamma \vDash \Sigma x{:}A_1.\, A_2 <: \Sigma x{:}B_1.\, B_2}
+
+\infax[S-OrL]
+{\Gamma \vDash A <: A \lor B}
+
+\infax[S-OrR]
+{\Gamma \vDash B <: A \lor B}
+
+\infrule[S-Or]
+{\Gamma \vDash A <: C \andalso \Gamma \vDash B <: C}
+{\Gamma \vDash A \lor B <: C}
+
+\infax[S-AndL]
+{\Gamma \vDash A \land B <: A}
+
+\infax[S-AndR]
+{\Gamma \vDash A \land B <: B}
+
+\infrule[S-And]
+{\Gamma \vDash C <: A \andalso \Gamma \vDash C <: B}
+{\Gamma \vDash C <: A \land B}
+
+\infax[S-RefineBase]
+{\Gamma \vDash \{x : A \mid p\} <: A}
+
+\infrule[S-Refine]
+{\Gamma \vDash A <: B \andalso \Gamma, x : A \vDash p_1 \Rightarrow p_2}
+{\Gamma \vDash \{x : A \mid p_1\} <: \{x : B \mid p_2\}}
+
+\infrule[S-TVar-Upper]
+{X :> L <: U \in \Gamma}
+{\Gamma \vDash X <: U}
+
+\infrule[S-TVar-Lower]
+{X :> L <: U \in \Gamma}
+{\Gamma \vDash L <: X}
+
+\infrule[S-Mu-Unfold]
+{\textsf{spos}(X, A)}
+{\Gamma \vDash \mu X.\, A <: A[X \bind \mu X.\, A]}
+
+\infrule[S-Mu-Fold]
+{\textsf{spos}(X, A)}
+{\Gamma \vDash A[X \bind \mu X.\, A] <: \mu X.\, A}
+
+\end{multicols}
+
+\infrule[S-Forall]
+{\Gamma \vDash L_1 <: L_2 \andalso \Gamma \vDash U_2 <: U_1 \andalso \Gamma, X :> L_2 <: U_2 \vDash A <: B}
+{\Gamma \vDash \forall (X :> L_1 <: U_1).\, A <: \forall (X :> L_2 <: U_2).\, B}
+
+\vspace{-1em}
+\caption{Subtyping rules. All rules are proven sound with respect to the semantic subtyping judgment.}\label{fig:subtyping}
+\end{figure*}

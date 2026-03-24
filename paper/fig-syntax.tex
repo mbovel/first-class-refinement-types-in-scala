@@ -1,0 +1,68 @@
+\begin{figure*}[t]
+\small
+\begin{flushleft}
+\begin{multicols}{2}\noindent\vspace{-1.5em}
+\begin{flalign*}
+	c \coloneqq\ & \texttt{unit} \mid \texttt{true} \mid \texttt{false} \mid z \in \mathbb{Z}  \tag*{\textbf{Constant}} \\
+	%
+	\mathit{op} \coloneqq\ & \texttt{==} \mid \texttt{!=} \mid \texttt{<} \mid \texttt{<=} \mid \texttt{>=} \mid \texttt{>}  \tag*{\textbf{Operation}} \\
+	& \texttt{\&\&} \mid \texttt{||} \mid \texttt{+} \mid \texttt{-} \mid \texttt{*} \mid \texttt{/} \mid \texttt{\%}  \\
+	%
+	a, b, f, p \coloneqq\ &  \tag*{\textbf{Term}} \\
+	& c  \tag*{constant} \\
+	& x  \tag*{variable} \\
+	& \lambda x{:}A.\, b  \tag*{abstraction} \\
+	& f\; a  \tag*{application} \\
+	& \Lambda (X :> L <: U).\, b  \tag*{type abstraction} \\
+	& f\,[A]  \tag*{type application} \\
+	& \textsf{let}\; x{:}A = a \;\textsf{in}\; b  \tag*{let} \\
+	& (a_1, a_2)  \tag*{pair} \\
+	&  \tag*{match pair} \\
+	& \textsf{match}\; a \;\textsf{with}\; (x, y) \Rightarrow b \\
+	&  \tag*{match sum} \\
+	& \textsf{match}\; a \;\textsf{with}\; \textsf{inl}(x) \Rightarrow b_l \mid \textsf{inr}(y) \Rightarrow b_r \\
+	& \textsf{inl}[A]\, a \tag*{left injection} \\
+	& \textsf{inr}[A]\, a \tag*{right injection} \\
+	& a \;\mathit{op}\; b  \tag*{binary operation} \\
+	& \textsf{if}\; a \;\textsf{then}\; b_1 \;\textsf{else}\; b_2  \tag*{conditional} \\
+	& \textsf{loop}(a)\; x.\; b  \tag*{loop} \\[0.5em]
+	%
+	\rho \coloneqq\ &  \tag*{\textbf{Environment}} \\
+	& \varnothing  \tag*{empty} \\
+	& \rho, x \mapsto v  \tag*{binding}
+\end{flalign*}
+
+\begin{flalign*}
+	v \coloneqq\ &  \tag*{\textbf{Value}} \\
+	& c  \tag*{constant} \\
+	& (v_1, v_2)  \tag*{pair} \\
+	& \textsf{inl}(v) \tag*{left injection} \\
+	& \textsf{inl}(v) \tag*{right injection} \\
+	& \langle \rho, \lambda x.\, b \rangle  \tag*{closure} \\
+	& \langle \rho, \Lambda X.\, b \rangle  \tag*{type closure} \\[0.5em]
+  %
+	A, B \coloneqq\ &  \tag*{\textbf{Type}} \\
+	& X  \tag*{variable} \\
+	& \texttt{Unit} \mid \texttt{True} \mid \texttt{False} \mid \texttt{Int32}  \tag*{base types} \\
+	& \top \tag*{top} \\
+	& \bot  \tag*{top} \\
+	& \Pi x{:}A.\, B  \tag*{dependent\ function} \\
+	& \forall (X :> L <: U).\, A  \tag*{bounded $\forall$} \\
+	& \Sigma x{:}A.\, B  \tag*{dependent\ pair} \\
+	& A + B  \tag*{sum} \\
+	& \{x : A \mid p\}  \tag*{refinement} \\
+	& A \lor B  \tag*{union} \\
+	& A \land B  \tag*{intersection} \\
+	& \mu X.\, A  \tag*{recursive} \\[0.5em]
+	%
+	\Gamma \coloneqq\ &  \tag*{\textbf{Context}} \\
+	& \varnothing  \tag*{empty} \\
+	& \Gamma, x : A  \tag*{term binding} \\
+	& \Gamma, X :> L <: U  \tag*{type var.\ bound} \\
+	& \Gamma, a_1 \sim a_2  \tag*{equality fact}
+\end{flalign*}
+\end{multicols}
+\end{flushleft}
+\vspace{-2em}
+\caption{Abstract syntax of the core calculus. Types and terms are mutually inductive; bindings use de Bruijn indices.}\label{fig:syntax}
+\end{figure*}

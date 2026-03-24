@@ -1,0 +1,9 @@
+opam-version: "2.0"
+name: "semantic-types"
+version: "0.1.0"
+synopsis: "Semantic Types Mechanizations in Rocq"
+license: "MIT"
+depends: [
+  "coq" {= "9.0.1"}
+  "coq-autosubst" {= "1.9"}
+]

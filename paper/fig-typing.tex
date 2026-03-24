@@ -1,0 +1,93 @@
+\begin{figure*}[t]
+\small
+\typicallabel{T-MatchPair}
+
+\noindent\textbf{Semantic typing rules} \hfill \fbox{$\Gamma \vDash a : A$}
+
+
+
+\begin{multicols}{2}
+
+\infax[T-Unit]
+{\Gamma \vDash \texttt{unit} : \texttt{Unit}}
+
+\infax[T-True]
+{\Gamma \vDash \texttt{true} : \texttt{True}}
+
+\infax[T-False]
+{\Gamma \vDash \texttt{false} : \texttt{False}}
+
+\infax[T-Int]
+{\Gamma \vDash z : \texttt{Int32}}
+
+\infrule[T-Var]
+{x : A \in \Gamma}
+{\Gamma \vDash x : A}
+
+\infrule[T-Abs]
+{\Gamma, x : A \vDash b : B}
+{\Gamma \vDash \lambda x{:}A.\, b : \Pi x{:}A.\, B}
+
+\infrule[T-App]
+{\Gamma \vDash f : \Pi x{:}A.\, B \andalso \Gamma \vDash y : A}
+{\Gamma \vDash f\; y : B[x \bind y]}
+
+\infrule[T-TAbs]
+{\Gamma, X :> L <: U \vDash b : B}
+{\Gamma \vDash \Lambda (X :> L <: U).\, b : \forall (X :> L <: U).\, B}
+
+\infrule[T-TApp]
+{\Gamma \vDash f : \forall (X :> L <: U).\, B \\
+ \Gamma \vDash L <: A \andalso \Gamma \vDash A <: U}
+{\Gamma \vDash f\,[A] : B[X \bind A]}
+
+\infrule[T-Let]
+{\Gamma \vDash a : A \andalso \Gamma, x : A, x \sim a \vDash b : B}
+{\Gamma \vDash \textsf{let}\; x{:}A = a \;\textsf{in}\; b : \textsf{avoid}(B, x)}
+
+\infrule[T-Pair]
+{\Gamma \vDash y : A \andalso \Gamma \vDash a_2 : B[x \bind y]}
+{\Gamma \vDash (y, a_2) : \Sigma x{:}A.\, B}
+
+\infrule[T-BinOp]
+{\Gamma \vDash a : A \andalso \Gamma \vDash b : A \andalso \textsf{compat}(\mathit{op}, A)}
+{\Gamma \vDash a \;\mathit{op}\; b : \textsf{result}(\mathit{op}, A)}
+
+\infrule[T-If]
+{\Gamma \vDash a : \texttt{True} \lor \texttt{False} \\
+ \Gamma, a \sim \textsf{true} \vDash b_1 : B_1 \andalso \Gamma, a \sim \textsf{false} \vDash b_2 : B_2}
+{\Gamma \vDash \textsf{if}\; a \;\textsf{then}\; b_1 \;\textsf{else}\; b_2 : B_1 \lor B_2}
+
+\infrule[T-Inl]
+{\Gamma \vDash a : A}
+{\Gamma \vDash \textsf{inl}[B]\, a : A + B}
+
+\infrule[T-Inr]
+{\Gamma \vDash a : B}
+{\Gamma \vDash \textsf{inr}[A]\, a : A + B}
+
+\infrule[T-Loop]
+{\Gamma \vDash a : A \andalso \Gamma, x : A \vDash b : A + B}
+{\Gamma \vDash \textsf{loop}(a)\; x.\; b : B}
+
+\infrule[T-Self]
+{\Gamma \vDash a : A \andalso \textsf{firstorder}(A)}
+{\Gamma \vDash a : \{x : A \mid x \mathbin{\texttt{==}} a\}}
+
+\infrule[T-Sub]
+{\Gamma \vDash a : A \andalso \Gamma \vDash A <: B}
+{\Gamma \vDash a : B}
+
+\end{multicols}
+
+\infrule[T-MatchPair]
+{\Gamma \vDash a : \Sigma x{:}A.\, B \andalso \Gamma, x : A, y : B \vDash b : C}
+{\Gamma \vDash \textsf{match}\; a \;\textsf{with}\; (x, y) \Rightarrow b : \textsf{avoid}(\textsf{avoid}(C, y), x)}
+
+\infrule[T-MatchSum]
+{\Gamma \vDash a : A_1 + A_2 \andalso \Gamma, x : A_1, a \sim \textsf{inl}(x) \vDash b_1 : B_1 \andalso \Gamma, y : A_2, a \sim \textsf{inr}(y) \vDash b_2 : B_2}
+{\Gamma \vDash \textsf{match}\; a \;\textsf{with}\; \textsf{inl}(x) \Rightarrow b_1 \mid \textsf{inr}(y) \Rightarrow b_2 : \textsf{avoid}(B_1, x) \lor \textsf{avoid}(B_2, y)}
+
+\vspace{-1em}
+\caption{Typing rules. All rules are proven sound with respect to the semantic typing judgment.}\label{fig:typing}
+\end{figure*}

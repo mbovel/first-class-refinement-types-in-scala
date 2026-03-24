@@ -1,0 +1,110 @@
+\begin{figure*}[p]
+\small
+\noindent\textbf{Value interpretation} \hfill \fbox{$\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v)$}
+
+\vspace{0.5em}
+\begin{math}
+\begin{array}{r@{\;}c@{\;}l}
+  \mathcal{V}\llbracket X \rrbracket_{\delta}^{\rho}(v) &\triangleq& \delta(X)(v)
+  \\[0.5em]
+  \mathcal{V}\llbracket \texttt{Unit} \rrbracket_{\delta}^{\rho}(v) &\triangleq& v = \texttt{unit}
+  \\[0.5em]
+  \mathcal{V}\llbracket \texttt{True} \rrbracket_{\delta}^{\rho}(v) &\triangleq& v = \texttt{true}
+  \\[0.5em]
+  \mathcal{V}\llbracket \texttt{False} \rrbracket_{\delta}^{\rho}(v) &\triangleq& v = \texttt{false}
+  \\[0.5em]
+  \mathcal{V}\llbracket \texttt{Int32} \rrbracket_{\delta}^{\rho}(v) &\triangleq& \exists z.\; v = z
+  \\[0.5em]
+  \mathcal{V}\llbracket \top \rrbracket_{\delta}^{\rho}(v) &\triangleq& \top
+  \\[0.5em]
+  \mathcal{V}\llbracket \bot \rrbracket_{\delta}^{\rho}(v) &\triangleq& \bot
+  \\[0.5em]
+  \mathcal{V}\llbracket \Pi x{:}A.\, B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
+    \exists \rho_f, b.\; v = \langle \rho_f, \lambda x.\, b \rangle \land \forall v_a.\; \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v_a) \implies \mathcal{E}\llbracket B \rrbracket_{\delta}^{\rho_f[x \mapsto v_a]}(b)
+  \\[0.5em]
+  \mathcal{V}\llbracket \forall (X :> L <: U).\, B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
+    \exists \rho_f, b.\; v = \langle \rho_f, \Lambda X.\, b \rangle \land \forall S.\; \mathcal{V}\llbracket L \rrbracket_{\delta}^{\rho} \subseteq S \subseteq \mathcal{V}\llbracket U \rrbracket_{\delta}^{\rho} \implies \mathcal{E}\llbracket B \rrbracket_{\delta[X \mapsto S]}^{\rho_f}(b)
+  \\[0.5em]
+  \mathcal{V}\llbracket \Sigma x{:}A.\, B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
+    \exists v_1, v_2.\; v = (v_1, v_2) \land \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v_1) \land \mathcal{V}\llbracket B \rrbracket_{\delta}^{\rho[x \mapsto v_1]}(v_2)
+  \\[0.5em]
+  \mathcal{V}\llbracket A + B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
+    (\exists w.\; v = \textsf{inl}(w) \land \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(w)) \lor (\exists w.\; v = \textsf{inr}(w) \land \mathcal{V}\llbracket B \rrbracket_{\delta}^{\rho}(w))
+  \\[0.5em]
+  \mathcal{V}\llbracket \{x : A \mid p\} \rrbracket_{\delta}^{\rho}(v) &\triangleq& \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \land \mathcal{E}\llbracket \texttt{True} \rrbracket_{\delta}^{\rho[x \mapsto v]}(p)
+  \\[0.5em]
+  \mathcal{V}\llbracket A \lor B \rrbracket_{\delta}^{\rho}(v) &\triangleq& \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \lor \mathcal{V}\llbracket B \rrbracket_{\delta}^{\rho}(v)
+  \\[0.5em]
+  \mathcal{V}\llbracket A \land B \rrbracket_{\delta}^{\rho}(v) &\triangleq& \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \land \mathcal{V}\llbracket B \rrbracket_{\delta}^{\rho}(v)
+  \\[0.5em]
+  \mathcal{V}\llbracket \mu X.\, A \rrbracket_{\delta}^{\rho}(v) &\triangleq& \forall n.\; F^n(v) \quad \text{where } F^0(v) = \top,\; F^{n+1}(v) = \mathcal{V}\llbracket A \rrbracket_{\delta[X \mapsto F^n]}^{\rho}(v)
+\end{array}
+\end{math}
+
+\vspace{1em}
+\noindent\textbf{Term interpretation} \hfill \fbox{$\mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(a)$}
+
+\vspace{0.5em}
+\begin{math}
+\begin{array}{r@{\;}c@{\;}l}
+  \mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(a) &\triangleq& \forall r.\; \rho \vdash a \Downarrow^? r \implies \exists v.\; r = \texttt{Some}\; v \land \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v)
+\end{array}
+\end{math}
+
+\vspace{1em}
+\noindent\textbf{Context well-formedness} \hfill \fbox{$\mathrm{wf}(\delta, \Gamma, \rho)$}
+
+\vspace{0.5em}
+\begin{math}
+\begin{array}{r@{\;}c@{\;}l}
+  \mathrm{wf}(\delta, \Gamma, \rho) &\triangleq& \forall (x : A) \in \Gamma.\; \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(\rho(x))
+  \\
+  && \land\; \forall (X :> L <: U) \in \Gamma.\; \mathcal{V}\llbracket L \rrbracket_{\delta}^{\rho} \subseteq \delta(X) \subseteq \mathcal{V}\llbracket U \rrbracket_{\delta}^{\rho}
+  \\
+  && \land\; \forall (a_1 \sim a_2) \in \Gamma.\; \exists v.\; \rho \vdash a_1 \Downarrow v \land \rho \vdash a_2 \Downarrow v
+\end{array}
+\end{math}
+
+\vspace{1em}
+\noindent\textbf{Semantic typing} \hfill \fbox{$\Gamma \vDash a : A$}
+
+\vspace{0.5em}
+\begin{math}
+\begin{array}{r@{\;}c@{\;}l}
+  \Gamma \vDash a : A &\triangleq& \forall \delta, \rho.\; \mathrm{wf}(\delta, \Gamma, \rho) \implies \mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(a)
+\end{array}
+\end{math}
+
+\vspace{1em}
+\noindent\textbf{Semantic subtyping} \hfill \fbox{$\Gamma \vDash A <: B$}
+
+\vspace{0.5em}
+\begin{math}
+\begin{array}{r@{\;}c@{\;}l}
+  \Gamma \vDash A <: B &\triangleq& \forall \delta, \rho.\; \mathrm{wf}(\delta, \Gamma, \rho) \implies \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho} \subseteq \mathcal{V}\llbracket B \rrbracket_{\delta}^{\rho}
+\end{array}
+\end{math}
+
+\vspace{1em}
+\noindent\textbf{Semantic implication} \hfill \fbox{$\Gamma \vDash p_1 \Rightarrow p_2$}
+
+\vspace{0.5em}
+\begin{math}
+\begin{array}{r@{\;}c@{\;}l}
+  \Gamma \vDash p_1 \Rightarrow p_2 &\triangleq& \forall \delta, \rho.\; \mathrm{wf}(\delta, \Gamma, \rho) \implies \mathcal{E}\llbracket \texttt{True} \rrbracket_{\delta}^{\rho}(p_1) \implies \mathcal{E}\llbracket \texttt{True} \rrbracket_{\delta}^{\rho}(p_2)
+\end{array}
+\end{math}
+
+\vspace{1em}
+\noindent\textbf{Semantic type inclusion} \hfill \fbox{$S_1 \subseteq S_2$}
+
+\vspace{0.5em}
+\begin{math}
+\begin{array}{r@{\;}c@{\;}l}
+  S_1 \subseteq S_2 &\triangleq& \forall v.\; S_1(v) \implies S_2(v)
+\end{array}
+\end{math}
+
+\vspace{0.5em}
+\caption{Semantic framework. The value interpretation $\mathcal{V}\llbracket \cdot \rrbracket$ maps syntactic types to predicates on values. The term interpretation $\mathcal{E}\llbracket \cdot \rrbracket$ lifts this to a partial correctness assertion on terms. Semantic typing and subtyping quantify over all well-formed environments.}\label{fig:interp}
+\end{figure*}

@@ -1,0 +1,67 @@
+\begin{figure*}[t]
+\small
+\begin{minipage}[t]{0.49\textwidth}
+\noindent\textbf{Scala source}
+
+\vspace{0.5em}
+\begin{lstlisting}[language=Scala,basicstyle=\ttfamily\small,morekeywords={@tailrec,then}]
+enum List[T]:
+  case Nil()
+  case Cons(head: T, tail: List[T])
+
+@tailrec def collect[T, S >: T](
+  xs: List[T],
+  p: S => Boolean,
+  acc: List[{v: T with p(v)}]
+): List[{v: T with p(v)}] =
+  xs match
+    case Nil() => acc
+    case Cons(x, xs1) =>
+      if p(x)
+      then collect(xs1, p, Cons(x, acc))
+      else collect(xs1, p, acc)
+\end{lstlisting}
+
+\end{minipage}%
+\hfill%
+\begin{minipage}[t]{0.49\textwidth}
+\noindent\textbf{Core calculus encoding}
+
+\vspace{1em}
+
+
+$\mathit{List}[T] \triangleq \mu X.\, \texttt{Unit} + (T, X)$
+
+\vspace{2.5em}
+
+$\Lambda (T :> \bot <: \top).\; \Lambda (S :> T <: \top).$
+
+\quad$\lambda \mathit{xs}{:}\mathit{List}[T].$
+
+\quad$\lambda p{:}(S \to \texttt{Bool}).$
+
+\quad$\lambda \mathit{acc}{:}\mathit{List}[\{v : T \mid p(v)\}].$
+
+\qquad$\textsf{loop}((\mathit{xs},\, \mathit{acc}))\; \mathit{state}.\;$
+
+\qquad\quad$\textsf{match}\; \mathit{state} \;\textsf{with}\; (\mathit{rem},\, \mathit{cacc}) \Rightarrow$
+
+\qquad\qquad$\textsf{match}\; \mathit{rem} \;\textsf{with}$
+
+\qquad\qquad\quad$\textsf{inl}(\_) \Rightarrow \textsf{inr}(\mathit{cacc})$
+
+\qquad\qquad$\mid\; \textsf{inr}(c) \Rightarrow$
+
+\qquad\qquad\quad$\textsf{match}\; c \;\textsf{with}\; (\mathit{hd},\, \mathit{tl}) \Rightarrow$
+
+\qquad\qquad\qquad$\textsf{if}\; p\;\mathit{hd}$
+
+\qquad\qquad\qquad$\textsf{then}\; \textsf{inl}((\mathit{tl},\, \textsf{inr}((\mathit{hd},\, \mathit{cacc}))))$
+
+\qquad\qquad\qquad$\textsf{else}\; \textsf{inl}((\mathit{tl},\, \mathit{cacc}))$
+
+\end{minipage}
+
+\vspace{0.5em}
+\caption{A \texttt{collect} function in Scala (left) and its encoding in the core calculus (right). The tail-recursive loop becomes a $\textsf{loop}$ combinator whose body returns $\textsf{inl}(\mathit{state'})$ to continue or $\textsf{inr}(\mathit{result})$ to break. Lists are equi-recursive: $\textsf{inl}(\texttt{unit})$ represents the empty list and $\textsf{inr}((\mathit{hd}, \mathit{tl}))$ a cons cell.}\label{fig:collect}
+\end{figure*}

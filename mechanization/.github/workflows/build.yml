@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Cache
+      id: cache-opam
+      uses: actions/cache@v3
+      with:
+        path: ./_opam
+        key: ${{ runner.os }}-my-opam-cache-${{ hashFiles('**/*.opam') }}
+
+    - name: Setup OCaml
+      id: setup-ocaml
+      uses: ocaml/setup-ocaml@v3
+      with:
+        ocaml-compiler: 5
+        opam-disable-sandboxing: true
+        opam-repositories: |
+          default: https://opam.ocaml.org
+          rocq-released: https://rocq-prover.org/opam/released
+
+    - name: Install dependencies
+      if: steps.cache-opam.outputs.cache-hit != 'true'
+      run: opam install . --deps-only -y
+
+    - name: Build
+      run: opam exec -- make -j4

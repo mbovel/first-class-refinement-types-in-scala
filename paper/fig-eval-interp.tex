@@ -1,0 +1,45 @@
+\begin{figure}[t]
+\small
+\noindent\textbf{Definitional interpreter (excerpt)} \hfill \fbox{$\texttt{eval}\; n\; \rho\; a$}
+
+\vspace{0.5em}
+\begin{center}
+\begin{minipage}{0.85\columnwidth}
+\begin{lstlisting}[morekeywords={Fixpoint,match,with,end,Some,None,option,nat,list},deletekeywords={val},morecomment={[s]{(*}{*)}},commentstyle=\color{gray}\itshape,basicstyle=\ttfamily\small]
+Fixpoint eval (fuel: nat) (env: list Value) (t: Term): option (option Value) :=
+  match fuel with
+  | 0 => None (* timeout *)
+  | S fuel' =>
+    match t with
+    | tabs _ b => Some (Some (vabs env b))
+    | tapp f a =>
+        match eval fuel env f with
+        | None => None
+        | Some (Some (vabs envf b)) =>
+            match eval fuel env a with
+            | Some (Some va) => eval fuel (va :: envf) b
+            | o => o (* propagate timeout or stuck *)
+            end
+        | _ => Some None (* stuck *)
+        end
+  ...
+  end.
+\end{lstlisting}
+\end{minipage}
+\end{center}
+
+\vspace{0.5em}
+\noindent\textbf{Termination} \hfill \fbox{$\rho \vdash a \Downarrow^? r$}
+
+\vspace{0.3em}
+\[\rho \vdash a \Downarrow^? r \;\triangleq\; \exists n.\; \texttt{eval}\; n\; \rho\; a = \texttt{Some}\; r\]
+
+\vspace{0.5em}
+\noindent\textbf{Successful evaluation} \hfill \fbox{$\rho \vdash a \Downarrow v$}
+
+\vspace{0.3em}
+\[\rho \vdash a \Downarrow v \;\triangleq\; \rho \vdash a \Downarrow^? \texttt{Some}\; v\]
+
+\vspace{0.5em}
+\caption{Fuel-bounded definitional interpreter, following Amin and Rompf~\cite{amin2017}. The interpreter returns \texttt{None} (timeout), \texttt{Some None} (stuck), or \texttt{Some (Some $v$)} (success).}\label{fig:eval-interp}
+\end{figure}

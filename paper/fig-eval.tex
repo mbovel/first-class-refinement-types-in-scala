@@ -1,0 +1,85 @@
+\begin{figure*}[t]
+\small
+\typicallabel{E-MatchPair}
+
+\noindent\textbf{Big-step evaluation rules} \hfill \fbox{$\rho \vdash a \Downarrow v$}
+
+\begin{multicols}{2}
+
+\infax[E-Const]
+{\rho \vdash c \Downarrow c}
+
+\infrule[E-Var]
+{x \bind v \in \rho}
+{\rho \vdash x \Downarrow v}
+
+\infax[E-Abs]
+{\rho \vdash \lambda x{:}A.\, b \Downarrow \langle \rho, \lambda x.\, b \rangle}
+
+\infax[E-TAbs]
+{\rho \vdash \Lambda (X :> L <: U).\, b \Downarrow \langle \rho, \Lambda X.\, b \rangle}
+
+\infrule[E-App]
+{\rho \vdash f \Downarrow \langle \rho_f, \lambda x.\, b \rangle \\
+ \rho \vdash a \Downarrow v_a \andalso \rho_f, x \bind v_a \vdash b \Downarrow v}
+{\rho \vdash f\; a \Downarrow v}
+
+\infrule[E-TApp]
+{\rho \vdash f \Downarrow \langle \rho_f, \Lambda X.\, b \rangle \andalso \rho_f \vdash b \Downarrow v}
+{\rho \vdash f\,[A] \Downarrow v}
+
+\infrule[E-Let]
+{\rho \vdash a \Downarrow v_a \andalso \rho, x \bind v_a \vdash b \Downarrow v}
+{\rho \vdash \textsf{let}\; x{:}A = a \;\textsf{in}\; b \Downarrow v}
+
+\infrule[E-Pair]
+{\rho \vdash a_1 \Downarrow v_1 \andalso \rho \vdash a_2 \Downarrow v_2}
+{\rho \vdash (a_1, a_2) \Downarrow (v_1, v_2)}
+
+\infrule[E-BinOp]
+{\rho \vdash a \Downarrow v_a \andalso \rho \vdash b \Downarrow v_b \andalso \delta(\mathit{op}, v_a, v_b) = r}
+{\rho \vdash a \;\mathit{op}\; b \Downarrow r}
+
+\infrule[E-IfTrue]
+{\rho \vdash a \Downarrow \texttt{true} \andalso \rho \vdash b_1 \Downarrow v}
+{\rho \vdash \textsf{if}\; a \;\textsf{then}\; b_1 \;\textsf{else}\; b_2 \Downarrow v}
+
+\infrule[E-IfFalse]
+{\rho \vdash a \Downarrow \texttt{false} \andalso \rho \vdash b_2 \Downarrow v}
+{\rho \vdash \textsf{if}\; a \;\textsf{then}\; b_1 \;\textsf{else}\; b_2 \Downarrow v}
+
+\infrule[E-Inl]
+{\rho \vdash a \Downarrow v}
+{\rho \vdash \textsf{inl}[B]\, a \Downarrow \textsf{inl}(v)}
+
+\infrule[E-Inr]
+{\rho \vdash a \Downarrow v}
+{\rho \vdash \textsf{inr}[A]\, a \Downarrow \textsf{inr}(v)}
+
+\infrule[E-LoopExit]
+{\rho \vdash a \Downarrow v_0 \\
+ \rho, x \bind v_0 \vdash b \Downarrow \textsf{inr}(v)}
+{\rho \vdash \textsf{loop}(a)\; x.\; b \Downarrow v}
+
+\infrule[E-LoopCont]
+{\rho \vdash a \Downarrow v_0 \andalso \rho, x \bind v_0 \vdash b \Downarrow \textsf{inl}(v_1) \\
+ \rho \vdash \textsf{loop}(v_1)\; x.\; b \Downarrow v}
+{\rho \vdash \textsf{loop}(a)\; x.\; b \Downarrow v}
+
+\end{multicols}
+
+\infrule[E-MatchPair]
+{\rho \vdash a \Downarrow (v_1, v_2) \andalso \rho, x \bind v_1, y \bind v_2 \vdash b \Downarrow v}
+{\rho \vdash \textsf{match}\; a \;\textsf{with}\; (x, y) \Rightarrow b \Downarrow v}
+
+\infrule[E-MatchSumL]
+{\rho \vdash a \Downarrow \textsf{inl}(v) \andalso \rho, x \bind v \vdash b_l \Downarrow w}
+{\rho \vdash \textsf{match}\; a \;\textsf{with}\; \textsf{inl}(x) \Rightarrow b_l \mid \textsf{inr}(y) \Rightarrow b_r \Downarrow w}
+
+\infrule[E-MatchSumR]
+{\rho \vdash a \Downarrow \textsf{inr}(v) \andalso \rho, y \bind v \vdash b_r \Downarrow w}
+{\rho \vdash \textsf{match}\; a \;\textsf{with}\; \textsf{inl}(x) \Rightarrow b_l \mid \textsf{inr}(y) \Rightarrow b_r \Downarrow w}
+
+\vspace{-1em}
+\caption{Successful evaluation rules ($\rho \vdash a \Downarrow v$), derived from the definitional interpreter (Figure~\ref{fig:eval-interp}).}\label{fig:eval}
+\end{figure*}

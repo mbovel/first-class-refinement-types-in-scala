@@ -1,0 +1,826 @@
+@article{borkowski2022,
+  author = {Borkowski, Michael H. and Vazou, Niki and Jhala, Ranjit},
+  title = {Mechanizing Refinement Types},
+  year = {2024},
+  issue_date = {January 2024},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  volume = {8},
+  number = {POPL},
+  url = {https://doi.org/10.1145/3632912},
+  doi = {10.1145/3632912},
+  abstract = {Practical checkers based on refinement types use the combination of implicit semantic subtyping and parametric polymorphism to simplify the specification and automate the verification of sophisticated properties of programs. However, a formal metatheoretic accounting of the soundness of refinement type systems using this combination has proved elusive. We present λRF, a core refinement calculus that combines semantic subtyping and parametric polymorphism. We develop a metatheory for this calculus and prove soundness of the type system. Finally, we give two mechanizations of our metatheory. First, we introduce data propositions, a novel feature that enables encoding derivation trees for inductively defined judgments as refined data types, and use them to show that LiquidHaskell's refinement types can be used for mechanization. Second, we mechanize our results in Coq, which comes with stronger soundness guarantees than LiquidHaskell, thereby laying the foundations for mechanizing the metatheory of LiquidHaskell.},
+  journal = {Proc. ACM Program. Lang.},
+  month = jan,
+  articleno = {70},
+  numpages = {30},
+  keywords = {refinement types, LiquidHaskell}
+}
+
+@software{borkowski2022_artifact,
+  author       = {Michael H. Borkowski and
+                  Niki Vazou and
+                  Ranjit Jhala},
+  title        = {Artifact for "Mechanizing Refinement Types"},
+  month        = oct,
+  year         = 2023,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.8425960},
+  url          = {https://doi.org/10.5281/zenodo.8425960},
+}
+
+@InProceedings{sun2024,
+  author =	{Sun, Ke and Wang, Di and Chen, Sheng and Wang, Meng and Hao, Dan},
+  title =	{{Formalizing, Mechanizing, and Verifying Class-Based Refinement Types}},
+  booktitle =	{38th European Conference on Object-Oriented Programming (ECOOP 2024)},
+  pages =	{39:1--39:30},
+  series =	{Leibniz International Proceedings in Informatics (LIPIcs)},
+  ISBN =	{978-3-95977-341-6},
+  ISSN =	{1868-8969},
+  year =	{2024},
+  volume =	{313},
+  editor =	{Aldrich, Jonathan and Salvaneschi, Guido},
+  publisher =	{Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
+  address =	{Dagstuhl, Germany},
+  URL =		{https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ECOOP.2024.39},
+  URN =		{urn:nbn:de:0030-drops-208881},
+  doi =		{10.4230/LIPIcs.ECOOP.2024.39},
+  annote =	{Keywords: Refinement Types, Program Verification, Object-oriented Programming}
+}
+
+@Article{sun2024_artifact,
+  author =	{Sun, Ke and Wang, Di and Chen, Sheng and Wang, Meng and Hao, Dan},
+  title =	{{Formalizing, Mechanizing, and Verifying Class-Based Refinement Types (Artifact)}},
+  pages =	{22:1--22:3},
+  journal =	{Dagstuhl Artifacts Series},
+  ISBN =	{978-3-95977-342-3},
+  ISSN =	{2509-8195},
+  year =	{2024},
+  volume =	{10},
+  number =	{2},
+  editor =	{Sun, Ke and Wang, Di and Chen, Sheng and Wang, Meng and Hao, Dan},
+  publisher =	{Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
+  address =	{Dagstuhl, Germany},
+  URL =		{https://drops.dagstuhl.de/entities/document/10.4230/DARTS.10.2.22},
+  URN =		{urn:nbn:de:0030-drops-209209},
+  doi =		{10.4230/DARTS.10.2.22},
+  annote =	{Keywords: Refinement Types, Program Verification, Object-oriented Programming}
+}
+
+@article{hamza2019,
+author = {Hamza, Jad and Voirol, Nicolas and Kun\v{c}ak, Viktor},
+title = {System FR: formalized foundations for the stainless verifier},
+year = {2019},
+issue_date = {October 2019},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {3},
+number = {OOPSLA},
+url = {https://doi.org/10.1145/3360592},
+doi = {10.1145/3360592},
+abstract = {We present the design, implementation, and foundation of a verifier for higher-order functional programs with generics and recursive data types. Our system supports proving safety and termination using preconditions, postconditions and assertions. It supports writing proof hints using assertions and recursive calls. To formalize the soundness of the system we introduce System FR, a calculus supporting System F polymorphism, dependent refinement types, and recursive types (including recursion through contravariant positions of function types). Through the use of sized types, System FR supports reasoning about termination of lazy data structures such as streams. We formalize a reducibility argument using the Coq proof assistant and prove the soundness of a type-checker with respect to call-by-value semantics, ensuring type safety and normalization for typeable programs. Our program verifier is implemented as an alternative verification-condition generator for the Stainless tool, which relies on the Inox SMT-based solver backend for automation. We demonstrate the efficiency of our approach by verifying a collection of higher-order functional programs comprising around 14000 lines of polymorphic higher-order Scala code, including graph search algorithms, basic number theory, monad laws, functional data structures, and assignments from popular Functional Programming MOOCs.},
+journal = {Proc. ACM Program. Lang.},
+month = oct,
+articleno = {166},
+numpages = {30},
+keywords = {software verification, recursive types, dependent types, System F, SMT}
+}
+
+@InProceedings{cardelli1991,
+author="Cardelli, Luca
+and Martini, Simone
+and Mitchell, John C.
+and Scedrov, Andre",
+editor="Ito, Takayasu
+and Meyer, Albert R.",
+title="An extension of system F with subtyping",
+booktitle="Theoretical Aspects of Computer Software",
+year="1991",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="750--770",
+abstract="System F is a well-known typed $\lambda$-calculus with polymorphic types, which provides a basis for polymorphic programming languages. We study an extension of F, called F<:, that combines parametric polymorphism with subtyping.",
+isbn="978-3-540-47617-7"
+}
+
+
+
+@article{amin2017,
+author = {Amin, Nada and Rompf, Tiark},
+title = {Type soundness proofs with definitional interpreters},
+year = {2017},
+issue_date = {January 2017},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {52},
+number = {1},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/3093333.3009866},
+doi = {10.1145/3093333.3009866},
+abstract = {While type soundness proofs are taught in every graduate PL class, the gap between realistic languages and what is accessible to formal proofs is large. In the case of Scala, it has been shown that its formal model, the Dependent Object Types (DOT) calculus, cannot simultaneously support key metatheoretic properties such as environment narrowing and subtyping transitivity, which are usually required for a type soundness proof. Moreover, Scala and many other realistic languages lack a general substitution property. The first contribution of this paper is to demonstrate how type soundness proofs for advanced, polymorphic, type systems can be carried out with an operational semantics based on high-level, definitional interpreters, implemented in Coq. We present the first mechanized soundness proofs in this style for System F and several extensions, including mutable references. Our proofs use only straightforward induction, which is significant, as the combination of big-step semantics, mutable references, and polymorphism is commonly believed to require coinductive proof techniques. The second main contribution of this paper is to show how DOT-like calculi emerge from straightforward generalizations of the operational aspects of F, exposing a rich design space of calculi with path-dependent types inbetween System F and DOT, which we dub the System D Square. By working directly on the target language, definitional interpreters can focus the design space and expose the invariants that actually matter at runtime. Looking at such runtime invariants is an exciting new avenue for type system design.},
+journal = {SIGPLAN Not.},
+month = jan,
+pages = {666–679},
+numpages = {14},
+keywords = {DOT, Definitional interpreters, Scala, dependent object types, type soundness}
+}
+
+@misc{scala3spec,
+  title = {The {Scala} 3 Language Specification, Version 3.4},
+  author = {{\'E}cole Polytechnique F{\'e}d{\'e}rale de Lausanne},
+  year = {2024},
+  url = {https://www.scala-lang.org/files/archive/spec/3.4/},
+  note = {\S13: Syntax Summary},
+}
+
+@article{timany2024,
+author = {Timany, Amin and Krebbers, Robbert and Dreyer, Derek and Birkedal, Lars},
+title = {A Logical Approach to Type Soundness},
+year = {2024},
+issue_date = {December 2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {71},
+number = {6},
+issn = {0004-5411},
+url = {https://doi.org/10.1145/3676954},
+doi = {10.1145/3676954},
+abstract = {Type soundness, which asserts that “well-typed programs cannot go wrong,” is widely viewed as the canonical theorem one must prove to establish that a type system is doing its job. It is commonly proved using the so-called syntactic approach (also known as progress and preservation), which has had a huge impact on the study and teaching of programming language foundations. Unfortunately, syntactic type soundness is a rather weak theorem. It only applies to programs that are well typed in their entirety and thus tells us nothing about the many programs written in “safe” languages that make use of “unsafe” language features. Even worse, it tells us nothing about whether type systems achieve one of their main goals: enforcement of data abstraction. One can easily define a language that enjoys syntactic type soundness and yet fails to support even the most basic modular reasoning principles for abstraction mechanisms like closures, objects, and abstract data types. Given these concerns, we argue that programming languages researchers should no longer be satisfied with proving syntactic type soundness and should instead start proving semantic type soundness, a more useful theorem that captures more accurately what type systems are actually good for. Semantic type soundness is an old idea—Milner’s original account of type soundness from 1978 was semantic—but it fell out of favor in the 1990s due to limitations and complexities of denotational models. In the succeeding decades, thanks to a series of technical advances—notably, step-indexed Kripke logical relations constructed over operational semantics and higher-order concurrent separation logic as consolidated in the Iris framework in Coq—we can now build (machine-checked) semantic soundness proofs at a much higher level of abstraction than was previously possible. The resulting “logical” approach to semantic type soundness has already been employed to great effect in a number of recent papers, but those papers typically (a) concern advanced problem scenarios that complicate the presentation, (b) assume significant prior knowledge of the reader, and (c) suppress many details of the proofs. Here, we aim to provide a gentler, more pedagogically motivated introduction to logical type soundness, targeted at a broader audience that may or may not be familiar with logical relations and Iris. As a bonus, we also show how logical type soundness proofs can easily be generalized to establish an even stronger relational property—representation independence—for realistic type systems.},
+journal = {J. ACM},
+month = nov,
+articleno = {40},
+numpages = {75},
+keywords = {Type soundness, data abstraction, logical relations, step-indexing, concurrent separation logic, Iris, Coq}
+}
+
+@article{jhala2021,
+author = {Jhala, Ranjit and Vazou, Niki},
+title = {Refinement Types: A Tutorial},
+year = {2021},
+issue_date = {Oct 2021},
+publisher = {Now Publishers Inc.},
+address = {Hanover, MA, USA},
+volume = {6},
+number = {3–4},
+issn = {2325-1107},
+url = {https://doi.org/10.1561/2500000032},
+doi = {10.1561/2500000032},
+abstract = {Refinement types enrich a language’s type system with logical predicates that circumscribe the set of values described by the type. These refinement predicates provide software developers a tunable knob with which to inform the type system about what invariants and correctness properties should be checked on their code, and give the type checker a way to enforce those properties at compile time. In this article, we distill the ideas developed in the substantial literature on refinement types into a unified tutorial that explains the key ingredients of modern refinement type systems. In particular, we show how to implement a refinement type checker via a progression of languages that incrementally add features to the language or type system.},
+journal = {Found. Trends Program. Lang.},
+month = oct,
+pages = {159–317},
+numpages = {164}
+}
+
+@article{rondon2008,
+author = {Rondon, Patrick M. and Kawaguci, Ming and Jhala, Ranjit},
+title = {Liquid types},
+year = {2008},
+issue_date = {June 2008},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {43},
+number = {6},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/1379022.1375602},
+doi = {10.1145/1379022.1375602},
+abstract = {We present Logically Qualified Data Types, abbreviated to Liquid Types, a system that combines Hindley-Milner type inference with Predicate Abstraction to automatically infer dependent types precise enough to prove a variety of safety properties. Liquid types allow programmers to reap many of the benefits of dependent types, namely static verification of critical properties and the elimination of expensive run-time checks, without the heavy price of manual annotation. We have implemented liquid type inference in DSOLVE, which takes as input an OCAML program and a set of logical qualifiers and infers dependent types for the expressions in the OCAML program. To demonstrate the utility of our approach, we describe experiments using DSOLVE to statically verify the safety of array accesses on a set of OCAML benchmarks that were previously annotated with dependent types as part of the DML project. We show that when used in conjunction with a fixed set of array bounds checking qualifiers, DSOLVE reduces the amount of manual annotation required for proving safety from 31\% of program text to under 1\%.},
+journal = {SIGPLAN Not.},
+month = jun,
+pages = {159–169},
+numpages = {11},
+keywords = {dependent types, hindley-milner, predicate abstraction, type inference}
+}
+
+@article{giarrusso2020,
+  author       = {Paolo G. Giarrusso and
+                  L{\'e}o Stefanesco and
+                  Amin Timany and
+                  Lars Birkedal and
+                  Robbert Krebbers},
+  title        = {Scala step-by-step: soundness for {DOT} with step-indexed logical
+                  relations in Iris},
+  journal      = {Proc. ACM Program. Lang.},
+  volume       = {4},
+  number       = {ICFP},
+  pages        = {114:1--114:29},
+  year         = {2020},
+  url          = {https://doi.org/10.1145/3408996},
+  doi          = {10.1145/3408996},
+}
+
+@software{giarrusso2020_artifact,
+  author       = {Paolo G. Giarrusso and
+                  L{\'e}o Stefanesco and
+                  Amin Timany and
+                  Lars Birkedal and
+                  Robbert Krebbers},
+  title        = {Scala Step-by-Step: Soundness for {DOT} with Step-Indexed
+                  Logical Relations in {Iris} --- {Coq} Formalization},
+  month        = jul,
+  year         = 2020,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.3926703},
+  url          = {https://doi.org/10.5281/zenodo.3926703},
+}
+
+@article{freeman1991,
+author = {Freeman, Tim and Pfenning, Frank},
+title = {Refinement types for ML},
+year = {1991},
+issue_date = {June 1991},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {26},
+number = {6},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/113446.113468},
+doi = {10.1145/113446.113468},
+journal = {SIGPLAN Not.},
+month = may,
+pages = {268–277},
+numpages = {10}
+}
+
+@article{vazou2017,
+author = {Vazou, Niki and Tondwalkar, Anish and Choudhury, Vikraman and Scott, Ryan G. and Newton, Ryan R. and Wadler, Philip and Jhala, Ranjit},
+title = {Refinement reflection: complete verification with SMT},
+year = {2017},
+issue_date = {January 2018},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {2},
+number = {POPL},
+url = {https://doi.org/10.1145/3158141},
+doi = {10.1145/3158141},
+abstract = {We introduce Refinement Reflection, a new framework for building SMT-based deductive verifiers. The key idea is to reflect the code implementing a user-defined function into the function’s (output) refinement type. As a consequence, at uses of the function, the function definition is instantiated in the SMT logic in a precise fashion that permits decidable verification. Reflection allows the user to write equational proofs of programs just by writing other programs using pattern-matching and recursion to perform case-splitting and induction. Thus, via the propositions-as-types principle, we show that reflection permits the specification of arbitrary functional correctness properties. Finally, we introduce a proof-search algorithm called Proof by Logical Evaluation that uses techniques from model checking and abstract interpretation, to completely automate equational reasoning. We have implemented reflection in Liquid Haskell and used it to verify that the widely used instances of the Monoid, Applicative, Functor, and Monad typeclasses actually satisfy key algebraic laws required to make the clients safe, and have used reflection to build the first library that actually verifies assumptions about associativity and ordering that are crucial for safe deterministic parallelism.},
+journal = {Proc. ACM Program. Lang.},
+month = dec,
+articleno = {53},
+numpages = {31},
+keywords = {verification, theorem proving, refinement types, Haskell}
+}
+
+@inproceedings{10.1145/2628136.2628161,
+author = {Vazou, Niki and Seidel, Eric L. and Jhala, Ranjit and Vytiniotis, Dimitrios and Peyton-Jones, Simon},
+title = {Refinement types for Haskell},
+year = {2014},
+isbn = {9781450328739},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2628136.2628161},
+doi = {10.1145/2628136.2628161},
+abstract = {SMT-based checking of refinement types for call-by-value languages is a well-studied subject. Unfortunately, the classical translation of refinement types to verification conditions is unsound under lazy evaluation. When checking an expression, such systems implicitly assume that all the free variables in the expression are bound to values. This property is trivially guaranteed by eager, but does not hold under lazy, evaluation. Thus, to be sound and precise, a refinement type system for Haskell and the corresponding verification conditions must take into account which subset of binders actually reduces to values. We present a stratified type system that labels binders as potentially diverging or not, and that (circularly) uses refinement types to verify the labeling. We have implemented our system in LIQUIDHASKELL and present an experimental evaluation of our approach on more than 10,000 lines of widely used Haskell libraries. We show that LIQUIDHASKELL is able to prove 96\% of all recursive functions terminating, while requiring a modest 1.7 lines of termination-annotations per 100 lines of code.},
+booktitle = {Proceedings of the 19th ACM SIGPLAN International Conference on Functional Programming},
+pages = {269–282},
+numpages = {14},
+location = {Gothenburg, Sweden},
+series = {ICFP '14}
+}
+
+@article{vazou2014,
+author = {Vazou, Niki and Seidel, Eric L. and Jhala, Ranjit and Vytiniotis, Dimitrios and Peyton-Jones, Simon},
+title = {Refinement types for Haskell},
+year = {2014},
+issue_date = {September 2014},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {49},
+number = {9},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/2692915.2628161},
+doi = {10.1145/2692915.2628161},
+abstract = {SMT-based checking of refinement types for call-by-value languages is a well-studied subject. Unfortunately, the classical translation of refinement types to verification conditions is unsound under lazy evaluation. When checking an expression, such systems implicitly assume that all the free variables in the expression are bound to values. This property is trivially guaranteed by eager, but does not hold under lazy, evaluation. Thus, to be sound and precise, a refinement type system for Haskell and the corresponding verification conditions must take into account which subset of binders actually reduces to values. We present a stratified type system that labels binders as potentially diverging or not, and that (circularly) uses refinement types to verify the labeling. We have implemented our system in LIQUIDHASKELL and present an experimental evaluation of our approach on more than 10,000 lines of widely used Haskell libraries. We show that LIQUIDHASKELL is able to prove 96\% of all recursive functions terminating, while requiring a modest 1.7 lines of termination-annotations per 100 lines of code.},
+journal = {SIGPLAN Not.},
+month = aug,
+pages = {269–282},
+numpages = {14}
+}
+
+@inproceedings{vazou2013,
+author = {Vazou, Niki and Rondon, Patrick M. and Jhala, Ranjit},
+title = {Abstract refinement types},
+year = {2013},
+isbn = {9783642370359},
+publisher = {Springer-Verlag},
+address = {Berlin, Heidelberg},
+url = {https://doi.org/10.1007/978-3-642-37036-6_13},
+doi = {10.1007/978-3-642-37036-6_13},
+abstract = {We present abstract refinement types which enable quantification over the refinements of data- and function-types. Our key insight is that we can avail of quantification while preserving SMT-based decidability, simply by encoding refinement parameters as uninterpreted propositions within the refinement logic. We illustrate how this mechanism yields a variety of sophisticated means for reasoning about programs, including: parametric refinements for reasoning with type classes, index-dependent refinements for reasoning about key-value maps, recursive refinements for reasoning about recursive data types, and inductive refinements for reasoning about higher-order traversal routines. We have implemented our approach in a refinement type checker for Haskell and present experiments using our tool to verify correctness invariants of various programs.},
+booktitle = {Proceedings of the 22nd European Conference on Programming Languages and Systems},
+pages = {209–228},
+numpages = {20},
+location = {Rome, Italy},
+series = {ESOP'13}
+}
+
+@inproceedings{sammler2021,
+author = {Sammler, Michael and Lepigre, Rodolphe and Krebbers, Robbert and Memarian, Kayvan and Dreyer, Derek and Garg, Deepak},
+title = {RefinedC: automating the foundational verification of C code with refined ownership types},
+year = {2021},
+isbn = {9781450383912},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3453483.3454036},
+doi = {10.1145/3453483.3454036},
+abstract = {Given the central role that C continues to play in systems software, and the difficulty of writing safe and correct C code, it remains a grand challenge to develop effective formal methods for verifying C programs. In this paper, we propose a new approach to this problem: a type system we call RefinedC, which combines ownership types (for modular reasoning about shared state and concurrency) with refinement types (for encoding precise invariants on C data types and Hoare-style specifications for C functions). RefinedC is both automated (requiring minimal user intervention) and foundational (producing a proof of program correctness in Coq), while at the same time handling a range of low-level programming idioms such as pointer arithmetic. In particular, following the approach of RustBelt, the soundness of the RefinedC type system is justified semantically by interpretation into the Coq-based Iris framework for higher-order concurrent separation logic. However, the typing rules of RefinedC are also designed to be encodable in a new “separation logic programming” language we call Lithium. By restricting to a carefully chosen (yet expressive) fragment of separation logic, Lithium supports predictable, automatic, goal-directed proof search without backtracking. We demonstrate the effectiveness of RefinedC on a range of representative examples of C code.},
+booktitle = {Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation},
+pages = {158–174},
+numpages = {17},
+keywords = {C programming language, Coq, Iris, ownership types, proof automation, refinement types, separation logic},
+location = {Virtual, Canada},
+series = {PLDI 2021}
+}
+
+@software{sammler2021_artifact,
+author = {Sammler, Michael and Lepigre, Rodolphe and Krebbers, Robbert and Memarian, Kayvan and Dreyer, Derek and Garg, Deepak},
+title = {Artifact and Appendix of "RefinedC: Automating the Foundational Verification of C Code with Refined Ownership Types"},
+year = {2021},
+publisher = {Association for Computing Machinery},
+url = {https://doi.org/10.5281/zenodo.4649822},
+abstract = {
+This is the artifact for the PLDI’21 paper “RefinedC: Automating the Foundational Verification of C Code with Refined Ownership Types”. It contains the RefinedC tool including its Coq development and the appendix for the paper.
+},
+keywords = {C programming language, Coq, Iris, ownership types, proof automation, refinement types, separation logic}
+}
+
+@article{gaher2024,
+author = {G\"{a}her, Lennard and Sammler, Michael and Jung, Ralf and Krebbers, Robbert and Dreyer, Derek},
+title = {RefinedRust: A Type System for High-Assurance Verification of Rust Programs},
+year = {2024},
+issue_date = {June 2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {8},
+number = {PLDI},
+url = {https://doi.org/10.1145/3656422},
+doi = {10.1145/3656422},
+abstract = {Rust is a modern systems programming language whose ownership-based type system statically guarantees memory safety, making it particularly well-suited to the domain of safety-critical systems. In recent years, a wellspring of automated deductive verification tools have emerged for establishing functional correctness of Rust code. However, none of the previous tools produce foundational proofs (machine-checkable in a generalpurpose proof assistant), and all of them are restricted to the safe fragment of Rust. This is a problem because the vast majority of Rust programs make use of unsafe code at critical points, such as in the implementation of widely-used APIs. We propose RefinedRust, a refinement type system—proven sound in the Coq proof assistant—with the goal of establishing foundational semi-automated functional correctness verification of both safe and unsafe Rust code. We have developed a prototype verification tool implementing RefinedRust. Our tool translates Rust code (with user annotations) into a model of Rust embedded in Coq, and then checks its adherence to the RefinedRust type system using separation logic automation in Coq. All proofs generated by RefinedRust are checked by the Coq proof assistant, so the automation and type system do not have to be trusted. We evaluate the effectiveness of RefinedRust by verifying a variant of Rust’s Vec implementation that involves intricate reasoning about unsafe pointer-manipulating code.},
+journal = {Proc. ACM Program. Lang.},
+month = jun,
+articleno = {192},
+numpages = {25},
+keywords = {separation logic, program verification, Rust, Iris}
+}
+
+@software{gaher2024_artifact,
+  author       = {Anonymous},
+  title        = {Artifact for "RefinedRust: A Type System for High-
+                   Assurance Verification of Rust Programs"
+                  },
+  month        = apr,
+  year         = 2024,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.10912439},
+  url          = {https://doi.org/10.5281/zenodo.10912439},
+}
+
+@article{vekris2016,
+author = {Vekris, Panagiotis and Cosman, Benjamin and Jhala, Ranjit},
+title = {Refinement types for TypeScript},
+year = {2016},
+issue_date = {June 2016},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {51},
+number = {6},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/2980983.2908110},
+doi = {10.1145/2980983.2908110},
+abstract = {We present Refined TypeScript (RSC), a lightweight refinement type system for TypeScript, that enables static verification of higher-order, imperative programs. We develop a formal system for RSC that delineates the interaction between refinement types and mutability, and enables flow-sensitive reasoning by translating input programs to an equivalent intermediate SSA form. By establishing type safety for the intermediate form, we prove safety for the input programs. Next, we extend the core to account for imperative and dynamic features of TypeScript, including overloading, type reflection, ad hoc type hierarchies and object initialization. Finally, we evaluate RSC on a set of real-world benchmarks, including parts of the Octane benchmarks, D3, Transducers, and the TypeScript compiler. We show how RSC successfully establishes a number of value dependent properties, such as the safety of array accesses and downcasts, while incurring a modest overhead in type annotations and code restructuring.},
+journal = {SIGPLAN Not.},
+month = jun,
+pages = {310–325},
+numpages = {16},
+keywords = {TypeScript, Type Systems, Refinement Types, Immutability}
+}
+
+@InProceedings{leino2010,
+author="Leino, K. Rustan M.",
+editor="Clarke, Edmund M.
+and Voronkov, Andrei",
+title="Dafny: An Automatic Program Verifier for Functional Correctness",
+booktitle="Logic for Programming, Artificial Intelligence, and Reasoning",
+year="2010",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="348--370",
+abstract="Traditionally, the full verification of a program's functional correctness has been obtained with pen and paper or with interactive proof assistants, whereas only reduced verification tasks, such as extended static checking, have enjoyed the automation offered by satisfiability-modulo-theories (SMT) solvers. More recently, powerful SMT solvers and well-designed program verifiers are starting to break that tradition, thus reducing the effort involved in doing full verification.",
+isbn="978-3-642-17511-4"
+}
+
+@article{swamy2016,
+author = {Swamy, Nikhil and Hri\c{t}cu, C\u{a}t\u{a}lin and Keller, Chantal and Rastogi, Aseem and Delignat-Lavaud, Antoine and Forest, Simon and Bhargavan, Karthikeyan and Fournet, C\'{e}dric and Strub, Pierre-Yves and Kohlweiss, Markulf and Zinzindohoue, Jean-Karim and Zanella-B\'{e}guelin, Santiago},
+title = {Dependent types and multi-monadic effects in F*},
+year = {2016},
+issue_date = {January 2016},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {51},
+number = {1},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/2914770.2837655},
+doi = {10.1145/2914770.2837655},
+abstract = {We present a new, completely redesigned, version of F*, a language that works both as a proof assistant as well as a general-purpose, verification-oriented, effectful programming language. In support of these complementary roles, F* is a dependently typed, higher-order, call-by-value language with _primitive_ effects including state, exceptions, divergence and IO. Although primitive, programmers choose the granularity at which to specify effects by equipping each effect with a monadic, predicate transformer semantics. F* uses this to efficiently compute weakest preconditions and discharges the resulting proof obligations using a combination of SMT solving and manual proofs. Isolated from the effects, the core of F* is a language of pure functions used to write specifications and proof terms---its consistency is maintained by a semantic termination check based on a well-founded order. We evaluate our design on more than 55,000 lines of F* we have authored in the last year, focusing on three main case studies. Showcasing its use as a general-purpose programming language, F* is programmed (but not verified) in F*, and bootstraps in both OCaml and F#. Our experience confirms F*'s pay-as-you-go cost model: writing idiomatic ML-like code with no finer specifications imposes no user burden. As a verification-oriented language, our most significant evaluation of F* is in verifying several key modules in an implementation of the TLS-1.2 protocol standard. For the modules we considered, we are able to prove more properties, with fewer annotations using F* than in a prior verified implementation of TLS-1.2. Finally, as a proof assistant, we discuss our use of F* in mechanizing the metatheory of a range of lambda calculi, starting from the simply typed lambda calculus to System F-omega and even micro-F*, a sizeable fragment of F* itself---these proofs make essential use of F*'s flexible combination of SMT automation and constructive proofs, enabling a tactic-free style of programming and proving at a relatively large scale.},
+journal = {SIGPLAN Not.},
+month = jan,
+pages = {256–270},
+numpages = {15},
+keywords = {effectful programming, proof assistants, verification}
+}
+
+
+@article{gamboa2025,
+author = {Gamboa, Catarina and Reese, Abigail and Fonseca, Alcides and Aldrich, Jonathan},
+title = {Usability Barriers for Liquid Types},
+year = {2025},
+issue_date = {June 2025},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {9},
+number = {PLDI},
+url = {https://doi.org/10.1145/3729327},
+doi = {10.1145/3729327},
+abstract = {Liquid types can express richer verification properties than simple type systems. However, despite their advantages, liquid types have yet to achieve widespread adoption. To understand why, we conducted a study analyzing developers' challenges with liquid types, focusing on LiquidHaskell.   Our findings reveal nine key barriers that span three categories, including developer experience, scalability challenges with complex and large codebases, and understanding the verification process. Together, these obstacles provide a comprehensive view of the usability challenges to the broader adoption of liquid types and offer insights that can inform the current and future design and implementation of liquid type systems.},
+journal = {Proc. ACM Program. Lang.},
+month = jun,
+articleno = {224},
+numpages = {26},
+keywords = {automated verification, human factors, liquid types, liquidhaskell, usability}
+}
+
+@mastersthesis{quentin,
+  author       = {Quentin Bernet},
+  title        = {Syntax and Runtime Checks for Qualified Types in Scala 3},
+  school       = {École Polytechnique Fédérale de Lausanne (EPFL)},
+  year         = {2024},
+  type         = {Master's thesis},
+  address      = {Lausanne, Switzerland},
+//note         = {Thesis advisor: Viktor Kunčak; external reviewer: Niki Vazou; PhD supervisor: Matt Bovel}
+}
+
+@mastersthesis{valentin,
+  author       = {Valentin Schneeberger},
+  title        = {Runtime Checks for Qualified Types in Scala 3},
+  school       = {École Polytechnique Fédérale de Lausanne (EPFL)},
+  year         = {2024},
+  type         = {Bachelor's thesis},
+  address      = {Lausanne, Switzerland}
+}
+
+@misc{refined,
+  author       = {Frank S. Thomas},
+  title        = {refined: Refined is a Scala library for refinement types},
+  year         = {2015},
+  howpublished = {\url{https://github.com/fthomas/refined}},
+  note         = {Accessed: 2026-02-11}
+}
+
+@misc{fansi,
+  author       = {Li Haoyi},
+  title        = {Fansi: Scala library for manipulating Fancy Ansi colored strings},
+  year         = {2016},
+  howpublished = {\url{https://github.com/com-lihaoyi/fansi}},
+  note         = {Accessed: 2026-03-18}
+}
+
+@misc{iron,
+  author       = {Iltotore},
+  title        = {Iron: A compile-time and runtime refinement library for Scala 3},
+  year         = {2021},
+  howpublished = {\url{https://github.com/Iltotore/iron}},
+  note         = {Accessed: 2026-02-11}
+}
+
+@inproceedings{schmid2016,
+author = {Schmid, Georg Stefan and Kuncak, Viktor},
+title = {SMT-based checking of predicate-qualified types for Scala},
+year = {2016},
+isbn = {9781450346481},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2998392.2998398},
+doi = {10.1145/2998392.2998398},
+abstract = {We present *qualified types* for Scala, a form of refinement types adapted to the Scala language. Qualified types allow users to refine base types and classes using predicate expressions. We implemented a type checker for qualified types that is embedded in Scala's next-generation compiler Dotty and delegates constraint checking to an SMT solver. Our system supports many of Scala's functional as well as its object-oriented constructs. To propagate user-provided qualifier ascriptions we utilize both Scala's own type system and an incomplete, but effective qualifier inference algorithm. Our evaluation shows that for a series of examples exerting various of Scala's language features, the additional compile-time overhead is manageable. By combining these features we show that one can verify essential safety properties such as static bounds-checks while retaining several of Scala's advanced features.},
+booktitle = {Proceedings of the 2016 7th ACM SIGPLAN Symposium on Scala},
+pages = {31–40},
+numpages = {10},
+keywords = {Refinement Types, Scala},
+location = {Amsterdam, Netherlands},
+series = {SCALA 2016}
+}
+
+@article{nelson1980,
+author = {Nelson, Greg and Oppen, Derek C.},
+title = {Fast Decision Procedures Based on Congruence Closure},
+year = {1980},
+issue_date = {April 1980},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {27},
+number = {2},
+issn = {0004-5411},
+url = {https://doi.org/10.1145/322186.322198},
+doi = {10.1145/322186.322198},
+abstract = {The notion of the congruence closure of a relation on a graph is defined and several algorithms for computing it are surveyed. A simple proof is given that the congruence closure algorithm provides a decision procedure for the quantifier-free theory of equality. A decision procedure is then given for the quantifier-free theory of LISP list structure based on the congruence closure algorithm. Both decision procedures determine the satisfiability of a conjunction of literals of length n in average time O(n log n) using the fastest known congruence closure algorithm. It is also shown that if the axiomatization of the theory of list structure is changed slightly, the problem of determining the satisfiability of a conjunction of literals becomes NP-complete. The decision procedures have been implemented in the authors' simplifier for the Stanford Pascal Verifier.},
+journal = {J. ACM},
+month = apr,
+pages = {356–364},
+numpages = {9}
+}
+
+@article{willsey2021,
+author = {Willsey, Max and Nandi, Chandrakana and Wang, Yisu Remy and Flatt, Oliver and Tatlock, Zachary and Panchekha, Pavel},
+title = {egg: Fast and extensible equality saturation},
+year = {2021},
+issue_date = {January 2021},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {5},
+number = {POPL},
+url = {https://doi.org/10.1145/3434304},
+doi = {10.1145/3434304},
+abstract = {An e-graph efficiently represents a congruence relation over many expressions. Although they were originally developed in the late 1970s for use in automated theorem provers, a more recent technique known as equality saturation repurposes e-graphs to implement state-of-the-art, rewrite-driven compiler optimizations and program synthesizers. However, e-graphs remain unspecialized for this newer use case. Equality saturation workloads exhibit distinct characteristics and often require ad-hoc e-graph extensions to incorporate transformations beyond purely syntactic rewrites.  This work contributes two techniques that make e-graphs fast and extensible, specializing them to equality saturation. A new amortized invariant restoration technique called rebuilding takes advantage of equality saturation's distinct workload, providing asymptotic speedups over current techniques in practice. A general mechanism called e-class analyses integrates domain-specific analyses into the e-graph, reducing the need for ad hoc manipulation. We implemented these techniques in a new open-source library called egg. Our case studies on three previously published applications of equality saturation highlight how egg's performance and flexibility enable state-of-the-art results across diverse domains.},
+journal = {Proc. ACM Program. Lang.},
+month = jan,
+articleno = {23},
+numpages = {29},
+keywords = {equality saturation, e-graphs}
+}
+
+@article{paraskevopoulou2021,
+author = {Paraskevopoulou, Zoe and Li, John M. and Appel, Andrew W.},
+title = {Compositional optimizations for CertiCoq},
+year = {2021},
+issue_date = {August 2021},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {5},
+number = {ICFP},
+url = {https://doi.org/10.1145/3473591},
+doi = {10.1145/3473591},
+abstract = {Compositional compiler verification is a difficult problem that focuses on separate compilation of program components with possibly different verified compilers. Logical relations are widely used in proving correctness of program transformations in higher-order languages; however, they do not scale to compositional verification of multi-pass compilers due to their lack of transitivity. The only known technique to apply to compositional verification of multi-pass compilers for higher-order languages is parametric inter-language simulations (PILS), which is however significantly more complicated than traditional proof techniques for compiler correctness. In this paper, we present a novel verification framework for lightweight compositional compiler correctness. We demonstrate that by imposing the additional restriction that program components are compiled by pipelines that go through the same sequence of intermediate representations, logical relation proofs can be transitively composed in order to derive an end-to-end compositional specification for multi-pass compiler pipelines. Unlike traditional logical-relation frameworks, our framework supports divergence preservation—even when transformations reduce the number of program steps. We achieve this by parameterizing our logical relations with a pair of relational invariants. We apply this technique to verify a multi-pass, optimizing middle-end pipeline for CertiCoq, a compiler from Gallina (Coq’s specification language) to C. The pipeline optimizes and closure-converts an untyped functional intermediate language (ANF or CPS) to a subset of that language without nested functions, which can be easily code-generated to low-level languages. Notably, our pipeline performs more complex closure-allocation optimizations than the state of the art in verified compilation. Using our novel verification framework, we prove an end-to-end theorem for our pipeline that covers both termination and divergence and applies to whole-program and separate compilation, even when different modules are compiled with different optimizations. Our results are mechanized in the Coq proof assistant.},
+journal = {Proc. ACM Program. Lang.},
+month = aug,
+articleno = {86},
+numpages = {30},
+keywords = {A-normal form, closure conversion, compilation by transformation, compositional compiler correctness, lambda lifting, logical relations, separate compilation}
+}
+
+@inproceedings{owens2016,
+author = {Owens, Scott and Myreen, Magnus O. and Kumar, Ramana and Tan, Yong Kiam},
+title = {Functional Big-Step Semantics},
+year = {2016},
+isbn = {9783662494974},
+publisher = {Springer-Verlag},
+address = {Berlin, Heidelberg},
+url = {https://doi.org/10.1007/978-3-662-49498-1_23},
+doi = {10.1007/978-3-662-49498-1_23},
+abstract = {When doing an interactive proof about a piece of software, it is important that the underlying programming language's semantics does not make the proof unnecessarily difficult or unwieldy. Both small-step and big-step semantics are commonly used, and the latter is typically given by an inductively defined relation. In this paper, we consider an alternative: using a recursive function akin\"{\i} \'{z}to an interpreter for the language. The advantages include a better induction theorem, less duplication, accessibility to ordinary functional programmers, and the ease of doing symbolic simulation in proofs via rewriting. We believe that this style of semantics is well suited for compiler verification, including proofs of divergence preservation. We do not claim the invention of this style of semantics: our contribution here is to clarify its value, and to explain how it supports several language features that might appear to require a relational or small-step approach. We illustrate the technique on a simple imperative language with C-like for-loops and a break statement, and compare it to a variety of other approaches. We also provide ML and lambda-calculus based examples to illustrate its generality.},
+booktitle = {Proceedings of the 25th European Symposium on Programming Languages and Systems - Volume 9632},
+pages = {589–615},
+numpages = {27}
+}
+
+@article{lattuada2023,
+author = {Lattuada, Andrea and Hance, Travis and Cho, Chanhee and Brun, Matthias and Subasinghe, Isitha and Zhou, Yi and Howell, Jon and Parno, Bryan and Hawblitzel, Chris},
+title = {Verus: Verifying Rust Programs using Linear Ghost Types},
+year = {2023},
+issue_date = {April 2023},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {7},
+number = {OOPSLA1},
+url = {https://doi.org/10.1145/3586037},
+doi = {10.1145/3586037},
+abstract = {The Rust programming language provides a powerful type system that checks linearity and borrowing, allowing code to safely manipulate memory without garbage collection and making Rust ideal for developing low-level, high-assurance systems. For such systems, formal verification can be useful to prove functional correctness properties beyond type safety. This paper presents Verus, an SMT-based tool for formally verifying Rust programs.   With Verus, programmers express proofs and specifications using the Rust language, allowing proofs to take advantage of Rust's linear types and borrow checking. We show how this allows proofs to manipulate linearly typed permissions that let Rust code safely manipulate memory, pointers, and concurrent resources. Verus organizes proofs and specifications using a novel mode system that distinguishes specifications, which are not checked for linearity and borrowing, from executable code and proofs, which are checked for linearity and borrowing.   We formalize Verus' linearity, borrowing, and modes in a small lambda calculus, for which we prove type safety and termination of specifications and proofs. We demonstrate Verus on a series of examples, including pointer-manipulating code (an xor-based doubly linked list), code with interior mutability, and concurrent code.},
+journal = {Proc. ACM Program. Lang.},
+month = apr,
+articleno = {85},
+numpages = {30},
+keywords = {systems verification, linear types, Rust}
+}
+
+@article{astrauskas2019,
+author = {Astrauskas, Vytautas and M\"{u}ller, Peter and Poli, Federico and Summers, Alexander J.},
+title = {Leveraging rust types for modular specification and verification},
+year = {2019},
+issue_date = {October 2019},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {3},
+number = {OOPSLA},
+url = {https://doi.org/10.1145/3360573},
+doi = {10.1145/3360573},
+abstract = {Rust's type system ensures memory safety: well-typed Rust programs are guaranteed to not exhibit problems such as dangling pointers, data races, and unexpected side effects through aliased references. Ensuring correctness properties beyond memory safety, for instance, the guaranteed absence of assertion failures or more-general functional correctness, requires static program verification. For traditional system programming languages, formal verification is notoriously difficult and requires complex specifications and logics to reason about pointers, aliasing, and side effects on mutable state. This complexity is a major obstacle to the more-widespread verification of system software.  In this paper, we present a novel verification technique that leverages Rust's type system to greatly simplify the specification and verification of system software written in Rust. We analyse information from the Rust compiler and synthesise a corresponding core proof for the program in a flavour of separation logic tailored to automation. To verify correctness properties beyond memory safety, users can annotate Rust programs with specifications at the abstraction level of Rust expressions; our technique weaves them into the core proof to verify modularly whether these specifications hold. Crucially, our proofs are constructed and checked automatically without exposing the underlying formal logic, allowing users to work exclusively at the level of abstraction of the programming language. As such, our work enables a new kind of verification tool, with the potential to impact a wide audience and allow the Rust community to benefit from state-of-the-art verification techniques. We have implemented our techniques for a subset of Rust; our evaluation on several thousand functions from widely-used Rust crates demonstrates its effectiveness.},
+journal = {Proc. ACM Program. Lang.},
+month = oct,
+articleno = {147},
+numpages = {30},
+keywords = {Rust, concurrency, heap-manipulating programs, type systems}
+}
+
+@inproceedings{xi1998,
+  author = {Xi, Hongwei and Pfenning, Frank},
+  title = {Eliminating array bound checking through dependent types},
+  year = {1998},
+  isbn = {0897919874},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/277650.277732},
+  doi = {10.1145/277650.277732},
+  booktitle = {Proceedings of the ACM SIGPLAN 1998 Conference on Programming Language Design and Implementation},
+  pages = {249--257},
+  numpages = {9},
+  location = {Montreal, Quebec, Canada},
+  series = {PLDI '98}
+}
+
+@inproceedings{zinzindohoue2017,
+  author = {Zinzindohou\'{e}, Jean-Karim and Bhargavan, Karthikeyan and Protzenko, Jonathan and Beurdouche, Benjamin},
+  title = {{HACL*}: A Verified Modern Cryptographic Library},
+  year = {2017},
+  isbn = {9781450349468},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/3133956.3134043},
+  doi = {10.1145/3133956.3134043},
+  booktitle = {Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security},
+  pages = {1789--1806},
+  numpages = {18},
+  location = {Dallas, Texas, USA},
+  series = {CCS '17}
+}
+
+@book{nordstrom1990,
+  author = {Nordstr\"{o}m, Bengt and Petersson, Kent and Smith, Jan M.},
+  title = {Programming in Martin-L\"{o}f's Type Theory: An Introduction},
+  year = {1990},
+  publisher = {Oxford University Press},
+  address = {Oxford, UK},
+  note = {Based on Nordstr\"{o}m and Petersson's 1983 report}
+}
+
+@misc{jhala2019why,
+  author = {Jhala, Ranjit},
+  title = {Why Refinement Types?},
+  year = {2019},
+  howpublished = {\url{https://ucsd-progsys.github.io/liquidhaskell/blogposts/2019-10-20-why-types.lhs/}},
+  note = {Accessed: 2026-03-09}
+}
+
+@inproceedings{cartwright1976,
+  author = {Cartwright, Robert},
+  title = {User-Defined Data Types as an Aid to Verifying {LISP} Programs},
+  booktitle = {Proceedings of the 3rd ACM SIGACT-SIGPLAN Symposium on Principles of Programming Languages (POPL)},
+  year = {1976},
+  pages = {228--256},
+  publisher = {ACM},
+  doi = {10.1145/512927.512951}
+}
+
+@incollection{constable1986,
+  author = {Constable, Robert L. and others},
+  title = {Implementing Mathematics with the {Nuprl} Proof Development System},
+  year = {1986},
+  publisher = {Prentice-Hall},
+  address = {Englewood Cliffs, NJ}
+}
+
+@article{dunfield2021,
+  author = {Dunfield, Jana and Krishnaswami, Neel},
+  title = {Bidirectional Typing},
+  year = {2021},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  volume = {54},
+  number = {5},
+  issn = {0360-0300},
+  url = {https://doi.org/10.1145/3450952},
+  doi = {10.1145/3450952},
+  journal = {ACM Comput. Surv.},
+  month = may,
+  articleno = {98},
+  numpages = {38}
+}
+
+@article{flanagan2006,
+author = {Flanagan, Cormac},
+title = {Hybrid type checking},
+year = {2006},
+issue_date = {January 2006},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {41},
+number = {1},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/1111320.1111059},
+doi = {10.1145/1111320.1111059},
+abstract = {Traditional static type systems are very effective for verifying basic interface specifications, but are somewhat limited in the kinds specifications they support. Dynamically-checked contracts can enforce more precise specifications, but these are not checked until run time, resulting in incomplete detection of defects.Hybrid type checking is a synthesis of these two approaches that enforces precise interface specifications, via static analysis where possible, but also via dynamic checks where necessary. This paper explores the key ideas and implications of hybrid type checking, in the context of the simply-typed λ-calculus with arbitrary refinements of base types.},
+journal = {SIGPLAN Not.},
+month = jan,
+pages = {245–256},
+numpages = {12},
+keywords = {type systems, static checking, dynamic checking, contracts}
+}
+
+@software{rocq,
+  author = {{The Rocq Development Team}},
+  title = {The {Rocq} Prover},
+  url = {https://rocq-prover.org/},
+  version = {9.1.0},
+  year = {2025}
+}
+
+@misc{zucker2024,
+  author = {Zucker, Philip},
+  title = {Acyclic Egraphs and Smart Constructors},
+  howpublished = {\url{https://www.philipzucker.com/smart_constructor_aegraph/}},
+  year = {2024},
+  note = {Blog post}
+}
+
+@misc{cranelift,
+  author = {Fallin, Chris},
+  title = {{Cranelift}'s {Acyclic} {Egraph} implementation},
+  howpublished = {\url{https://docs.rs/cranelift-egraph/latest/cranelift_egraph/}},
+  year = {2023},
+  note = {Rust crate documentation}
+}
+
+@inproceedings{schneider2024,
+  author = {Schneider, Rudi and Koehler, Thomas and Steuwer, Michel},
+  title = {Slotted E-Graphs},
+  year = {2025},
+  booktitle = {Proceedings of the ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI)},
+  publisher = {Association for Computing Machinery}
+}
+
+
+@inproceedings{10.1145/2784731.2784737,
+author = {Keil, Matthias and Thiemann, Peter},
+title = {Blame assignment for higher-order contracts with intersection and union},
+year = {2015},
+isbn = {9781450336697},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2784731.2784737},
+doi = {10.1145/2784731.2784737},
+abstract = {We present an untyped calculus of blame assignment for a higher-order contract system with two new operators: intersection and union. The specification of these operators is based on the corresponding type theoretic constructions. This connection makes intersection and union contracts their inevitable dynamic counterparts with a range of desirable properties and makes them suitable for subsequent integration in a gradual type system. A denotational specification provides the semantics of a contract in terms of two sets: a set of terms satisfying the contract and a set of contexts respecting the contract. This kind of specification for contracts is novel and interesting in its own right. A nondeterministic operational semantics serves as the specification for contract monitoring and for proving its correctness. It is complemented by a deterministic semantics that is closer to an implementation and that is connected to the nondeterministic semantics by simulation. The calculus is the formal basis of TJS, a language embedded, higher-order contract system implemented for JavaScript.},
+booktitle = {Proceedings of the 20th ACM SIGPLAN International Conference on Functional Programming},
+pages = {375–386},
+numpages = {12},
+keywords = {Blame, Higher-Order Contracts, Intersection, Union},
+location = {Vancouver, BC, Canada},
+series = {ICFP 2015}
+}
+
+@article{keil2015,
+author = {Keil, Matthias and Thiemann, Peter},
+title = {Blame assignment for higher-order contracts with intersection and union},
+year = {2015},
+issue_date = {September 2015},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {50},
+number = {9},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/2858949.2784737},
+doi = {10.1145/2858949.2784737},
+abstract = {We present an untyped calculus of blame assignment for a higher-order contract system with two new operators: intersection and union. The specification of these operators is based on the corresponding type theoretic constructions. This connection makes intersection and union contracts their inevitable dynamic counterparts with a range of desirable properties and makes them suitable for subsequent integration in a gradual type system. A denotational specification provides the semantics of a contract in terms of two sets: a set of terms satisfying the contract and a set of contexts respecting the contract. This kind of specification for contracts is novel and interesting in its own right. A nondeterministic operational semantics serves as the specification for contract monitoring and for proving its correctness. It is complemented by a deterministic semantics that is closer to an implementation and that is connected to the nondeterministic semantics by simulation. The calculus is the formal basis of TJS, a language embedded, higher-order contract system implemented for JavaScript.},
+journal = {SIGPLAN Not.},
+month = aug,
+pages = {375–386},
+numpages = {12},
+keywords = {Blame, Higher-Order Contracts, Intersection, Union}
+}
+
+
+@article{xu2025,
+author = {Xu, Yichen and Bra\v{c}evac, Oliver and Pham, Cao Nguyen and Odersky, Martin},
+title = {What’s in the Box: Ergonomic and Expressive Capture Tracking over Generic Data Structures},
+year = {2025},
+issue_date = {October 2025},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {9},
+number = {OOPSLA2},
+url = {https://doi.org/10.1145/3763112},
+doi = {10.1145/3763112},
+abstract = {Capturing types in Scala unify static effect and resource tracking with object capabilities, enabling lightweight effect polymorphism with minimal notational overhead. However, their expressiveness has been insufficient for tracking capabilities embedded in generic data structures, preventing them from scaling to the standard collections library – an essential prerequisite for broader adoption. This limitation stems from the inability to name capabilities within the system’s notion of box types.    This paper develops System Capless, a new foundation for capturing types that provides the theoretical basis for reach capabilities (rcaps), a novel mechanism for naming “what’s in the box”. The calculus refines the universal capability notion into a new scheme with existential and universal capture set quantification. Intuitively, rcaps witness existentially quantified capture sets inside the boxes of generic types in a way that does not require exposing existential capture types in the surface language. We have fully mechanized the formal metatheory of System Capless in Lean, including proofs of type soundness and scope safety. System Capless supports the same lightweight notation of capturing types plus rcaps, as certified by a type-preserving translation, and also enables fully optional explicit capture-set quantification to increase expressiveness.   Finally, we present a full reimplementation of capture checking in Scala 3 based on System Capless and migrate the entire Scala collections library and an asynchronous programming library to evaluate its practicality and ergonomics. Our results demonstrate that reach capabilities enable the adoption of capture checking in production code with minimal changes and minimal-to-zero notational overhead in a vast majority of cases.},
+journal = {Proc. ACM Program. Lang.},
+month = oct,
+articleno = {334},
+numpages = {28},
+keywords = {Capture Checking, Effect Polymorphism, Generic Data Structures, Scala}
+}
+
+@misc{odersky2026trackingcapabilitiessaferagents,
+      title={Tracking Capabilities for Safer Agents}, 
+      author={Martin Odersky and Yaoyu Zhao and Yichen Xu and Oliver Bračevac and Cao Nguyen Pham},
+      year={2026},
+      eprint={2603.00991},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2603.00991}, 
+}
