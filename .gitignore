@@ -2,3 +2,4 @@ target
 out
 .bsp
 .scala-build
+evaluation/first_class_and_stainless/lib/

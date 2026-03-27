@@ -15,18 +15,13 @@ Compilation-time benchmarks comparing four configurations of refinement types in
 
 ## Setup
 
-### Stainless
-
-The `stainless` submodule points to a fork with benchmark-specific changes (native Z3 bundling, verification error reporting, suppressed debug output).
+From the `evaluation/first_class_and_stainless/` directory:
 
 ```sh
-git submodule update --init --recursive evaluation/first_class_and_stainless/stainless
-cd evaluation/first_class_and_stainless/stainless
-sbt "stainless-dotty / assembly"
-sbt "stainless-library / package"
+./setup.sh
 ```
 
-This builds the Stainless assembly jar (including ScalaZ3 native libraries) and the Stainless library jar, which are picked up automatically by `build.sbt`.
+This initializes the `stainless` submodule (a fork with benchmark-specific changes), builds the Stainless assembly and library jars, and copies them to `lib/`.
 
 ## Running benchmarks
 
