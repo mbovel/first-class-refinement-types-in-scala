@@ -1,0 +1,4 @@
+[submodule "evaluation/first_class_and_stainless/stainless"]
+	path = evaluation/first_class_and_stainless/stainless
+	url = git@github.com:mbovel/stainless.git
+	branch = refinement-types-eval
