@@ -8,7 +8,11 @@ on:
 
 jobs:
   bench:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,14 +23,17 @@ jobs:
           distribution: temurin
           java-version: 25
 
+      - uses: sbt/setup-sbt@v1
+
       - name: Cache sbt
         uses: actions/cache@v4
         with:
           path: |
             ~/.sbt
             ~/.cache/coursier
-          key: sbt-${{ hashFiles('**/build.sbt', '**/plugins.sbt', '**/build.properties') }}
-          restore-keys: sbt-
+            ~/Library/Caches/Coursier
+          key: sbt-${{ matrix.os }}-${{ hashFiles('**/build.sbt', '**/plugins.sbt', '**/build.properties') }}
+          restore-keys: sbt-${{ matrix.os }}-
 
       - name: Build Stainless
         working-directory: evaluation/first_class_and_stainless
