@@ -1,0 +1,37 @@
+name: Benchmarks dry run
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Cache sbt
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.sbt
+            ~/.cache/coursier
+          key: sbt-${{ hashFiles('**/build.sbt', '**/plugins.sbt', '**/build.properties') }}
+          restore-keys: sbt-
+
+      - name: Build Stainless
+        working-directory: evaluation/first_class_and_stainless
+        run: ./setup.sh
+
+      - name: Run benchmarks (dry run)
+        working-directory: evaluation/first_class_and_stainless
+        run: sbt "clean; bench / Jmh / run -wi 0 -i 1 -foe true"

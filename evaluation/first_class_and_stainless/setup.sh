@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR"
 
 echo "==> Initializing stainless submodule..."
-git submodule update --init --recursive stainless
+git -C "$(git rev-parse --show-toplevel)" submodule update --init --recursive evaluation/first_class_and_stainless/stainless
 
 echo "==> Building Stainless assembly jar..."
 cd stainless
