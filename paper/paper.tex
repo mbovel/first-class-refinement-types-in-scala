@@ -767,6 +767,7 @@ We thank the LAMP and LARA teams at EPFL for insightful discussions and the prio
 \begin{figure}[H]
 \label{fig:example3}
 \begin{lstlisting}[language=Scala]
+// Example 3: Matrix operations with checked dimensions
 case class Matrix(width: Pos, height: Pos):
   private val size = width * height
   private val data = CheckedArray(size.runtimeChecked)
@@ -794,14 +795,8 @@ def matricesExample =
   m1.mul(m2)
   val m1T = m1.transpose()
   m1T.mul(m1)
-\end{lstlisting}
-\caption{Matrix operations with dimension-checked multiplication and transposition.}
-\end{figure}
 
-
-\begin{figure}[H]
-\label{fig:example4}
-\begin{lstlisting}[language=Scala]
+// Example 4: Memoized Fibonacci with a dependent map
 case class DepMap[K, V](p: (K, V) => Boolean):
   def put(n: K, v: V with p(n, v)): Unit = ???
   def get(n: K): Option[{res: V with p(n, res)}] = ???
@@ -818,7 +813,6 @@ def fibMemo(n: Int): {res: Int with res == fib(n)} =
       cache.put(n, res)
       res
 \end{lstlisting}
-\caption{Memoized Fibonacci with a dependently-typed cache.}
 \end{figure}
 
 \end{document}
