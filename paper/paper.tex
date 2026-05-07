@@ -1,5 +1,5 @@
 
-\documentclass[acmsmall,screen,review,anonymous]{acmart}
+\documentclass[acmsmall,screen]{acmart}
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
 \AtBeginDocument{%
@@ -103,6 +103,24 @@
   \country{Switzerland}
 }
 
+\author{Viktor Kun\v{c}ak}
+\email{viktor.kuncak@epfl.ch}
+\orcid{0000-0001-7044-9522}
+\affiliation{%
+  \institution{EPFL}
+  \city{Lausanne}
+  \country{Switzerland}
+}
+
+\author{Martin Odersky}
+\email{martin.odersky@epfl.ch}
+\orcid{0009-0005-3923-8993}
+\affiliation{%
+  \institution{EPFL}
+  \city{Lausanne}
+  \country{Switzerland}
+}
+
 
 %%
 %% The abstract is a short summary of the work to be presented in the
@@ -117,8 +135,7 @@
   maintain two mental models, and refinements cannot interact with
   features like type inference, subtyping, or overloading.
   
-  We present
-  the design of first-class refinement types for Scala~3, where
+  We present the design of first-class refinement types for Scala~3, where
   refinements are ordinary types that participate in subtyping,
   inference, and pattern matching alongside existing language features. We prove type soundness of a core calculus mechanized in Rocq,
   combining dependent function types, bounded polymorphism,
@@ -163,6 +180,8 @@
 %% This command processes the author and affiliation and title
 %% information and builds the first part of the formatted document.
 \maketitle
+
+{\small\noindent\emph{Draft version as of May~7, 2026. Will be updated in the coming months.}}
 
 \section{Introduction}
 
@@ -233,9 +252,6 @@ These examples illustrate a broader point: when refinement types are first-class
   \item We prove \textbf{type soundness} of a core calculus capturing the essential features of our design, mechanized in Rocq~\cite{rocq} (\S\ref{sec:formalization}). The operational semantics is given by a fuel-bounded definitional interpreter, and soundness is established via semantic typing, where types are interpreted as predicates on values. To our knowledge, this is the first mechanized soundness proof that combines refinement types with union and intersection types, bounded polymorphism (with lower and upper bounds), and positive equi-recursive types, a combination needed to model Scala's type system but not covered by prior mechanizations~\cite{hamza2019, borkowski2022, sun2024}.
   \item We describe a \textbf{prototype implementation} in the Scala~3 compiler (Dotty), showing that refinement types can be added to an industrial-strength compiler with modest changes to its architecture (\S\ref{sec:implementation}). We also present a lightweight e-graph-based solver for predicate entailment and evaluate our system on a suite of benchmarks (\S\ref{sec:evaluation}).
 \end{itemize}
-
-\vfill
-\pagebreak
 
 \section{Design}\label{sec:design}
 
@@ -729,7 +745,7 @@ GitHub Copilot was also used for code autocompletion, and Google and ChatGPT for
 %% consistent spelling of the heading.
 \begin{acks}
 
-We thank the LAMP and LARA teams at EPFL for insightful discussions and the prior work that laid the foundation for this paper, and in particular Sébastien Doeraene and Guillaume Martres for their valuable feedback on the Dotty implementation, and Eugène Flesselle for discussions on the formal system.
+We thank the LAMP and LARA teams at EPFL for insightful discussions and the prior work that laid the foundation for this paper, and in particular Sébastien Doeraene and Guillaume Martres for their valuable feedback on the Dotty implementation.
 
 \end{acks}
 
