@@ -1,5 +1,5 @@
 
-\documentclass[acmsmall,screen]{acmart}
+\documentclass[acmsmall,screen,nonacm]{acmart}
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
 \AtBeginDocument{%
@@ -11,21 +11,10 @@
 %% values in them; it is your responsibility as an author to replace
 %% the commands and values with those provided to you when you
 %% complete the rights form.
-\setcopyright{acmlicensed}
-\copyrightyear{2018}
-\acmYear{2018}
-\acmDOI{XXXXXXX.XXXXXXX}
-%% These commands are for a PROCEEDINGS abstract or paper.
-\acmConference[Conference acronym 'XX]{Make sure to enter the correct
-  conference title from your rights confirmation email}{June 03--05,
-  2018}{Woodstock, NY}
-%%
-%%  Uncomment \acmBooktitle if the title of the proceedings is different
-%%  from ``Proceedings of ...''!
-%%
-%%\acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
-%%  June 03--05, 2018, Woodstock, NY}
-\acmISBN{978-1-4503-XXXX-X/2018/06}
+%%\acmConference[Conference acronym 'XX]{Make sure to enter the correct
+%%  conference title from your rights confirmation email}{June 03--05,
+%%  2026}{Woodstock, NY}
+%%\acmISBN{978-1-4503-XXXX-X/2026/06}
 
 
 %%
@@ -126,24 +115,9 @@
 %% The abstract is a short summary of the work to be presented in the
 %% article.
 \begin{abstract}
-  Refinement types---types qualified with logical predicates---have
-  proven effective for lightweight verification in languages like
-  Liquid Haskell, F*, and Dafny. However, in these systems refinements
-  are either written in a separate specification language or treated as
-  second-class annotations, disconnected from the host language's type
-  system. This disconnect creates usability barriers: programmers must
-  maintain two mental models, and refinements cannot interact with
-  features like type inference, subtyping, or overloading.
-  
-  We present the design of first-class refinement types for Scala~3, where
-  refinements are ordinary types that participate in subtyping,
-  inference, and pattern matching alongside existing language features. We prove type soundness of a core calculus mechanized in Rocq,
-  combining dependent function types, bounded polymorphism,
-  positive equi-recursive types, union and intersection types, and refinement
-  types under a partial-correctness semantics using a fuel-bounded
-  definitional interpreter and semantic typing. Finally, we implement our
-  design as a prototype extension of the Scala~3 compiler with a
-  lightweight e-graph-based solver for predicate entailment.
+Refinement types---types qualified with logical predicates---have proven effective for lightweight verification in languages like Liquid Haskell, F*, and Dafny. However, in these systems refinements are either written in a separate specification language or treated as second-class annotations, disconnected from the host language's type system. This disconnect creates usability barriers: programmers must maintain two mental models, and refinements cannot interact with features like type inference, subtyping, or overloading.
+
+We present the design of first-class refinement types for Scala~3, where refinements are ordinary types that participate in subtyping, inference, and pattern matching alongside existing language features. We prove type soundness of a core calculus mechanized in Rocq, combining dependent function types, bounded polymorphism, positive equi-recursive types, union and intersection types, and refinement types under a partial-correctness semantics using a fuel-bounded definitional interpreter and semantic typing. Finally, we implement our design as a prototype extension of the Scala~3 compiler with a lightweight e-graph-based solver for predicate entailment.
 \end{abstract}
 
 %%
@@ -181,7 +155,7 @@
 %% information and builds the first part of the formatted document.
 \maketitle
 
-{\small\noindent\emph{Draft version as of May~7, 2026. Will be updated in the coming months.}}
+{\small\noindent\emph{Draft version as of May~8, 2026. Will be updated in the coming months.}}
 
 \section{Introduction}
 
@@ -252,6 +226,8 @@ These examples illustrate a broader point: when refinement types are first-class
   \item We prove \textbf{type soundness} of a core calculus capturing the essential features of our design, mechanized in Rocq~\cite{rocq} (\S\ref{sec:formalization}). The operational semantics is given by a fuel-bounded definitional interpreter, and soundness is established via semantic typing, where types are interpreted as predicates on values. To our knowledge, this is the first mechanized soundness proof that combines refinement types with union and intersection types, bounded polymorphism (with lower and upper bounds), and positive equi-recursive types, a combination needed to model Scala's type system but not covered by prior mechanizations~\cite{hamza2019, borkowski2022, sun2024}.
   \item We describe a \textbf{prototype implementation} in the Scala~3 compiler (Dotty), showing that refinement types can be added to an industrial-strength compiler with modest changes to its architecture (\S\ref{sec:implementation}). We also present a lightweight e-graph-based solver for predicate entailment and evaluate our system on a suite of benchmarks (\S\ref{sec:evaluation}).
 \end{itemize}
+
+\pagebreak
 
 \section{Design}\label{sec:design}
 
