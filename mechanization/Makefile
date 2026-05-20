@@ -9,8 +9,9 @@ refinement_types/Makefile:
 refinement_types: refinement_types/Makefile
 	$(MAKE) -C refinement_types
 
-clean: refinement_types/Makefile
+clean:
 	$(MAKE) -C systemf clean
-	$(MAKE) -C refinement_types clean
+	$(if $(wildcard refinement_types/Makefile),$(MAKE) -C refinement_types clean)
+	rm -f refinement_types/Makefile refinement_types/Makefile.conf
 
 .PHONY: all systemf refinement_types clean
