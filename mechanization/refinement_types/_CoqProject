@@ -38,3 +38,4 @@ Adequacy.v
 AlgorithmicTyping.v
 Examples.v
 ExamplesCollect.v
+ExamplesPartialSoundness.v
