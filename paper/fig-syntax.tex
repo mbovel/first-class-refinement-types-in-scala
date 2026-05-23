@@ -37,7 +37,7 @@
 	& c  \tag*{constant} \\
 	& (v_1, v_2)  \tag*{pair} \\
 	& \textsf{inl}(v) \tag*{left injection} \\
-	& \textsf{inl}(v) \tag*{right injection} \\
+	& \textsf{inr}(v) \tag*{right injection} \\
 	& \langle \rho, \lambda x.\, b \rangle  \tag*{closure} \\
 	& \langle \rho, \Lambda X.\, b \rangle  \tag*{type closure} \\[0.5em]
   %
@@ -45,7 +45,7 @@
 	& X  \tag*{variable} \\
 	& \texttt{Unit} \mid \texttt{True} \mid \texttt{False} \mid \texttt{Int32}  \tag*{base types} \\
 	& \top \tag*{top} \\
-	& \bot  \tag*{top} \\
+	& \bot  \tag*{bottom} \\
 	& \Pi x{:}A.\, B  \tag*{dependent\ function} \\
 	& \forall (X :> L <: U).\, A  \tag*{bounded $\forall$} \\
 	& \Sigma x{:}A.\, B  \tag*{dependent\ pair} \\
