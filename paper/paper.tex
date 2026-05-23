@@ -325,7 +325,7 @@ Third, \emph{usability}. Overly detailed inferred types---such as deeply nested 
 \paragraph{Our solution: equality facts and selfification.}
 Instead of always inferring precise types, we keep Scala's existing widening behavior and recover precision on demand through two mechanisms, both standard in refinement type systems~\cite{hamza2019,borkowski2022,sun2024}.
 
-The first mechanism is the \emph{equality fact context}. The \textsc{T-Let} typing rule (Figure~\ref{fig:typing}) records an equality between each binding and its definition:
+The first mechanism is the \emph{equality fact context}. The \textsc{T-Let} typing rule (Figure~\ref{fig:typing}) records an equality fact $x \sim e_1$ between each binding $x$ and its definition $e_1$, where $\sim$ denotes that two terms evaluate to the same value:
 %
 \[
 \frac{\Gamma \vdash e_1 : T_1 \qquad
