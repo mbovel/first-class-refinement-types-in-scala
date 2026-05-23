@@ -13,11 +13,11 @@ Fixpoint eval (fuel: nat) (env: list Value) (t: Term): option (option Value) :=
     match t with
     | tabs _ b => Some (Some (vabs env b))
     | tapp f a =>
-        match eval fuel env f with
+        match eval fuel' env f with
         | None => None
         | Some (Some (vabs envf b)) =>
-            match eval fuel env a with
-            | Some (Some va) => eval fuel (va :: envf) b
+            match eval fuel' env a with
+            | Some (Some va) => eval fuel' (va :: envf) b
             | o => o (* propagate timeout or stuck *)
             end
         | _ => Some None (* stuck *)
