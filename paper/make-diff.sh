@@ -23,17 +23,54 @@ else
   latexdiff=(perl "$(kpsewhich --format=texmfscripts latexdiff.pl)")
 fi
 
-# Extract the old paper sources at the given revision.
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
-git -C "$repo_root" archive "$rev" paper | tar -x -C "$tmp"
 
-# --flatten inlines \input'd figures so their changes are diffed too.
+# Inline \input'd figures ourselves so their changes are diffed too. We do
+# not use latexdiff --flatten: it also inlines the .bbl (yielding spurious
+# warnings) and mis-hashes \lstinline commands in the flattened document,
+# producing a diff that does not compile.
+cat > "$tmp/flatten.pl" <<'EOF'
+# Inline \input{...} commands (up to 3 levels), resolving relative to the
+# file's directory. Commented-out \input lines are left untouched.
+use strict; use warnings;
+use File::Basename;
+
+sub slurp {
+  my ($path) = @_;
+  open my $fh, "<", $path or die "cannot open $path: $!";
+  local $/; my $c = <$fh>; close $fh;
+  return $c;
+}
+
+sub inline_input {
+  my ($dir, $name) = @_;
+  my $f = "$dir/$name";
+  $f .= ".tex" unless $f =~ /\.tex$/;
+  return slurp($f);
+}
+
+my ($file) = @ARGV;
+my $dir = dirname($file);
+my $text = slurp($file);
+for (1 .. 3) {
+  last unless $text =~ s{^[ \t]*\\input\{([^\}]+)\}}{inline_input($dir, $1)}gme;
+}
+print $text;
+EOF
+
+# Extract the old paper sources at the given revision, then flatten both.
+git -C "$repo_root" archive "$rev" paper | tar -x -C "$tmp"
+perl "$tmp/flatten.pl" "$tmp/paper/paper.tex" > "$tmp/old-flat.tex"
+perl "$tmp/flatten.pl" "$paper_dir/paper.tex" > "$tmp/new-flat.tex"
+
 # lstlisting is registered as a verbatim environment so that changed
 # listings are marked up as a whole instead of latexdiff injecting \DIF
-# commands into the code.
-"${latexdiff[@]}" --flatten \
-  --config 'VERBATIMENV=(?:verbatim[*]?|lstlisting)' \
-  "$tmp/paper/paper.tex" "$paper_dir/paper.tex" > "$paper_dir/$out"
+# commands into the code. acks is registered too: it is a comment-package
+# environment whose \end{acks} must start a line, which latexdiff markup
+# would otherwise break.
+"${latexdiff[@]}" \
+  --config 'VERBATIMENV=(?:verbatim[*]?|lstlisting|acks)' \
+  "$tmp/old-flat.tex" "$tmp/new-flat.tex" > "$paper_dir/$out"
 
 echo "Wrote $paper_dir/$out (diff against $rev)"
