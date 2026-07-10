@@ -5,7 +5,7 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
 `./make-diff.sh`.
 
 - **Non-terminating predicates: properties established formally (§2.3).**
-  (8b60bad, c738801) Promoted the non-termination discussion to its own
+  (8b60bad) Promoted the non-termination discussion to its own
   subsection and stated the metatheoretic properties of the design as lemmas,
   proved in the Rocq mechanization (`ExamplesPartialSoundness.v`): entailment
   `Γ ⊨ t && true ⇒ t` holds for arbitrary, possibly diverging `t`; entailment
