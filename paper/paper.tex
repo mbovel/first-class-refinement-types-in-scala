@@ -302,11 +302,36 @@ We do not currently enforce purity of called functions: our solver assumes all f
 
 \subsection{Non-termination and partial correctness}\label{sec:termination}
 
-Our system uses a \emph{partial-correctness} semantics: a term~\lstinline!e! has type \lstinline!{x: T with p(x)}! if, whenever \lstinline!e! terminates with a value~\lstinline!v!, the predicate \lstinline!p(v)! holds. No termination guarantee is required. Formally, the term interpretation $\mathcal{E}\llbracket A \rrbracket$ (\S\ref{sec:interpretation}) asserts that \emph{if} a term evaluates to a value, that value satisfies the type's predicate.
+Our system uses a \emph{partial-correctness} semantics: a term~\lstinline!e! has type \lstinline!{x: T with p(x)}! if, whenever \lstinline!e! terminates with a value~\lstinline!v!, the predicate \lstinline!p(v)! holds. No termination guarantee is required for typing. Formally, the term interpretation $\mathcal{E}\llbracket A \rrbracket$ (\S\ref{sec:interpretation}) asserts that \emph{if} a term evaluates to a value, that value satisfies the type's interpretation. This is a key difference from prior systems, designed around termination: System~FR~\cite{hamza2019} enforces total correctness and requires termination proofs for all recursive functions, Liquid Haskell requires termination of functions reflected into refinements~\cite{vazou2014}, and F*~\cite{swamy2016} and Dafny~\cite{leino2010} require specification-level computation to terminate.
 
-This choice is deliberate. Scala is a general-purpose language; requiring termination proofs would create a significant adoption barrier. Partial correctness still provides strong guarantees: if a function returns, its result satisfies the refinement. This suffices for many practical use cases---ensuring that array indices are in bounds, that division is never by zero, or that protocol invariants are maintained---and means that existing Scala programs can be gradually annotated with refinement types without restructuring.
+Since predicates are ordinary pure terms (\S\ref{sec:purity}), they may themselves diverge. The termination requirements of the systems above stem from their reading of predicates as formulas in a classical logic, typically that of an SMT solver. We instead define their meaning operationally: $\{x : A \mid p\}$ contains those values of~$A$ for which $p$ evaluates to $\texttt{true}$ \emph{whenever it terminates}. Type soundness thus requires no termination assumptions; termination resurfaces only when justifying individual entailment rules. Crucially, a diverging predicate is vacuously satisfied: it behaves like $\texttt{true}$, and can never be used to prove $\texttt{false}$.
 
-Note that partial correctness is not unsound per se: a non-terminating expression can be given type \lstinline!{x: Unit with false}!, which could in principle be used to derive arbitrary conclusions. However, any code path that depends on this value must first force the non-terminating computation, so it is effectively unreachable. Unsoundness would arise only if such an expression were erased at compile time, allowing code to assume the predicate without actually running the computation.
+Termination considerations are confined to a single judgment: the \emph{semantic implication} judgment $\Gamma \vDash p_1 \Rightarrow p_2$ (\S\ref{sec:interpretation}), which the subtyping rule \textsc{S-Refine} (\S\ref{sec:subtyping}) uses to compare the predicates of two refinement types. It reads both sides partially: in every well-formed environment, if $p_1$ evaluates to $\texttt{true}$ whenever it terminates, then so does $p_2$. Termination thus never enters the type system itself; it is only needed to justify individual entailment rules, and only some of them. Here and below, a term \emph{terminates} in a given environment if its evaluation produces a value. For example, dropping a trivially true conjunct needs no termination:\footnote{The lemmas in this subsection are proved in our Rocq mechanization, in the file \texttt{ExamplesPartialSoundness.v}.}
+
+\begin{lemma}[\textsc{And-True}]\label{lem:and-true}
+  $\forall \Gamma, t. \;\Gamma \vDash t \mathbin{\texttt{\&\&}} \texttt{true} \Rightarrow t$.
+\end{lemma}
+
+\noindent Other rules genuinely do:
+
+\begin{lemma}[\textsc{And-False}]\label{lem:and-false}
+  $\forall \Gamma, t. \; t \text{ terminates} \implies \Gamma \vDash t \mathbin{\texttt{\&\&}} \texttt{false} \Rightarrow \texttt{false}$.
+\end{lemma}
+
+\noindent The termination hypothesis is necessary: writing ``$\textsf{diverge}$'' for a closed term that never terminates, we have $\neg\,(\varnothing \vDash \textsf{diverge} \mathbin{\texttt{\&\&}} \texttt{false} \Rightarrow \texttt{false})$, since the left-hand side diverges and is vacuously satisfied while $\texttt{false}$ is not. The fact that a ``morally $\texttt{false}$'' predicate can be vacuously satisfied may look alarming, but it is harmless: a diverging predicate is indistinguishable from $\texttt{true}$, not from $\texttt{false}$, and $\texttt{true}$ proves nothing:
+
+\begin{lemma}[Diverging predicates are vacuous]\label{lem:diverge-vacuous}
+  \leavevmode
+  \begin{enumerate}[nosep]
+    \item $\forall \Gamma, A. \; \Gamma \vDash \{x : A \mid \textsf{diverge}\} \mathrel{<:>} \{x : A \mid \texttt{true}\} \mathrel{<:>} A$, where ${<:>}$ denotes mutual subtyping.
+    \item $\forall \Gamma, t, A. \; t \text{ terminates} \implies \neg\,(\Gamma \vDash t : \{x : A \mid \texttt{false}\})$.
+    \item $\neg\,(\varnothing \vDash \{x : \texttt{Unit} \mid \textsf{diverge}\} <: \{x : \texttt{Unit} \mid \texttt{false}\})$.
+  \end{enumerate}
+\end{lemma}
+
+\noindent A diverging \emph{term}, by contrast, can be given the type $\{x : \texttt{Unit} \mid \texttt{false}\}$: the partial-correctness interpretation is vacuous for terms that never produce a value. This is not unsound: by Lemma~\ref{lem:diverge-vacuous}(2), no computation that actually completes has this type, so any code path that would exploit such a ``proof of $\texttt{false}$'' must first force the diverging computation, and therefore never runs. Unsoundness would arise only if the computation were erased at compile time, allowing code to assume the predicate without running it.
+
+In this paper we give the implication judgment a semantic definition only; developing a syntactic proof system for it is future work. Our solver (\S\ref{sec:solver}) implements a set of entailment rules whose termination-sensitive instances are currently unverified: like purity (\S\ref{sec:purity}), termination of the functions called in predicates is assumed rather than checked, and a termination checker is left as future work. Note that within the checked predicate fragment (\S\ref{sec:purity}), every construct except function calls trivially terminates, and termination only matters for specific rules, such as the simplification of $t \mathbin{\texttt{\&\&}} \texttt{false}$ to $\texttt{false}$ above, or the use of a predicate from a called function's result type. Crucially, even with a termination checker in place, proofs would be required only for the specific functions those rules touch---never systematically for every function used in a predicate. We believe this is essential for adoption: Scala is a general-purpose language, and systematically requiring termination proofs would create a significant barrier.
 
 \subsection{Mixed-precision type inference}\label{sec:inference}
 
@@ -495,7 +520,7 @@ To provide a conventional syntactic interface, we also define inductive syntacti
   If\/ $\Gamma \vdash A <: B$ then $\Gamma \vDash A <: B$.
 \end{theorem}
 
-\noindent Note that the semantic implication judgment $\Gamma \vDash p_1 \Rightarrow p_2$ has no syntactic counterpart: we do not define inference rules for it. Instead, it remains an entirely semantic notion, used directly in the subtyping rule \textsc{S-Refine}. This reflects the design of the implementation, where predicate entailment is delegated to the solver (\S\ref{sec:solver}) rather than derived from syntactic rules.
+\noindent Note that the semantic implication judgment $\Gamma \vDash p_1 \Rightarrow p_2$ has no syntactic counterpart: we do not define inference rules for it. Instead, it remains an entirely semantic notion, used directly in the subtyping rule \textsc{S-Refine}. This reflects the design of the implementation, where predicate entailment is delegated to the solver (\S\ref{sec:solver}) rather than derived from syntactic rules. Individual entailment rules are justified semantically, one by one; as shown in \S\ref{sec:termination} (Lemmas~\ref{lem:and-true}--\ref{lem:diverge-vacuous}), some hold unconditionally while others require termination assumptions.
 
 This separation between syntactic and semantic judgments allows us to state and use typing rules in the familiar inductive style, while the soundness guarantee flows from the semantic interpretation.
 

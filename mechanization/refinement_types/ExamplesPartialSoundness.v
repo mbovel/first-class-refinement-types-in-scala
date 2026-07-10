@@ -341,6 +341,43 @@ Proof.
     exists (vbool true). split; reflexivity.
 Qed.
 
+(** Hence [{x: A | true}], [{x: A | diverge}], and [A] are all semantic
+    subtypes of each other, in any context. *)
+
+Corollary sem_subtype_refine_true_base :
+  forall tbounds tenv facts A,
+    sem_subtype tbounds tenv facts (TRefine A (tbool true)) A.
+Proof.
+  intros tbounds tenv facts A tvars venv _ _ _ v Hv.
+  exact (proj1 (refine_true_eq_base A tvars venv v) Hv).
+Qed.
+
+Corollary sem_subtype_base_refine_true :
+  forall tbounds tenv facts A,
+    sem_subtype tbounds tenv facts A (TRefine A (tbool true)).
+Proof.
+  intros tbounds tenv facts A tvars venv _ _ _ v Hv.
+  exact (proj2 (refine_true_eq_base A tvars venv v) Hv).
+Qed.
+
+Corollary sem_subtype_refine_diverge_base :
+  forall tbounds tenv facts A,
+    sem_subtype tbounds tenv facts (TRefine A tdiverge) A.
+Proof.
+  intros tbounds tenv facts A tvars venv _ _ _ v Hv.
+  apply (proj1 (refine_true_eq_base A tvars venv v)).
+  exact (proj1 (refine_diverge_eq_refine_true A tvars venv v) Hv).
+Qed.
+
+Corollary sem_subtype_base_refine_diverge :
+  forall tbounds tenv facts A,
+    sem_subtype tbounds tenv facts A (TRefine A tdiverge).
+Proof.
+  intros tbounds tenv facts A tvars venv _ _ _ v Hv.
+  apply (proj2 (refine_diverge_eq_refine_true A tvars venv v)).
+  exact (proj2 (refine_true_eq_base A tvars venv v) Hv).
+Qed.
+
 (** ** 7. No converging term has type [{x: A | false}], for any [A].
 
     This generalizes example 1b above: if [t] evaluates to a value in some
