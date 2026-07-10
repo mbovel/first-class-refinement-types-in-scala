@@ -520,7 +520,7 @@ To provide a conventional syntactic interface, we also define inductive syntacti
   If\/ $\Gamma \vdash A <: B$ then $\Gamma \vDash A <: B$.
 \end{theorem}
 
-\noindent Note that the semantic implication judgment $\Gamma \vDash p_1 \Rightarrow p_2$ has no syntactic counterpart: we do not define inference rules for it. Instead, it remains an entirely semantic notion, used directly in the subtyping rule \textsc{S-Refine}. This reflects the design of the implementation, where predicate entailment is delegated to the solver (\S\ref{sec:solver}) rather than derived from syntactic rules. Individual entailment rules are justified semantically, one by one; as shown in \S\ref{sec:termination} (Lemmas~\ref{lem:and-true}--\ref{lem:diverge-vacuous}), some hold unconditionally while others require termination assumptions.
+\noindent Note that the semantic implication judgment $\Gamma \vDash p_1 \Rightarrow p_2$ has no syntactic counterpart: we do not define inference rules for it. Instead, it remains an entirely semantic notion, used directly in the subtyping rule \textsc{S-Refine}. This reflects the design of the implementation, where predicate entailment is delegated to the solver (\S\ref{sec:solver}) rather than derived from syntactic rules. Syntactic entailment rules could nonetheless be proved sound against the semantic judgment, just as the typing and subtyping rules are; Lemmas~\ref{lem:and-true} and~\ref{lem:and-false} (\S\ref{sec:termination}) exemplify this, showing that some rules hold unconditionally while others require termination assumptions.
 
 This separation between syntactic and semantic judgments allows us to state and use typing rules in the familiar inductive style, while the soundness guarantee flows from the semantic interpretation.
 
