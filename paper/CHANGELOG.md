@@ -20,10 +20,11 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
   all evaluated with the same, decremented fuel. The previous prose incorrectly
   suggested that fuel is decremented only for the body, and the listing did not
   decrement the fuel at all.
-- **Skolem terms instead of skolem types (§4.2).** (4bb4920) The implementation
-  no longer reuses Scala's built-in skolem types; it now uses its own custom
-  skolem terms in predicates. The "Hoisting and skolems" section was reworded
-  accordingly.
+- **Skolem terms instead of skolem types (§4.2).** (4bb4920) An implementation
+  detail, unrelated to the reviews and largely orthogonal to the subject of the
+  paper: the implementation no longer reuses Scala's built-in skolem types; it
+  now uses its own custom skolem terms in predicates. The "Hoisting and
+  skolems" section was reworded accordingly.
 - **Fixed a miscitation in related work (§5).** (37883cb) Paraskevopoulou et al.
   use an interpreter-based approach with step-indexed logical relations for
   multi-pass compiler verification; the previous text misattributed the
