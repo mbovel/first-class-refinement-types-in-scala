@@ -32,9 +32,11 @@ abstract class RefinementsBenchmarks extends CompilationBenchmarks:
   def range =
     DottyCompiler.compile(Seq(s"$sourcesDir/range.scala"), options, outDir)
 
-  @Benchmark
-  def mergeSortBounds =
-    DottyCompiler.compile(Seq(s"$sourcesDir/mergeSortBounds.scala"), options, outDir)
+  // Fails to compile in the first_class variant:
+  // https://github.com/mbovel/first-class-refinement-types-in-scala/actions/runs/29086185876
+  // @Benchmark
+  // def mergeSortBounds =
+  //   DottyCompiler.compile(Seq(s"$sourcesDir/mergeSortBounds.scala"), options, outDir)
 
   @Benchmark
   def fibMemo =
