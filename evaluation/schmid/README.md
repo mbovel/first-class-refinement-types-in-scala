@@ -22,28 +22,24 @@ JDK 8 is located as follows: `$JDK8_HOME` if set, the current `java` if it is a 
 
 ## Running benchmarks
 
-All commands are run from the `evaluation/schmid/` directory. sbt itself must run on a modern JDK (11+), but the JMH-forked JVM that runs the Georg compiler should be a JDK 8, selected with JMH's `-jvm` option:
-
-```sh
-JAVA8="$(cs java-home --jvm temurin:8)/bin/java"
-```
+All commands are run from the `evaluation/schmid/` directory. sbt itself runs on a modern JDK (11+), but the JMH harness and the forked JVMs that run the Georg compiler use JDK 8, located automatically by `build.sbt` (`$JDK8_HOME` if set, otherwise `cs java-home --jvm temurin:8`).
 
 ### Quick test (single iteration, no warmup)
 
 ```sh
-sbt 'Jmh / run -wi 0 -i 1 SchmidRefinementBenchmarks -jvm '"$JAVA8"
+sbt 'bench / Jmh / run -wi 0 -i 1 SchmidRefinementBenchmarks'
 ```
 
 ### Single benchmark
 
 ```sh
-sbt 'Jmh / run -wi 0 -i 1 SchmidRefinementBenchmarks.rational -jvm '"$JAVA8"
+sbt 'bench / Jmh / run -wi 0 -i 1 SchmidRefinementBenchmarks.rational'
 ```
 
 ### Full run (150 warmup, 20 measurement iterations)
 
 ```sh
-sbt 'Jmh / run SchmidRefinementBenchmarks -jvm '"$JAVA8"
+sbt 'bench / Jmh / run SchmidRefinementBenchmarks'
 ```
 
 ## Benchmark sources
