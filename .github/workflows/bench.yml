@@ -86,7 +86,8 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          # Zulu rather than Temurin: the latter has no macOS/ARM64 JDK 8 builds
+          distribution: zulu
           java-version: 8
 
       - name: Record JDK 8 home
