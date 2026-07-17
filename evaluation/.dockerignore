@@ -1,0 +1,3 @@
+# The image is toolchain-only; the repository is volume-mounted at run time,
+# so no build context is needed.
+*
