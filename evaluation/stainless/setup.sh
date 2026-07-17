@@ -4,8 +4,14 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR"
 
-echo "==> Initializing stainless submodule..."
-git -C "$(git rev-parse --show-toplevel)" submodule update --init --recursive evaluation/stainless/stainless
+# Skip submodule init when the sources are already present (e.g. in the
+# Docker image build, where there is no enclosing git repository).
+if [[ -e stainless/inox/build.sbt ]]; then
+  echo "==> stainless sources already present, skipping submodule init"
+else
+  echo "==> Initializing stainless submodule..."
+  git -C "$(git rev-parse --show-toplevel)" submodule update --init --recursive evaluation/stainless/stainless
+fi
 
 echo "==> Building Stainless assembly jar..."
 cd stainless

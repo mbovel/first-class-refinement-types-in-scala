@@ -34,8 +34,8 @@ jobs:
           restore-keys: sbt-first-class-${{ matrix.os }}-
 
       - name: Run first-class benchmarks (dry run)
-        working-directory: evaluation/first-class
-        run: sbt "clean; bench / Jmh / run -wi 0 -i 1 -foe true"
+        working-directory: evaluation
+        run: ./run.sh --suite first-class --dry-run
 
   stainless:
     runs-on: ${{ matrix.os }}
@@ -70,8 +70,8 @@ jobs:
         run: ./setup.sh
 
       - name: Run Stainless benchmarks (dry run)
-        working-directory: evaluation/stainless
-        run: sbt "clean; bench / Jmh / run -wi 0 -i 1 -foe true"
+        working-directory: evaluation
+        run: ./run.sh --suite stainless --dry-run
 
   schmid:
     runs-on: ${{ matrix.os }}
@@ -124,5 +124,27 @@ jobs:
         run: ./setup.sh
 
       - name: Run Schmid benchmarks (dry run)
-        working-directory: evaluation/schmid
-        run: sbt "clean; Jmh / run -wi 0 -i 1 -foe true -jvm $JDK8_HOME/bin/java"
+        working-directory: evaluation
+        run: ./run.sh --suite schmid --dry-run
+
+  docker:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build image
+        run: docker build -t refinement-bench evaluation
+
+      - name: Run all suites (dry run)
+        run: |
+          mkdir -p results
+          docker run -v "$PWD/results:/work/evaluation/results" refinement-bench --suite all --dry-run
+
+      - name: Check result files
+        run: |
+          ls -l results
+          test -s results/first-class.json
+          test -s results/stainless.json
+          test -s results/schmid.json

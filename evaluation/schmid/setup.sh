@@ -4,8 +4,14 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR"
 
-echo "==> Initializing refined-dotty submodule..."
-git -C "$(git rev-parse --show-toplevel)" submodule update --init evaluation/schmid/refined-dotty
+# Skip submodule init when the sources are already present (e.g. in the
+# Docker image build, where there is no enclosing git repository).
+if [[ -e refined-dotty/project/Build.scala ]]; then
+  echo "==> refined-dotty sources already present, skipping submodule init"
+else
+  echo "==> Initializing refined-dotty submodule..."
+  git -C "$(git rev-parse --show-toplevel)" submodule update --init evaluation/schmid/refined-dotty
+fi
 
 # The refined-dotty build uses sbt 0.13, which requires JDK 8.
 if [[ -n "${JDK8_HOME:-}" ]]; then

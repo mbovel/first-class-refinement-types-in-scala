@@ -1,21 +1,27 @@
-# Toolchain for running all benchmarks: first-class, stainless, and schmid.
+# Ready-to-run image for the benchmarks: first-class, stainless, and schmid.
 #
-# The image contains JDK 25 (default), JDK 8 (as $JDK8_HOME, needed by the
-# refined-dotty build and the schmid JMH forks), sbt, git, and Z3. The
-# repository itself is volume-mounted, so jars built by the setup scripts and
-# benchmark results persist on the host.
+# Contains JDK 25 (default), JDK 8 ($JDK8_HOME), sbt, git, Z3, the benchmark
+# sources, prebuilt Stainless and refined-dotty jars, and warmed sbt caches,
+# so the benchmarks run without further setup or network access.
 #
 # The Stainless native Z3 bindings are x86-64 only, so on ARM hosts (e.g.
 # Apple Silicon) build and run with an explicit platform:
 #
 #   docker build --platform linux/amd64 -t refinement-bench evaluation
-#   docker run --platform linux/amd64 -v "$PWD:/work" -w /work -it refinement-bench
+#   docker run --platform linux/amd64 refinement-bench --suite first-class --dry-run
+#   docker run --platform linux/amd64 refinement-bench --suite stainless   # full run
+#   docker run --platform linux/amd64 refinement-bench --suite all --dry-run
 #
-# Then, inside the container, e.g.:
+# The entry point is run.sh, which writes JMH results to
+# /work/evaluation/results/<suite>.json; mount a host directory there to
+# collect them:
 #
-#   cd evaluation/first-class && sbt 'bench / Jmh / run -wi 0 -i 1 FirstClassBenchmarks'
-#   cd evaluation/stainless   && ./setup.sh && sbt 'bench / Jmh / run -wi 0 -i 1 StainlessVerifyBenchmarks'
-#   cd evaluation/schmid      && ./setup.sh && sbt 'Jmh / run -wi 0 -i 1 SchmidRefinementBenchmarks -jvm '"$JDK8_HOME/bin/java"
+#   docker run --platform linux/amd64 -v "$PWD/results:/work/evaluation/results" \
+#     refinement-bench --suite all --dry-run
+#
+# For an interactive shell instead:
+#
+#   docker run --platform linux/amd64 --entrypoint bash -it refinement-bench
 #
 # JMH forks the benchmark JVMs with -Xmx8G: give the container >= 10 GB of
 # memory.
@@ -39,5 +45,33 @@ RUN curl -fsSL "https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt
       | tar xz -C /opt \
     && ln -s /opt/sbt/bin/sbt /usr/local/bin/sbt
 
-WORKDIR /work
-CMD ["bash"]
+WORKDIR /work/evaluation
+
+# Build the vendored Stainless compiler plugin (slow, changes rarely, so it
+# comes first: later changes to the benchmarks do not invalidate this layer).
+COPY stainless/stainless stainless/stainless
+COPY stainless/setup.sh stainless/setup.sh
+RUN cd stainless && ./setup.sh
+
+# Build Georg Schmid's LiquidTyper-enabled Dotty fork.
+COPY schmid/refined-dotty schmid/refined-dotty
+COPY schmid/setup.sh schmid/setup.sh
+RUN cd schmid && ./setup.sh
+
+# Benchmark sources and harnesses.
+COPY sources sources
+COPY first-class first-class
+COPY stainless/bench stainless/bench
+COPY stainless/build.sbt stainless/build.sbt
+COPY stainless/project stainless/project
+COPY schmid/src schmid/src
+COPY schmid/build.sbt schmid/build.sbt
+COPY schmid/project schmid/project
+
+# Compile the benchmark harnesses (including JMH codegen) to warm the caches.
+RUN cd first-class && sbt "bench / Jmh / compile"
+RUN cd stainless && sbt "bench / Jmh / compile"
+RUN cd schmid && sbt "bench / Jmh / compile"
+
+COPY run.sh run.sh
+ENTRYPOINT ["/work/evaluation/run.sh"]
