@@ -1,18 +1,24 @@
 #!/usr/bin/env bash
 # Runs one benchmark suite, or all of them. --dry-run does a single iteration
 # without warmup (as in CI); otherwise the full JMH configuration applies (150
-# warmup and 20 measurement iterations). JMH results are written to
-# <results-dir>/<suite>.json (default: results/ next to this script).
+# warmup and 20 measurement iterations).
+#
+# --runs N repeats the whole selection N times, with runs as the outer loop
+# (suites are interleaved)
+#
+# JMH results are written to <results-dir>/<run>/<suite>.json, where <run> is
+# 0 for a dry run and 1..N for full runs.
 set -euo pipefail
 
 usage() {
-  echo "Usage: $(basename "$0") --suite first-class|stainless|schmid|all [--dry-run] [--results-dir DIR]" >&2
+  echo "Usage: $(basename "$0") --suite first-class|stainless|schmid|all [--dry-run | --runs N] [--results-dir DIR]" >&2
   exit 1
 }
 
 ORIG_PWD="$PWD"
 SUITE=""
 DRY_RUN=0
+RUNS=""
 RESULTS_DIR=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -24,6 +30,11 @@ while [[ $# -gt 0 ]]; do
     --dry-run)
       DRY_RUN=1
       shift
+      ;;
+    --runs)
+      [[ $# -ge 2 ]] || usage
+      RUNS="$2"
+      shift 2
       ;;
     --results-dir)
       [[ $# -ge 2 ]] || usage
@@ -76,9 +87,20 @@ check_suite() {
   esac
 }
 
+if [[ "$DRY_RUN" == 1 && -n "$RUNS" ]]; then
+  echo "error: --dry-run and --runs cannot be combined" >&2
+  usage
+fi
+if [[ -n "$RUNS" && ! "$RUNS" =~ ^[1-9][0-9]*$ ]]; then
+  echo "error: --runs expects a positive integer" >&2
+  usage
+fi
+
 JMH_ARGS=""
+RUN_IDS=($(seq 1 "${RUNS:-1}"))
 if [[ "$DRY_RUN" == 1 ]]; then
   JMH_ARGS=" -wi 0 -i 1 -foe true"
+  RUN_IDS=(0)
 fi
 
 if [[ -z "$RESULTS_DIR" ]]; then
@@ -94,7 +116,10 @@ for suite in "${SUITES[@]}"; do
   check_suite "$suite"
 done
 
-for suite in "${SUITES[@]}"; do
-  echo "==> Running $suite benchmarks..."
-  (cd "$suite" && sbt "bench / Jmh / run$JMH_ARGS -rf json -rff $RESULTS_DIR/$suite.json")
+for run in "${RUN_IDS[@]}"; do
+  for suite in "${SUITES[@]}"; do
+    echo "==> Run $run: $suite benchmarks..."
+    mkdir -p "$RESULTS_DIR/$run"
+    (cd "$suite" && sbt "bench / Jmh / run$JMH_ARGS -rf json -rff $RESULTS_DIR/$run/$suite.json")
+  done
 done

@@ -13,8 +13,8 @@
 #   docker run --platform linux/amd64 refinement-bench --suite all --dry-run
 #
 # The entry point is run.sh, which writes JMH results to
-# /work/evaluation/results/<suite>.json; mount a host directory there to
-# collect them:
+# /work/evaluation/results/<run>/<suite>.json; mount a host directory there
+# to collect them:
 #
 #   docker run --platform linux/amd64 -v "$PWD/results:/work/evaluation/results" \
 #     refinement-bench --suite all --dry-run

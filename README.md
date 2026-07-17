@@ -36,13 +36,16 @@ docker run --platform linux/amd64 -v "$PWD/results:/work/evaluation/results" \
   refinement-bench --suite all --dry-run
 ```
 
-This should produce `results/first-class.json`, `results/stainless.json`, and
-`results/schmid.json` (JMH result files, one entry per benchmark).
+This should produce `results/0/first-class.json`, `results/0/stainless.json`,
+and `results/0/schmid.json` (JMH result files, one entry per benchmark; a dry
+run writes to run directory `0`, full runs to `1..N`).
 
 ## Full benchmark runs
 
 Full runs use the paper's JMH configuration (150 warmup + 20 measurement
-iterations per benchmark) and take **several hours per suite**:
+iterations per benchmark) and take **several hours per suite**; add
+`--runs N` to repeat the whole selection N times (suites interleaved,
+results in `results/1..N/`):
 
 ```sh
 docker run --platform linux/amd64 -v "$PWD/results:/work/evaluation/results" \

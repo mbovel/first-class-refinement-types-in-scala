@@ -144,7 +144,7 @@ jobs:
 
       - name: Check result files
         run: |
-          ls -l results
-          test -s results/first-class.json
-          test -s results/stainless.json
-          test -s results/schmid.json
+          ls -lR results
+          test -s results/0/first-class.json
+          test -s results/0/stainless.json
+          test -s results/0/schmid.json
