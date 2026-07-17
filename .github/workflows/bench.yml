@@ -111,6 +111,14 @@ jobs:
           key: sbt-schmid-${{ matrix.os }}-${{ hashFiles('**/build.sbt', '**/plugins.sbt', '**/build.properties') }}
           restore-keys: sbt-schmid-${{ matrix.os }}-
 
+      - name: Install Z3
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get update && sudo apt-get install -y z3
+          else
+            brew install z3
+          fi
+
       - name: Build refined-dotty
         working-directory: evaluation/schmid
         run: ./setup.sh
