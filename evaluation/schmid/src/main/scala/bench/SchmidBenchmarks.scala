@@ -58,7 +58,10 @@ abstract class SchmidBenchmarks extends CompilationBenchmarks {
   // def matrixDims(): Unit =
   //   SchmidCompiler.compile(Seq(source("matrixDims")), options, outDir)
 
-  @Benchmark
-  def mergeSortBounds(): Unit =
-    SchmidCompiler.compile(Seq(source("mergeSortBounds")), options, outDir)
+  // Fails the liquid type check: the 2016 scala-smtlib parser cannot read
+  // modern z3 output (UnexpectedTokenException), so a constraint is reported
+  // as violated:
+  // @Benchmark
+  // def mergeSortBounds(): Unit =
+  //   SchmidCompiler.compile(Seq(source("mergeSortBounds")), options, outDir)
 }
