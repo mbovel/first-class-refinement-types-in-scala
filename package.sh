@@ -4,7 +4,7 @@
 #
 # The Docker image is stored as a plain `docker save` tar; the zip's own
 # compression is applied once, and evaluators load it directly after
-# unzipping with `docker load -i refinement-bench.tar`.
+# unzipping with `docker load -i evaluation-image.tar`.
 #
 # Requires the image to be built first:
 #
@@ -59,7 +59,7 @@ echo "==> Recording version..."
 git rev-parse HEAD > "$STAGING/VERSION"
 
 echo "==> Saving Docker image..."
-docker save refinement-bench -o "$STAGING/refinement-bench.tar"
+docker save refinement-bench -o "$STAGING/evaluation-image.tar"
 
 echo "==> Creating zip..."
 cd "$OUT_DIR"
