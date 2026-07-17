@@ -111,6 +111,11 @@ elif [[ "$RESULTS_DIR" != /* ]]; then
 fi
 mkdir -p "$RESULTS_DIR"
 RESULTS_DIR="$(cd "$RESULTS_DIR" && pwd)"
+# Hidden files (e.g. macOS .DS_Store) do not count as content.
+if [[ -n "$(ls "$RESULTS_DIR")" ]]; then
+  echo "error: results directory is not empty: $RESULTS_DIR" >&2
+  exit 1
+fi
 
 for suite in "${SUITES[@]}"; do
   check_suite "$suite"
