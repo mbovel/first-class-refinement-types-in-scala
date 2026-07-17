@@ -3,7 +3,7 @@ package bench
 import bench.compilers.DottyCompiler
 import org.openjdk.jmh.annotations.{Benchmark, Warmup}
 
-abstract class RefinementsBenchmarks extends CompilationBenchmarks:
+abstract class AbstractFirstClassBenchmarks extends CompilationBenchmarks:
 
   /** Source file suffix, e.g. "first-class" for `sources/max-first-class.scala`. */
   def suffix: String
@@ -12,12 +12,16 @@ abstract class RefinementsBenchmarks extends CompilationBenchmarks:
   def source(name: String): String = s"${BenchSources.dir}/$name-$suffix.scala"
 
   @Benchmark
-  def maximum =
-    DottyCompiler.compile(Seq(source("maximum")), options, outDir) 
-  
+  def maxAbstract =
+    DottyCompiler.compile(Seq(source("maxAbstract")), options, outDir)
+
   @Benchmark
-  def maximumBig =
-    DottyCompiler.compile(Seq(source("maximumBig")), options, outDir) 
+  def maxAbstractBig =
+    DottyCompiler.compile(Seq(source("maxAbstractBig")), options, outDir)
+
+  @Benchmark
+  def sqrt =
+    DottyCompiler.compile(Seq(source("sqrt")), options, outDir)
 
   @Benchmark
   def vec =
@@ -38,17 +42,17 @@ abstract class RefinementsBenchmarks extends CompilationBenchmarks:
   // Fails to compile in the first-class variant:
   // https://github.com/mbovel/first-class-refinement-types-in-scala/actions/runs/29086185876
   // @Benchmark
-  // def mergeSortBounds =
-  //   DottyCompiler.compile(Seq(source("mergeSortBounds")), options, outDir)
+  // def mergeSortLength =
+  //   DottyCompiler.compile(Seq(source("mergeSortLength")), options, outDir)
 
   @Benchmark
   def fibMemo =
     DottyCompiler.compile(Seq(source("fibMemo")), options, outDir)
 
   // Georg-equivalent benchmarks
-  // @Benchmark
-  // def max =
-  //   DottyCompiler.compile(Seq(source("max")), options, outDir)
+  @Benchmark
+  def max =
+    DottyCompiler.compile(Seq(source("max")), options, outDir)
 
   // @Benchmark
   // def sumnat =
@@ -71,8 +75,12 @@ abstract class RefinementsBenchmarks extends CompilationBenchmarks:
     DottyCompiler.compile(Seq(source("list2")), options, outDir)
 
   @Benchmark
-  def hofsafety1 =
-    DottyCompiler.compile(Seq(source("hofsafety1")), options, outDir)
+  def hof1 =
+    DottyCompiler.compile(Seq(source("hof1")), options, outDir)
+  
+  @Benchmark
+  def hof2 =
+    DottyCompiler.compile(Seq(source("hof2")), options, outDir)
 
   @Benchmark
   def fansi =
@@ -81,11 +89,6 @@ abstract class RefinementsBenchmarks extends CompilationBenchmarks:
   @Benchmark
   def collect =
     DottyCompiler.compile(Seq(source("collect")), options, outDir)
-
-  // @Benchmark
-  // def hofsafety2 =
-  //   DottyCompiler.compile(Seq(source("hofsafety2")), options, outDir)
-
   // @Benchmark
   // def arrfold =
   //   DottyCompiler.compile(Seq(source("arrfold")), options, outDir)

@@ -99,7 +99,7 @@ fi
 JMH_ARGS=""
 RUN_IDS=($(seq 1 "${RUNS:-1}"))
 if [[ "$DRY_RUN" == 1 ]]; then
-  JMH_ARGS=" -wi 0 -i 1 -foe true"
+  JMH_ARGS=" -wi 0 -i 1"
   RUN_IDS=(0)
 fi
 
@@ -125,6 +125,6 @@ for run in "${RUN_IDS[@]}"; do
   for suite in "${SUITES[@]}"; do
     echo "==> Run $run: $suite benchmarks..."
     mkdir -p "$RESULTS_DIR/$run"
-    (cd "$suite" && sbt "bench / Jmh / run$JMH_ARGS -rf json -rff $RESULTS_DIR/$run/$suite.json")
+    (cd "$suite" && sbt "bench / Jmh / run$JMH_ARGS -foe true -gc true -rf json -rff $RESULTS_DIR/$run/$suite.json")
   done
 done

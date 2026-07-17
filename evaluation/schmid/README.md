@@ -54,12 +54,17 @@ Source files are in the shared `../sources/` directory, using Georg's `{ v: Type
 | `postuple-schmid.scala` | Tuple with `a + b > 0` constraint |
 | `list1-schmid.scala` | `List[NonNeg]` with `.head` preserving refinement |
 | `list2-schmid.scala` | `List[NonNeg]` with `.reverse` preserving type parameter |
-| `hofsafety1-schmid.scala` | HOF `g(f: NonNeg => Int)` called with refined lambda |
-| `hofsafety2-schmid.scala` | Closure returning `NonNeg => NonNeg` |
+| `hof1-schmid.scala` | HOF `g(f: NonNeg => Int)` called with refined lambda |
+| `hof2-schmid.scala` | Closure returning `NonNeg => NonNeg` |
 | `arrfold-schmid.scala` | Generic `arrFold[A]` with `arrSum` and `arrMax` |
 | `rational-schmid.scala` | `Rational` class with `q != 0` constraint |
 
 These are the exact programs from Georg's test suite (`LiquidTyperTests.scala`).
+
+In addition, `mergeSortLength-schmid.scala` is a direct port of the first-class
+`mergeSortLength` benchmark, but it crashes the LiquidTyper and is therefore
+not benchmarked: refined class-typed method results inside the class are
+unsupported (see the comment in `SchmidBenchmarks.scala` for the error).
 
 ## Dependencies
 

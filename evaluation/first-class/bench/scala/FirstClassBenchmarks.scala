@@ -3,7 +3,7 @@ package bench
 import bench.compilers.DottyCompiler
 import org.openjdk.jmh.annotations.{Benchmark, Warmup}
 
-class FirstClassBenchmarks extends RefinementsBenchmarks:
+class FirstClassBenchmarks extends AbstractFirstClassBenchmarks:
 
   override def suffix = "first-class"
 

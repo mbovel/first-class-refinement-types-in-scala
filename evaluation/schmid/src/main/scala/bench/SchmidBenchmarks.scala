@@ -38,12 +38,12 @@ abstract class SchmidBenchmarks extends CompilationBenchmarks {
     SchmidCompiler.compile(Seq(source("list2")), options, outDir)
 
   @Benchmark
-  def hofsafety1(): Unit =
-    SchmidCompiler.compile(Seq(source("hofsafety1")), options, outDir)
+  def hof1(): Unit =
+    SchmidCompiler.compile(Seq(source("hof1")), options, outDir)
 
   @Benchmark
-  def hofsafety2(): Unit =
-    SchmidCompiler.compile(Seq(source("hofsafety2")), options, outDir)
+  def hof2(): Unit =
+    SchmidCompiler.compile(Seq(source("hof2")), options, outDir)
 
   @Benchmark
   def arrfold(): Unit =
@@ -53,15 +53,22 @@ abstract class SchmidBenchmarks extends CompilationBenchmarks {
   def rational(): Unit =
     SchmidCompiler.compile(Seq(source("rational")), options, outDir)
 
+  @Benchmark
+  def sqrt(): Unit =
+    SchmidCompiler.compile(Seq(source("sqrt")), options, outDir)
+
+  // Crashes the LiquidTyper: refined class-typed method results inside the
+  // class are dropped ("WARNING: Ignoring ascription of unsupported type
+  // LiquidType(v, SafeSeq, v.len == this.len + that.len)" for ++, take and
+  // tail), and extracting ++'s qualifier then aborts with "Unknown call to
+  // val len on that$0 (UnsupL<mergeSortLength.SafeSeq>)", since SafeSeq is
+  // an unsupported type within its own body:
+  // @Benchmark
+  // def mergeSortLength(): Unit =
+  //   SchmidCompiler.compile(Seq(source("mergeSortLength")), options, outDir)
+
   // Crashes the LiquidTyper solver (None.get in Solver.declareObject):
   // @Benchmark
   // def matrixDims(): Unit =
   //   SchmidCompiler.compile(Seq(source("matrixDims")), options, outDir)
-
-  // Fails the liquid type check: the 2016 scala-smtlib parser cannot read
-  // modern z3 output (UnexpectedTokenException), so a constraint is reported
-  // as violated:
-  // @Benchmark
-  // def mergeSortBounds(): Unit =
-  //   SchmidCompiler.compile(Seq(source("mergeSortBounds")), options, outDir)
 }

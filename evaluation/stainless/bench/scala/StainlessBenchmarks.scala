@@ -17,17 +17,17 @@ abstract class StainlessBenchmarks extends CompilationBenchmarks:
     compiler.compile(Seq(source("matrixDims")), options, outDir)
 
   //@Benchmark
-  //def range =
-  //  compiler.compile(Seq(source("range")), options, outDir)
-
-  //@Benchmark
-  //def mergeSortBounds =
-  //  compiler.compile(Seq(source("mergeSortBounds")), options, outDir)
+  //def mergeSortLength =
+  //  compiler.compile(Seq(source("mergeSortLength")), options, outDir)
 
   // Georg-equivalent benchmarks
   @Benchmark
   def max =
     compiler.compile(Seq(source("max")), options, outDir)
+
+  @Benchmark
+  def sqrt =
+    compiler.compile(Seq(source("sqrt")), options, outDir)
 
   @Benchmark
   def sumnat =

@@ -1,7 +1,7 @@
 import stainless.lang._
 import stainless.annotation._
 
-object MergeSortBounds:
+object mergeSortLength:
 
   sealed abstract class MyList[T]
   case class MyCons[T](head: T, tail: MyList[T]) extends MyList[T]

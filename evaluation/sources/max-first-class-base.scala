@@ -1,2 +1,4 @@
-def max(x: Int, y: Int): Int =
-  if x > y then x else y
+object Foo {
+  def max(x: Int, y: Int): Int =
+    if (x > y) x else y
+}

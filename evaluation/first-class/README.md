@@ -3,7 +3,7 @@
 Compilation-time benchmarks for our qualified types extension to Scala 3, using the `ch.epfl.lara` Dotty fork:
 
 - **First-class** (`FirstClassBenchmarks`): with `-language:experimental.qualifiedTypes`.
-- **Base** (`RefinementsBaseBenchmarks`): same programs without refinement type annotations, as a baseline.
+- **Base** (`FirstClassBaseBenchmarks`): same programs without refinement type annotations, as a baseline.
 
 ## Prerequisites
 
@@ -21,7 +21,7 @@ All commands are run from the `evaluation/first-class/` directory.
 sbt 'bench / Jmh / run -wi 0 -i 1 FirstClassBenchmarks'
 
 # Base (no refinements)
-sbt 'bench / Jmh / run -wi 0 -i 1 RefinementsBaseBenchmarks'
+sbt 'bench / Jmh / run -wi 0 -i 1 FirstClassBaseBenchmarks'
 ```
 
 ### Single benchmark
@@ -34,7 +34,7 @@ sbt 'bench / Jmh / run -wi 0 -i 1 FirstClassBenchmarks.postuple'
 
 ```sh
 sbt 'bench / Jmh / run FirstClassBenchmarks'
-sbt 'bench / Jmh / run RefinementsBaseBenchmarks'
+sbt 'bench / Jmh / run FirstClassBaseBenchmarks'
 ```
 
 ## Benchmark sources

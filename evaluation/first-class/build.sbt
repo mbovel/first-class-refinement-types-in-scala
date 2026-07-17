@@ -1,6 +1,6 @@
 val sharedScalacOptions = Seq("-feature", "-Werror", "-deprecation")
 
-val dottyVersion = "3.8.4-RC1-bin-20260316-3082482-NIGHTLY"
+val dottyVersion = "3.10.0-RC1-bin-20260717-611589a-NIGHTLY"
 
 scalaVersion := dottyVersion
 scalaOrganization := "ch.epfl.lara"

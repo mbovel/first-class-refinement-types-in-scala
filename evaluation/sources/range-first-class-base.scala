@@ -1,18 +1,23 @@
 
 
-case class CheckedArray(val size: Int):
-  private val data = new Array[Double](size)
-  def apply(i: Int): Double = data(i)
+trait CheckedArray[T]:
+  def size: Int
+  def apply(i: Int): T
 
-case class RRange(from: Int, until: Int):
-  inline def foreach(body: Int => Unit): Unit =
-    var i: Int = from
-    while i < until do
-      body(i)
-      i += 1
+case class CheckedRange(from: Int, until: Int):
+  def foreach(body: (x: Int) => Unit): Unit =
+    foreachLoop(from, body)
 
-@main def checkedArrayTest(): Unit =
-  val a = CheckedArray(10)
-  val r = RRange(0, 10)
+  @annotation.tailrec
+  private def foreachLoop(
+    x: Int,
+    body: (x: Int) => Unit
+  ): Unit =
+    body(x)
+    val next = x + 1
+    if from <= next && next < until then foreachLoop(next, body)
+
+def checkedArrayTest[T](a: CheckedArray[T]): Unit =
+  val r = CheckedRange(0, 10)
   for i <- r do
     a(i)
