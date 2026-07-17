@@ -4,4 +4,5 @@ out
 .scala-build
 .stainless-cache
 evaluation/stainless/lib/
+evaluation/schmid/lib/
 paper/paper-diff.*

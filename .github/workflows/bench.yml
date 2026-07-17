@@ -7,7 +7,37 @@ on:
     branches: [main]
 
 jobs:
-  bench:
+  first-class:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - uses: sbt/setup-sbt@v1
+
+      - name: Cache sbt
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.sbt
+            ~/.cache/coursier
+            ~/Library/Caches/Coursier
+          key: sbt-first-class-${{ matrix.os }}-${{ hashFiles('**/build.sbt', '**/plugins.sbt', '**/build.properties') }}
+          restore-keys: sbt-first-class-${{ matrix.os }}-
+
+      - name: Run first-class benchmarks (dry run)
+        working-directory: evaluation/first-class
+        run: sbt "clean; bench / Jmh / run -wi 0 -i 1 -foe true"
+
+  stainless:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -32,12 +62,8 @@ jobs:
             ~/.sbt
             ~/.cache/coursier
             ~/Library/Caches/Coursier
-          key: sbt-${{ matrix.os }}-${{ hashFiles('**/build.sbt', '**/plugins.sbt', '**/build.properties') }}
-          restore-keys: sbt-${{ matrix.os }}-
-
-      - name: Run first-class benchmarks (dry run)
-        working-directory: evaluation/first-class
-        run: sbt "clean; bench / Jmh / run -wi 0 -i 1 -foe true"
+          key: sbt-stainless-${{ matrix.os }}-${{ hashFiles('**/build.sbt', '**/plugins.sbt', '**/build.properties') }}
+          restore-keys: sbt-stainless-${{ matrix.os }}-
 
       - name: Build Stainless
         working-directory: evaluation/stainless
@@ -46,3 +72,48 @@ jobs:
       - name: Run Stainless benchmarks (dry run)
         working-directory: evaluation/stainless
         run: sbt "clean; bench / Jmh / run -wi 0 -i 1 -foe true"
+
+  schmid:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 8
+
+      - name: Record JDK 8 home
+        run: echo "JDK8_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - uses: sbt/setup-sbt@v1
+
+      - name: Cache sbt
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.sbt
+            ~/.ivy2/cache
+            ~/.cache/coursier
+            ~/Library/Caches/Coursier
+          key: sbt-schmid-${{ matrix.os }}-${{ hashFiles('**/build.sbt', '**/plugins.sbt', '**/build.properties') }}
+          restore-keys: sbt-schmid-${{ matrix.os }}-
+
+      - name: Build refined-dotty
+        working-directory: evaluation/schmid
+        run: ./setup.sh
+
+      - name: Run Schmid benchmarks (dry run)
+        working-directory: evaluation/schmid
+        run: sbt "clean; Jmh / run -wi 0 -i 1 -foe true -jvm $JDK8_HOME/bin/java"

@@ -2,3 +2,7 @@
 	path = evaluation/stainless/stainless
 	url = git@github.com:mbovel/stainless.git
 	branch = refinement-types-eval
+[submodule "evaluation/schmid/refined-dotty"]
+	path = evaluation/schmid/refined-dotty
+	url = git@github.com:mbovel/dotty.git
+	branch = liquidtyper-fix

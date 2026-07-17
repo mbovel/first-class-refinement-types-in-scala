@@ -1,0 +1,13 @@
+digraph {
+"Top" [label=<Top<BR /><FONT POINT-SIZE="10">true</FONT>> shape=box style=filled fillcolor=powderblue];
+"G$0" [label=<G$0<BR /><FONT POINT-SIZE="10">v$1 == y$0</FONT>> shape=box style=filled fillcolor=powderblue];
+"G$1" [label=<G$1<BR /><FONT POINT-SIZE="10">v$1 == x$0</FONT>> shape=box style=filled fillcolor=powderblue];
+"Ⲕ" [label=<Ⲕ<BR /><FONT POINT-SIZE="10">true</FONT>> style=filled fillcolor=tomato  ];
+"Ⲕ" [label=<Ⲕ<BR /><FONT POINT-SIZE="10">v$1 &gt;= x$0 &amp;&amp; v$1 &gt;= y$0 &amp;&amp; (v$1 == x$0 || v$1 == y$0)</FONT>>   penwidth=3];
+"Ⲕ" [label=<Ⲕ<BR /><FONT POINT-SIZE="10">true</FONT>> style=filled fillcolor=tomato  ];
+"Ⲕ" [label=<Ⲕ<BR /><FONT POINT-SIZE="10">(x$0 &gt; y$0 &amp;&amp; v$1 == x$0 || x$0 &lt;= y$0 &amp;&amp; v$1 == y$0)</FONT>>  style=filled fillcolor=gold ];
+"Top" [label=<Top<BR /><FONT POINT-SIZE="10">true</FONT>>   ];
+"G$1" -> "Ⲕ" [];
+"G$0" -> "Ⲕ" [];
+"Ⲕ" -> "Ⲕ" [];
+}

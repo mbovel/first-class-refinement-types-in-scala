@@ -4,59 +4,46 @@ Compilation-time benchmarks for Georg Schmid's 2016 LiquidTyper extension to Dot
 
 ## Prerequisites
 
-- JDK 8 (required by sbt 0.13 used in the old Dotty fork)
+- JDK 8 (required by sbt 0.13 used in the old Dotty fork; installed automatically via coursier if `cs` is available)
 - Z3 (`brew install z3` or equivalent)
 - sbt
 
 ## Setup
 
-### 1. Switch to JDK 8
+From the `evaluation/schmid/` directory:
 
 ```sh
-eval $(cs java --jvm 8 --env)
+./setup.sh
 ```
 
-### 2. Publish Georg's Dotty fork locally
+This initializes the `refined-dotty` submodule (`mbovel/dotty@liquidtyper-fix`, a fork of Georg's Dotty with build fixes and suppressed debug output), builds it with JDK 8, and copies the resulting jars to `lib/` together with the Leon and scala-smtlib jars it vendors.
 
-The `related-work/schmid2016/artifact` submodule points to `mbovel/dotty@liquidtyper-fix`, a fork of Georg's Dotty with build fixes and suppressed debug output.
-
-```sh
-cd related-work/schmid2016/artifact
-eval $(cs java --jvm 8 --env) && sbt publishLocal
-```
-
-This publishes `ch.epfl.lamp:dotty_2.11:0.1-SNAPSHOT` to the local Ivy cache.
-
-### 3. Switch back to JDK 25
-
-```sh
-eval $(cs java --jvm 25 --env)
-```
-
-The benchmarks run in a JMH-forked JVM using JDK 8 (configured via sbt).
-
-**Note**: sbt in `evaluation/schmid/` must be run with a JDK that supports sbt 1.x (JDK 11+), but the JMH forked JVM will use whatever `java` is on `PATH`. The Georg compiler itself only requires JDK 8 classes, which are available on newer JDKs.
+JDK 8 is located as follows: `$JDK8_HOME` if set, the current `java` if it is a JDK 8, or `cs java --jvm temurin:8` as a fallback.
 
 ## Running benchmarks
 
-All commands are run from the `evaluation/schmid/` directory.
+All commands are run from the `evaluation/schmid/` directory. sbt itself must run on a modern JDK (11+), but the JMH-forked JVM that runs the Georg compiler should be a JDK 8, selected with JMH's `-jvm` option:
+
+```sh
+JAVA8="$(cs java-home --jvm temurin:8)/bin/java"
+```
 
 ### Quick test (single iteration, no warmup)
 
 ```sh
-sbt 'Jmh / run -wi 0 -i 1 SchmidRefinementBenchmarks'
+sbt 'Jmh / run -wi 0 -i 1 SchmidRefinementBenchmarks -jvm '"$JAVA8"
 ```
 
 ### Single benchmark
 
 ```sh
-sbt 'Jmh / run -wi 0 -i 1 SchmidRefinementBenchmarks.rational'
+sbt 'Jmh / run -wi 0 -i 1 SchmidRefinementBenchmarks.rational -jvm '"$JAVA8"
 ```
 
 ### Full run (150 warmup, 20 measurement iterations)
 
 ```sh
-sbt 'Jmh / run SchmidRefinementBenchmarks'
+sbt 'Jmh / run SchmidRefinementBenchmarks -jvm '"$JAVA8"
 ```
 
 ## Benchmark sources
@@ -80,9 +67,13 @@ These are the exact programs from Georg's test suite (`LiquidTyperTests.scala`).
 
 ## Dependencies
 
-- `ch.epfl.lamp:dotty_2.11:0.1-SNAPSHOT` (published locally from Georg's fork)
-- `leon_2.11-3.0.jar`, `scala-smtlib_2.11.jar` (in `lib/`, provide Z3 SMT-LIB interface)
-- `interface-0.13.11.jar` (in `lib/`, sbt interface for old Dotty)
+Unmanaged jars in `lib/`, populated by `setup.sh`:
+
+- `dotty_2.11-0.1-SNAPSHOT.jar`, `dotty-interfaces-0.1-SNAPSHOT.jar` (built from `refined-dotty/`)
+- `leon_2.11-3.0.jar`, `scala-smtlib_2.11.jar` (copied from `refined-dotty/lib/`, provide the Z3 SMT-LIB interface)
+- `interface-0.13.11.jar` (sbt interface for the old Dotty; copied from the Ivy cache, where the refined-dotty build resolves it, since it is not on Maven Central)
+
+Managed dependencies (Maven Central, mirroring the refined-dotty build): `me.d-d:scala-compiler:2.11.5-20160322-171045-e19b30b3cd` (patched Scala compiler), `jline:jline:2.12`, `org.scala-lang.modules:scala-xml:1.0.1`.
 
 ## Georg's Dotty fork modifications
 
