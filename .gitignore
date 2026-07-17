@@ -6,3 +6,4 @@ out
 evaluation/stainless/lib/
 evaluation/schmid/lib/
 paper/paper-diff.*
+smt-sessions/
