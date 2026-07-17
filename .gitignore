@@ -3,5 +3,5 @@ out
 .bsp
 .scala-build
 .stainless-cache
-evaluation/first_class_and_stainless/lib/
+evaluation/stainless/lib/
 paper/paper-diff.*

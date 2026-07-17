@@ -35,46 +35,46 @@ eval $(cs java --jvm 25 --env)
 
 The benchmarks run in a JMH-forked JVM using JDK 8 (configured via sbt).
 
-**Note**: sbt in `evaluation-georg/` must be run with a JDK that supports sbt 1.x (JDK 11+), but the JMH forked JVM will use whatever `java` is on `PATH`. The Georg compiler itself only requires JDK 8 classes, which are available on newer JDKs.
+**Note**: sbt in `evaluation/schmid/` must be run with a JDK that supports sbt 1.x (JDK 11+), but the JMH forked JVM will use whatever `java` is on `PATH`. The Georg compiler itself only requires JDK 8 classes, which are available on newer JDKs.
 
 ## Running benchmarks
 
-All commands are run from the `evaluation-georg/` directory.
+All commands are run from the `evaluation/schmid/` directory.
 
 ### Quick test (single iteration, no warmup)
 
 ```sh
-sbt 'Jmh / run -wi 0 -i 1 GeorgBenchmarks'
+sbt 'Jmh / run -wi 0 -i 1 SchmidRefinementBenchmarks'
 ```
 
 ### Single benchmark
 
 ```sh
-sbt 'Jmh / run -wi 0 -i 1 GeorgBenchmarks.rational'
+sbt 'Jmh / run -wi 0 -i 1 SchmidRefinementBenchmarks.rational'
 ```
 
 ### Full run (150 warmup, 20 measurement iterations)
 
 ```sh
-sbt 'Jmh / run GeorgBenchmarks'
+sbt 'Jmh / run SchmidRefinementBenchmarks'
 ```
 
 ## Benchmark sources
 
-Source files are in `bench-sources/`, using Georg's `{ v: Type if predicate }` syntax:
+Source files are in the shared `../sources/` directory, using Georg's `{ v: Type if predicate }` syntax (`*-schmid.scala`) or without refinements (`*-schmid-base.scala`, compiled with `-Yskip:liquidtyper` by `SchmidBaseBenchmarks`):
 
 | Benchmark | Description |
 |-----------|-------------|
-| `max.scala` | `max` with full postcondition `v >= x && v >= y && (v == x \|\| v == y)` |
-| `sumnat.scala` | Recursive `sumNat` with `NonNeg` type, `safeAdd` |
-| `intarray.scala` | Array with bounds-checked `access` method |
-| `postuple.scala` | Tuple with `a + b > 0` constraint |
-| `list1.scala` | `List[NonNeg]` with `.head` preserving refinement |
-| `list2.scala` | `List[NonNeg]` with `.reverse` preserving type parameter |
-| `hofsafety1.scala` | HOF `g(f: NonNeg => Int)` called with refined lambda |
-| `hofsafety2.scala` | Closure returning `NonNeg => NonNeg` |
-| `arrfold.scala` | Generic `arrFold[A]` with `arrSum` and `arrMax` |
-| `rational.scala` | `Rational` class with `q != 0` constraint |
+| `max-schmid.scala` | `max` with full postcondition `v >= x && v >= y && (v == x \|\| v == y)` |
+| `sumnat-schmid.scala` | Recursive `sumNat` with `NonNeg` type, `safeAdd` |
+| `intarray-schmid.scala` | Array with bounds-checked `access` method |
+| `postuple-schmid.scala` | Tuple with `a + b > 0` constraint |
+| `list1-schmid.scala` | `List[NonNeg]` with `.head` preserving refinement |
+| `list2-schmid.scala` | `List[NonNeg]` with `.reverse` preserving type parameter |
+| `hofsafety1-schmid.scala` | HOF `g(f: NonNeg => Int)` called with refined lambda |
+| `hofsafety2-schmid.scala` | Closure returning `NonNeg => NonNeg` |
+| `arrfold-schmid.scala` | Generic `arrFold[A]` with `arrSum` and `arrMax` |
+| `rational-schmid.scala` | `Rational` class with `q != 0` constraint |
 
 These are the exact programs from Georg's test suite (`LiquidTyperTests.scala`).
 

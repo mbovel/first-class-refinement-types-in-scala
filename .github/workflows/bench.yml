@@ -35,10 +35,14 @@ jobs:
           key: sbt-${{ matrix.os }}-${{ hashFiles('**/build.sbt', '**/plugins.sbt', '**/build.properties') }}
           restore-keys: sbt-${{ matrix.os }}-
 
+      - name: Run first-class benchmarks (dry run)
+        working-directory: evaluation/first-class
+        run: sbt "clean; bench / Jmh / run -wi 0 -i 1 -foe true"
+
       - name: Build Stainless
-        working-directory: evaluation/first_class_and_stainless
+        working-directory: evaluation/stainless
         run: ./setup.sh
 
-      - name: Run benchmarks (dry run)
-        working-directory: evaluation/first_class_and_stainless
+      - name: Run Stainless benchmarks (dry run)
+        working-directory: evaluation/stainless
         run: sbt "clean; bench / Jmh / run -wi 0 -i 1 -foe true"

@@ -1,6 +1,6 @@
 package bench
 
-/** Quick test to check if GeorgCompiler works. Run with:
+/** Quick test to check if SchmidCompiler works. Run with:
  *  sbt 'set fork := true' 'runMain bench.TestCompile'
  */
 object TestCompile {
@@ -12,7 +12,7 @@ object TestCompile {
     for (f <- files) {
       print(s"Testing $f.scala... ")
       try {
-        bench.compilers.GeorgCompiler.compile(Seq(s"bench-sources/$f.scala"), Seq(), dir)
+        bench.compilers.SchmidCompiler.compile(Seq(s"../sources/$f-schmid.scala"), Seq(), dir)
         println("OK")
       } catch {
         case e: Exception => println(s"FAILED: ${e.getMessage}")
