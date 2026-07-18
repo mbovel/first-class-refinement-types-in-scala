@@ -15,6 +15,16 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Free runner disk space
+        # BuildKit keeps the build cache plus the exported image, about twice
+        # the image size, which exceeds the stock runner's free disk (the
+        # previous run was SIGTERMed while exporting layers). Dropping unused
+        # preinstalled toolchains frees ~30 GB.
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+
       - name: Build image
         run: docker build -t refinement-artifact .
 
