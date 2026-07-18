@@ -5,8 +5,14 @@
 \begin{flalign*}
 	c \coloneqq\ & \texttt{unit} \mid \texttt{true} \mid \texttt{false} \mid z \in \mathbb{Z}  \tag*{\textbf{Constant}} \\
 	%
+	% LaTeXML drops tag-only rows and misaligns untagged continuation rows,
+	% so give it single-row versions of entries that are split for the PDF.
+	\iflatexml
+	\mathit{op} \coloneqq\ & \texttt{==} \mid \texttt{!=} \mid \texttt{<} \mid \texttt{<=} \mid \texttt{>=} \mid \texttt{>} \mid \texttt{\&\&} \mid \texttt{||} \mid \texttt{+} \mid \texttt{-} \mid \texttt{*} \mid \texttt{/} \mid \texttt{\%}  \tag*{\textbf{Operation}} \\
+	\else
 	\mathit{op} \coloneqq\ & \texttt{==} \mid \texttt{!=} \mid \texttt{<} \mid \texttt{<=} \mid \texttt{>=} \mid \texttt{>}  \tag*{\textbf{Operation}} \\
 	& \texttt{\&\&} \mid \texttt{||} \mid \texttt{+} \mid \texttt{-} \mid \texttt{*} \mid \texttt{/} \mid \texttt{\%}  \\
+	\fi
 	%
 	a, b, f, p \coloneqq\ &  \tag*{\textbf{Term}} \\
 	& c  \tag*{constant} \\
@@ -17,10 +23,15 @@
 	& f\,[A]  \tag*{type application} \\
 	& \textsf{let}\; x{:}A = a \;\textsf{in}\; b  \tag*{let} \\
 	& (a_1, a_2)  \tag*{pair} \\
+	\iflatexml
+	& \textsf{match}\; a \;\textsf{with}\; (x, y) \Rightarrow b  \tag*{match pair} \\
+	& \textsf{match}\; a \;\textsf{with}\; \textsf{inl}(x) \Rightarrow b_l \mid \textsf{inr}(y) \Rightarrow b_r  \tag*{match sum} \\
+	\else
 	&  \tag*{match pair} \\
 	& \textsf{match}\; a \;\textsf{with}\; (x, y) \Rightarrow b \\
 	&  \tag*{match sum} \\
 	& \textsf{match}\; a \;\textsf{with}\; \textsf{inl}(x) \Rightarrow b_l \mid \textsf{inr}(y) \Rightarrow b_r \\
+	\fi
 	& \textsf{inl}[A]\, a \tag*{left injection} \\
 	& \textsf{inr}[A]\, a \tag*{right injection} \\
 	& a \;\mathit{op}\; b  \tag*{binary operation} \\

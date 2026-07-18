@@ -56,6 +56,22 @@
 \usepackage{multicol}
 \usepackage{stmaryrd} % for \llbracket, \rrbracket
 \usepackage{bcprules}
+% LaTeXML (arXiv HTML) chokes on bcprules' box-based layout: the zero-width
+% label box renders one letter per line. Use a simple inline layout there.
+\IfFileExists{latexml.sty}
+  {\usepackage{latexml}}
+  {\newif\iflatexml\latexmlfalse}
+\iflatexml
+  \renewcommand{\layoutruleverbose}[2]{%
+    \begin{center}$\displaystyle #2$\quad #1\end{center}}
+  \renewcommand{\layoutrulenolabel}[1]{%
+    \begin{center}$\displaystyle #1$\end{center}}
+  \newcommand{\codesize}{}% full-size code in HTML
+  % Includes a workaround for https://github.com/arXiv/html_feedback/issues/2201
+  \lxRequireResource[type=text/css]{html-fixes.css}
+\else
+  \newcommand{\codesize}{\small}
+\fi
 \usepackage{placeins}
 \usepackage{enumitem}
 \usepackage{booktabs}
@@ -65,7 +81,7 @@
 \setlist[itemize]{leftmargin=1.5em, itemsep=0.3em}
 \newcommand{\bind}{\mathbin{\!\mapsto\!}} % compact mapsto for bindings
 \lstset{
-  basicstyle=\ttfamily\small,
+  basicstyle=\ttfamily\codesize,
   keywordstyle=\bfseries,
   commentstyle=\color{gray},
   showstringspaces=false,
@@ -198,7 +214,8 @@ As a concrete example of the expressiveness this integration enables, consider S
 \begin{lstlisting}[language=Scala]
 def maximum[T: Ordering, U <: T](xs: List[U]): U = xs.reduce(max)
 type Even = {v: Int with v % 2 == 0}
-def example1: Even = maximum(List(2, 4, 6))\end{lstlisting}
+def example1: Even = maximum(List(2, 4, 6))
+\end{lstlisting}
 \vspace{-1em}
 \caption{Instantiation of a bounded type parameter with a refinement type.}
 \end{figure}

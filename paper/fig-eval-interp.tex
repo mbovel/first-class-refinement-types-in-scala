@@ -5,7 +5,7 @@
 \vspace{0.5em}
 \begin{center}
 \begin{minipage}{0.85\columnwidth}
-\begin{lstlisting}[morekeywords={Fixpoint,match,with,end,Some,None,option,nat,list},deletekeywords={val},morecomment={[s]{(*}{*)}},commentstyle=\color{gray}\itshape,basicstyle=\ttfamily\small]
+\begin{lstlisting}[morekeywords={Fixpoint,match,with,end,Some,None,option,nat,list},deletekeywords={val},morecomment={[s]{(*}{*)}},commentstyle=\color{gray}\itshape,basicstyle=\ttfamily\codesize]
 Fixpoint eval (fuel: nat) (env: list Value) (t: Term): option (option Value) :=
   match fuel with
   | 0 => None (* timeout *)

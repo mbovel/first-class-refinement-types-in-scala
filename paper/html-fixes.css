@@ -1,0 +1,38 @@
+/* Fixes for the LaTeXML/arXiv HTML rendering. */
+
+/* arXiv's HTML CSS lacks LaTeXML's rule preserving listing indentation
+   (.ltx_lst_space spans collapse without it).
+   See https://github.com/arXiv/html_feedback/issues/2201 */
+.ltx_lst_space { white-space: pre; }
+
+/* In the grammar figures (flalign* with \tag*), LaTeXML puts each label in
+   a zero-width overflow cell (.ltx_eqn_eqno { max-width:0 }), painting it
+   over the equation content. Give the label cell a real, fixed width plus a
+   gap instead. The width is fixed (not natural) because each flalign* block
+   becomes its own table: without a common width the blocks' columns drift
+   apart. Scoped to figures to leave numbered equations untouched. */
+figure .ltx_eqn_eqno.ltx_align_left {
+  max-width: none;
+  width: 10em;
+  padding-right: 1em;
+}
+/* Same drift for the left-hand-side column (widest lhs differs per block);
+   equalize it across blocks. */
+figure table.ltx_eqn_table:has(.ltx_eqn_eqno.ltx_align_left)
+  td.ltx_align_right.ltx_eqn_cell {
+  min-width: 7em;
+}
+/* Stock CSS stretches equation tables to width:100%; the surplus is
+   distributed into the columns differently per block (their content widths
+   differ), which drifts the shared axis. Shrink grammar tables to content
+   so column widths are determined by the fixed/min widths above alone. */
+figure table.ltx_eqn_table:has(.ltx_eqn_eqno.ltx_align_left) {
+  width: auto;
+}
+/* The percentage-width spacer cells scale with each block's total width,
+   reintroducing drift between blocks; disable them. */
+figure table.ltx_eqn_table:has(.ltx_eqn_eqno.ltx_align_left) td.ltx_eqn_center_padleft,
+figure table.ltx_eqn_table:has(.ltx_eqn_eqno.ltx_align_left) td.ltx_eqn_center_padright {
+  width: 0;
+  min-width: 0;
+}

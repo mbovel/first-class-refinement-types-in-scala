@@ -32,7 +32,10 @@ trap 'rm -rf "$tmp"' EXIT
 # producing a diff that does not compile.
 cat > "$tmp/flatten.pl" <<'EOF'
 # Inline \input{...} commands (up to 3 levels), resolving relative to the
-# file's directory. Commented-out \input lines are left untouched.
+# file's directory. Commented-out \input lines are left untouched, as are
+# machine-generated bench_* files: diffing regenerated table cells is
+# meaningless and latexdiff's row markup breaks booktabs (\cmidrule
+# runaway); the compiled diff shows the current table unmarked instead.
 use strict; use warnings;
 use File::Basename;
 
@@ -54,7 +57,7 @@ my ($file) = @ARGV;
 my $dir = dirname($file);
 my $text = slurp($file);
 for (1 .. 3) {
-  last unless $text =~ s{^[ \t]*\\input\{([^\}]+)\}}{inline_input($dir, $1)}gme;
+  last unless $text =~ s{^[ \t]*\\input\{(?!bench_)([^\}]+)\}}{inline_input($dir, $1)}gme;
 }
 print $text;
 EOF
