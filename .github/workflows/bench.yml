@@ -42,7 +42,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-15]
+        # macos-15-intel rather than macos-15: the ScalaZ3 native bindings are
+        # x86-64 only, and the benchmarks refuse to run without native Z3
+        # (macos-15 runners are ARM64, where inox would fall back to Princess).
+        os: [ubuntu-24.04, macos-15-intel]
     steps:
       - uses: actions/checkout@v4
         with:
