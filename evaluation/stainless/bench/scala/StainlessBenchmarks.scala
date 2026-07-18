@@ -42,9 +42,13 @@ abstract class StainlessBenchmarks extends CompilationBenchmarks:
   def sqrt =
     compiler.compile(Seq(source("sqrt")), options, outDir)
 
-  @Benchmark
-  def sumnat =
-    compiler.compile(Seq(source("sumnat")), options, outDir)
+  // Z3 non-deterministically diverges on one of sumnat's VCs: most
+  // iterations verify in ~0.5 s, but a few percent hit repeated 30 s solver
+  // timeouts and take minutes, ruining the measurements.
+  // See https://github.com/epfl-lara/stainless/issues/1766
+  // @Benchmark
+  // def sumnat =
+  //   compiler.compile(Seq(source("sumnat")), options, outDir)
 
   @Benchmark
   def intarray =
