@@ -38,7 +38,15 @@ rsync -a \
   --exclude '.DS_Store' \
   --exclude 'smt-sessions' \
   --exclude '/artifact' \
-  --exclude '/paper' \
+  --exclude '/paper/*.aux' \
+  --exclude '/paper/*.log' \
+  --exclude '/paper/*.fls' \
+  --exclude '/paper/*.fdb_latexmk' \
+  --exclude '/paper/*.blg' \
+  --exclude '/paper/*.out' \
+  --exclude '/paper/*.synctex.gz' \
+  --exclude '/paper/paper-diff.*' \
+  --exclude '/implementation/out' \
   --exclude '/evaluation/stainless/lib' \
   --exclude '/evaluation/results' \
   --exclude '/evaluation/first-class/bench/out' \
