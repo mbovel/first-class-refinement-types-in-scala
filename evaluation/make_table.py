@@ -157,19 +157,19 @@ def generate_latex_table(table):
     lines.append(r"\centering")
     lines.append(r"\captionsetup{font=small}")
     lines.append(r"\footnotesize")
-    lines.append(r"\begin{tabular}{l" + " rrrr" * len(PLATFORMS) + "}")
+    lines.append(r"\begin{tabular}{l" + " rrr" * len(PLATFORMS) + "}")
     lines.append(r"\toprule")
 
-    # Top header: platform names spanning 4 columns each
+    # Top header: platform names spanning 3 columns each
     top_header = ""
     for label, _, _ in PLATFORMS:
-        top_header += f" & \\multicolumn{{4}}{{c}}{{{label}}}"
+        top_header += f" & \\multicolumn{{3}}{{c}}{{{label}}}"
     top_header += r" \\"
     # cmidrules under each platform
     cmidrules = ""
     for i in range(len(PLATFORMS)):
-        start = 2 + i * 4
-        end = start + 3
+        start = 2 + i * 3
+        end = start + 2
         cmidrules += f"\\cmidrule(lr){{{start}-{end}}} "
     lines.append(top_header)
     lines.append(cmidrules)
@@ -177,7 +177,7 @@ def generate_latex_table(table):
     # Sub-header
     sub_header = "Benchmark"
     for _ in PLATFORMS:
-        sub_header += r" & LoC & Base & Time & $\Delta$\%"
+        sub_header += r" & LoC & Base & $\Delta$\%"
     sub_header += r" \\"
     lines.append(sub_header)
     lines.append(r"\midrule")
@@ -196,13 +196,7 @@ def generate_latex_table(table):
                 row += f" & ${b['score']:.0f} \\pm {b['error']:.0f}$"
             else:
                 row += " & ---"
-            # Checked
-            if has_checked:
-                c = table[bench][checked_col]
-                row += f" & ${c['score']:.0f} \\pm {c['error']:.0f}$"
-            else:
-                row += " & ---"
-            # Relative diff
+            # Relative diff (the checked time itself is base * (1 + delta))
             if has_base and has_checked:
                 b = table[bench][base_col]
                 c = table[bench][checked_col]
@@ -215,7 +209,7 @@ def generate_latex_table(table):
 
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
-    lines.append(r"\caption{Compilation time benchmarks (ms/op, single-shot), as mean $\pm$ 95\% confidence interval across runs. Each platform shows unchecked (baseline) and checked times, with relative overhead. The overhead interval is propagated from the base and checked intervals.}")
+    lines.append(r"\caption{Compilation time benchmarks (ms/op, single-shot), as mean $\pm$ 95\% confidence interval across runs. Each platform shows the unchecked baseline time and the relative overhead of checking; the checked time is $\text{base} \times (1 + \Delta)$. The overhead interval is propagated from the base and checked intervals.}")
     lines.append(r"\label{fig:bench-table}")
     lines.append(r"\end{figure*}")
     return "\n".join(lines)
