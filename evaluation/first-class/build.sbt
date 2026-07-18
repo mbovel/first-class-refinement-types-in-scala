@@ -1,9 +1,12 @@
 val sharedScalacOptions = Seq("-feature", "-Werror", "-deprecation")
 
-val dottyVersion = "3.10.0-RC1-bin-20260717-611589a-NIGHTLY"
+// Override with e.g. -Ddotty.version=3.10.0-RC1-bin-SNAPSHOT -Ddotty.organization=org.scala-lang
+// to benchmark a locally published compiler (sbt clean community-build/prepareCommunityBuild).
+val dottyVersion = sys.props.getOrElse("dotty.version", "3.10.0-RC1-bin-20260717-611589a-NIGHTLY")
+val dottyOrganization = sys.props.getOrElse("dotty.organization", "ch.epfl.lara")
 
 scalaVersion := dottyVersion
-scalaOrganization := "ch.epfl.lara"
+scalaOrganization := dottyOrganization
 
 lazy val bench =
   project
@@ -11,11 +14,11 @@ lazy val bench =
     .dependsOn()
     .settings(
       scalaVersion := dottyVersion,
-      scalaOrganization := "ch.epfl.lara",
+      scalaOrganization := dottyOrganization,
       scalacOptions ++= sharedScalacOptions,
       libraryDependencies ++= Seq(
-        "ch.epfl.lara" %% "scala3-compiler" % dottyVersion,
-        "ch.epfl.lara" %% "scala3-library" % dottyVersion,
+        dottyOrganization %% "scala3-compiler" % dottyVersion,
+        dottyOrganization %% "scala3-library" % dottyVersion,
       ),
       Compile / scalaSource := baseDirectory.value / "scala",
       // Fork so that java.class.path contains the full classpath, as DottyCompiler expects
