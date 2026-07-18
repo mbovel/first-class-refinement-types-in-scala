@@ -62,9 +62,10 @@ abstract class StainlessBenchmarks extends CompilationBenchmarks:
   def rational =
     compiler.compile(Seq(source("rational")), options, outDir)
 
-/** Baseline: Stainless extraction only, no verification. */
+/** Baseline: contract-free sources (no require/ensuring/decreases), still
+ *  through Stainless extraction but without verification. */
 class StainlessBaseBenchmarks extends StainlessBenchmarks:
-  override def suffix = "stainless"
+  override def suffix = "stainless-base"
   override def options = Seq("-P:stainless:verify:no")
 
 /** Stainless with verification (including termination measures; the plugin

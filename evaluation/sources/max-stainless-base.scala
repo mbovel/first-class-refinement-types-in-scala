@@ -1,0 +1,7 @@
+import stainless.lang._
+
+object Max {
+  def max(x: Int, y: Int): Int = {
+    if (x > y) x else y
+  }
+}
