@@ -1,14 +1,15 @@
 object Foo {
-  class Matrix(val width: Int, val height: Int) {
-    def transpose(): Matrix =
-      new Matrix(height, width)
+  class Matrix(val width: Int, val height: Int)
 
-    def mul(that: Matrix): Matrix =
-      new Matrix(that.width, height)
-  }
-  val m1 = new Matrix(2, 3)
-  val m2 = new Matrix(3, 2)
-  m1.mul(m2)
-  val m1T = m1.transpose()
-  m1T.mul(m1)
+  def transpose(m: Matrix): Matrix =
+    new Matrix(m.height, m.width)
+
+  def mul(m: Matrix)(that: Matrix): Matrix =
+    new Matrix(that.width, m.height)
+
+  def testMul(m1: Matrix, m2: Matrix): Matrix =
+    mul(m1)(m2)
+
+  def testTranspose(m1: Matrix): Matrix =
+    transpose(m1)
 }

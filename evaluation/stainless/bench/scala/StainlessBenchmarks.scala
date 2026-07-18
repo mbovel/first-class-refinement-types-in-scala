@@ -16,6 +16,10 @@ abstract class StainlessBenchmarks extends CompilationBenchmarks:
   def matrixDims =
     compiler.compile(Seq(source("matrixDims")), options, outDir)
 
+  @Benchmark
+  def vec =
+    compiler.compile(Seq(source("vec")), options, outDir)
+
   //@Benchmark
   //def mergeSortLength =
   //  compiler.compile(Seq(source("mergeSortLength")), options, outDir)

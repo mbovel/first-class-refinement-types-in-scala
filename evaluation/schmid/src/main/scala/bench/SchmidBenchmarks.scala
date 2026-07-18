@@ -67,8 +67,7 @@ abstract class SchmidBenchmarks extends CompilationBenchmarks {
   // def mergeSortLength(): Unit =
   //   SchmidCompiler.compile(Seq(source("mergeSortLength")), options, outDir)
 
-  // Crashes the LiquidTyper solver (None.get in Solver.declareObject):
-  // @Benchmark
-  // def matrixDims(): Unit =
-  //   SchmidCompiler.compile(Seq(source("matrixDims")), options, outDir)
+  @Benchmark
+  def matrixDims(): Unit =
+    SchmidCompiler.compile(Seq(source("matrixDims")), options, outDir)
 }

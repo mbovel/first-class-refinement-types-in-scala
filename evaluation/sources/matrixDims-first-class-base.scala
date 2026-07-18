@@ -1,16 +1,15 @@
-type Pos = Int
+object Foo {
+  case class Matrix(width: Int, height: Int)
 
-case class Matrix(width: Pos, height: Pos):
-  def transpose(): Matrix =
-    Matrix(height, width)
+  def transpose(m: Matrix): Matrix =
+    new Matrix(m.height, m.width)
 
-  def mul(that: Matrix): Matrix =
-    Matrix(that.width, height)
+  def mul(m: Matrix)(that: Matrix): Matrix =
+    new Matrix(that.width, m.height)
 
-def main =
-  val m1 = Matrix(2, 3)
-  val m2 = Matrix(3, 2)
-  m1.mul(m2)
+  def testMul(m1: Matrix, m2: Matrix): Matrix =
+    mul(m1)(m2)
 
-  val m1T = m1.transpose()
-  m1T.mul(m1)
+  def testTranspose(m1: Matrix): Matrix =
+    transpose(m1)
+}

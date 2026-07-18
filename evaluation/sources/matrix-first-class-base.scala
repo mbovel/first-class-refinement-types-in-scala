@@ -3,14 +3,24 @@ case class CheckedArray(size: Int):
   def apply(i: Int): Double = data(i)
   def update(i: Int, x: Double): Unit = data(i) = x
 
-def forRange(from: Int, to: Int)(body: Int => Unit): Unit =
-  var i: Int = from
-  while i < to do
-    body(i)
-    i = i + 1
+def forRange(from: Int, to: Int)(
+  body: Int => Unit
+): Unit =
+  if from < to then forRangeLoop(from, to, from, body)
+
+@annotation.tailrec
+def forRangeLoop(
+  from: Int,
+  to: Int,
+  x: Int,
+  body: Int => Unit,
+): Unit =
+  body(x)
+  if from <= x + 1 && x + 1 < to then
+    forRangeLoop(from, to, x + 1, body)
 
 case class Matrix(width: Int, height: Int):
-  private val size = width * height
+  private val size: Int = width * height
   private val data = CheckedArray(size)
 
   def index(i: Int, j: Int): Int =
@@ -39,9 +49,9 @@ case class Matrix(width: Int, height: Int):
         res(i, j) = sum
     res
 
-def main =
-  val m1 = Matrix(2, 3)
-  val m2 = Matrix(3, 2)
+def example4(w: Int, h: Int) =
+  val m1 = Matrix(w, h)
+  val m2 = Matrix(h, w)
   m1.mul(m2)
 
   val m1T = m1.transpose()

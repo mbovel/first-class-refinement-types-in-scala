@@ -10,7 +10,7 @@ object TestCompile {
     val dir = "out"
     new java.io.File(dir).mkdirs()
     val defaultFiles = Seq("max", "sumnat", "intarray", "postuple", "list1", "list2",
-                           "hof1", "hof2", "arrfold", "rational", "sqrt")
+                           "hof1", "hof2", "arrfold", "rational", "sqrt", "matrixDims")
     val files = if (args.nonEmpty) args.toSeq else defaultFiles
     for (f <- files) {
       print(s"Testing $f.scala... ")

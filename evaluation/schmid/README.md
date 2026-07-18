@@ -63,10 +63,17 @@ These are the programs from Georg's test suite (`LiquidTyperTests.scala`),
 lightly restyled to match the first-class variants (e.g. `sumnat` is wrapped in
 an object and drops the redundant `AnyInt` alias).
 
-In addition, `mergeSortLength-schmid.scala` is a direct port of the first-class
-`mergeSortLength` benchmark, but it crashes the LiquidTyper and is therefore
-not benchmarked: refined class-typed method results inside the class are
-unsupported (see the comment in `SchmidBenchmarks.scala` for the error).
+In addition:
+
+- `mergeSortLength-schmid.scala` is a direct port of the first-class
+  `mergeSortLength` benchmark, but it crashes the LiquidTyper and is therefore
+  not benchmarked: refined class-typed method results inside the class are
+  unsupported (see the comment in `SchmidBenchmarks.scala` for the error).
+- `matrixDims-schmid.scala` ports the first-class `matrixDims` benchmark with
+  the full dimension specifications for `transpose` and `mul`, restructured
+  around LiquidTyper restrictions (top-level functions, a curried parameter
+  list for `mul`'s precondition, and one function per step of the original
+  `main`; see the header comment in the source file).
 
 ## Dependencies
 
