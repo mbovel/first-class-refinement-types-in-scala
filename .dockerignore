@@ -11,6 +11,9 @@ paper
 artifact
 pr-diff.patch
 
+# Compiler build output in the implementation checkout.
+implementation/out
+
 # Evaluation build residue and outputs that the image build regenerates.
 **/target
 **/.bsp

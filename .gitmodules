@@ -6,3 +6,7 @@
 	path = evaluation/schmid/refined-dotty
 	url = git@github.com:mbovel/dotty.git
 	branch = liquidtyper-fix
+[submodule "implementation"]
+	path = implementation
+	url = https://github.com/mbovel/dotty.git
+	branch = qualifiers-ci

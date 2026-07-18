@@ -14,6 +14,8 @@
 #   docker run refinement-artifact mechanization    # compile the mechanization only
 #   docker run refinement-artifact evaluation --suite stainless --dry-run
 #   docker run refinement-artifact evaluation --suite all --runs 10
+#   docker run refinement-artifact implementation \
+#     "scala3-bootstrapped / scalac -language:experimental.qualifiedTypes tests/pos-custom-args/qualified-types/list_collect.scala"
 #
 # JMH results are written to /work/evaluation/results/<run>/<suite>.json;
 # mount a host directory there to collect them:
@@ -77,6 +79,16 @@ RUN cd evaluation/stainless && ./setup.sh
 COPY --chown=rocq:rocq evaluation/schmid/refined-dotty evaluation/schmid/refined-dotty
 COPY --chown=rocq:rocq evaluation/schmid/setup.sh evaluation/schmid/setup.sh
 RUN cd evaluation/schmid && ./setup.sh
+
+# Build the qualified-types compiler (scala/scala3#21586) by compiling one
+# qualified-types test file, so everything needed is precompiled in the image.
+# The dotty build derives its version through sbt-git, and the checkout's git
+# metadata cannot be copied into the image (the submodule's git dir lives in
+# the parent repository), so a fresh single-commit repository stands in.
+COPY --chown=rocq:rocq implementation implementation
+RUN cd implementation && git init -q \
+    && git -c user.email=docker@invalid -c user.name=docker commit -q --allow-empty -m "image build" \
+    && sbt "scala3-bootstrapped / scalac -language:experimental.qualifiedTypes tests/pos-custom-args/qualified-types/list_collect.scala"
 
 # Benchmark sources and harnesses.
 COPY --chown=rocq:rocq evaluation/sources evaluation/sources

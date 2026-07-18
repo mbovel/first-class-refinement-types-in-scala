@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # Entry point for the artifact image (also runnable directly from a checkout).
 #
-#   run.sh                       compile the mechanization, then dry-run all benchmarks
-#   run.sh mechanization         compile the mechanization
-#   run.sh evaluation ARGS...    run the benchmarks (delegates to evaluation/run.sh)
+#   run.sh                            compile the mechanization, then dry-run all benchmarks
+#   run.sh mechanization              compile the mechanization
+#   run.sh evaluation ARGS...         run the benchmarks (delegates to evaluation/run.sh)
+#   run.sh implementation SBT_ARGS... run sbt in the qualified-types compiler checkout
 set -euo pipefail
 
 cd "$(dirname "$0")"
 
 usage() {
-  echo "Usage: $(basename "$0") [mechanization | evaluation ARGS...]" >&2
+  echo "Usage: $(basename "$0") [mechanization | evaluation ARGS... | implementation SBT_ARGS...]" >&2
   echo "With no arguments: compile the mechanization, then dry-run all benchmarks." >&2
   exit "${1:-1}"
 }
@@ -36,6 +37,10 @@ case "${1:-}" in
   evaluation)
     shift
     ./evaluation/run.sh "$@"
+    ;;
+  implementation)
+    shift
+    (cd implementation && sbt "$@")
     ;;
   -h|--help)
     usage 0

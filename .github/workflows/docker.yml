@@ -19,9 +19,11 @@ jobs:
         run: docker build -t refinement-artifact .
 
       - name: Run the artifact image (mechanization + all suites, dry run)
+        # --network none proves the image is self-contained: nothing may be
+        # downloaded at run time.
         run: |
           mkdir -p results
-          docker run -v "$PWD/results:/work/evaluation/results" refinement-artifact
+          docker run --network none -v "$PWD/results:/work/evaluation/results" refinement-artifact
 
       - name: Check result files
         run: |
