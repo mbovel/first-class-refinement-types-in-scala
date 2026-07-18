@@ -10,6 +10,19 @@ import dotty.tools.dotc.reporting.Diagnostic
  *  and `stainless.annotation._` are available.
  */
 object StainlessCompiler extends Compiler:
+  def compile(sources: Seq[String], options: Seq[String], outputDir: String, shouldFail: Boolean = false): Unit =
+    StainlessCompilers.compile(sources, options, outputDir, shouldFail, withPlugin = true)
+
+/** Same Dotty and classpath (the stainless-library jar stays included, so
+ *  `stainless.lang._` imports still resolve) but without the Stainless
+ *  plugin: used by the contract-free baseline benchmarks, mirroring the
+ *  feature-off baselines of the other platforms.
+ */
+object StainlessNoPluginCompiler extends Compiler:
+  def compile(sources: Seq[String], options: Seq[String], outputDir: String, shouldFail: Boolean = false): Unit =
+    StainlessCompilers.compile(sources, options, outputDir, shouldFail, withPlugin = false)
+
+private object StainlessCompilers:
 
   private val stdlibClasspath: String =
     System.getProperty("java.class.path", "")
@@ -20,15 +33,13 @@ object StainlessCompiler extends Compiler:
   private val stainlessAssemblyJar: String = StainlessJars.assemblyJar
   private val stainlessLibraryJar: String = StainlessJars.libraryJar
 
-  def compile(sources: Seq[String], options: Seq[String], outputDir: String, shouldFail: Boolean = false): Unit =
+  def compile(sources: Seq[String], options: Seq[String], outputDir: String, shouldFail: Boolean, withPlugin: Boolean): Unit =
     val fullClasspath =
       (Seq(stdlibClasspath, stainlessLibraryJar).filter(_.nonEmpty)).mkString(java.io.File.pathSeparator)
     val scalacOptions =
       (if fullClasspath.nonEmpty then Seq("-classpath", fullClasspath) else Seq.empty)
-        ++ Seq(
-          "-Xno-enrich-error-messages",
-          s"-Xplugin:$stainlessAssemblyJar",
-        )
+        ++ Seq("-Xno-enrich-error-messages")
+        ++ (if withPlugin then Seq(s"-Xplugin:$stainlessAssemblyJar") else Seq.empty)
     val allArgs = (Array("-d", outputDir) ++ scalacOptions ++ options ++ sources)
     val reporter =
       // Extraction errors (e.g. ImperativeEliminationException) escape the Stainless plugin as

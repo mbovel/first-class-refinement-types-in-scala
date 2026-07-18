@@ -1,6 +1,6 @@
 package bench
 
-import bench.compilers.{Compiler, StainlessCompiler}
+import bench.compilers.{Compiler, StainlessCompiler, StainlessNoPluginCompiler}
 import org.openjdk.jmh.annotations.{Benchmark, Warmup}
 
 abstract class StainlessBenchmarks extends CompilationBenchmarks:
@@ -62,11 +62,13 @@ abstract class StainlessBenchmarks extends CompilationBenchmarks:
   def rational =
     compiler.compile(Seq(source("rational")), options, outDir)
 
-/** Baseline: contract-free sources (no require/ensuring/decreases), still
- *  through Stainless extraction but without verification. */
+/** Baseline: contract-free sources (no require/ensuring/decreases) compiled
+ *  with the same Dotty and classpath but without the Stainless plugin,
+ *  mirroring the feature-off baselines of the other platforms. */
 class StainlessBaseBenchmarks extends StainlessBenchmarks:
   override def suffix = "stainless-base"
-  override def options = Seq("-P:stainless:verify:no")
+  override def compiler = StainlessNoPluginCompiler
+  override def options = Seq()
 
 /** Stainless with verification (including termination measures; the plugin
  *  only understands the verify and ghost-elim options). */
