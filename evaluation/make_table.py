@@ -211,8 +211,10 @@ def generate_latex_table(table):
         for _, base_col, checked_col in PLATFORMS:
             has_base = base_col in table[bench]
             has_checked = checked_col in table[bench]
-            # LoC
-            loc = count_loc(bench, checked_col)
+            # LoC: only for benchmarks that actually run on this platform (the
+            # source file may exist without a benchmark, e.g. mergeSort-schmid
+            # crashes the LiquidTyper and is commented out).
+            loc = count_loc(bench, checked_col) if (has_base or has_checked) else None
             row += f" & ${loc}$" if loc else " & ---"
             # Unchecked
             if has_base:
