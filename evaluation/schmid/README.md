@@ -65,8 +65,8 @@ an object and drops the redundant `AnyInt` alias).
 
 In addition:
 
-- `mergeSortLength-schmid.scala` is a direct port of the first-class
-  `mergeSortLength` benchmark, but it crashes the LiquidTyper and is therefore
+- `mergeSort-schmid.scala` is a direct port of the first-class
+  `mergeSort` benchmark, but it crashes the LiquidTyper and is therefore
   not benchmarked: refined class-typed method results inside the class are
   unsupported (see the comment in `SchmidBenchmarks.scala` for the error).
 - `matrixDims-schmid.scala` ports the first-class `matrixDims` benchmark with

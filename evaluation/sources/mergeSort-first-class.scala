@@ -1,4 +1,4 @@
-object MergeSortLength {
+object MergeSort {
   type Pos = {v: Int with v >= 0}
 
   def safeDiv(x: Pos, y: Pos with y > 1): {res: Pos with res < x} =

@@ -3,7 +3,7 @@ package bench
 /** Quick test to check if SchmidCompiler works. Run with:
  *  sbt 'set fork := true' 'runMain bench.TestCompile'
  *  Optionally pass benchmark names to test only those, e.g.
- *  sbt 'set fork := true' 'runMain bench.TestCompile mergeSortLength'
+ *  sbt 'set fork := true' 'runMain bench.TestCompile mergeSort'
  */
 object TestCompile {
   def main(args: Array[String]): Unit = {

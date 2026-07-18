@@ -61,11 +61,11 @@ abstract class SchmidBenchmarks extends CompilationBenchmarks {
   // class are dropped ("WARNING: Ignoring ascription of unsupported type
   // LiquidType(v, SafeSeq, v.len == this.len + that.len)" for ++, take and
   // tail), and extracting ++'s qualifier then aborts with "Unknown call to
-  // val len on that$0 (UnsupL<mergeSortLength.SafeSeq>)", since SafeSeq is
+  // val len on that$0 (UnsupL<mergeSort.SafeSeq>)", since SafeSeq is
   // an unsupported type within its own body:
   // @Benchmark
-  // def mergeSortLength(): Unit =
-  //   SchmidCompiler.compile(Seq(source("mergeSortLength")), options, outDir)
+  // def mergeSort(): Unit =
+  //   SchmidCompiler.compile(Seq(source("mergeSort")), options, outDir)
 
   @Benchmark
   def matrixDims(): Unit =

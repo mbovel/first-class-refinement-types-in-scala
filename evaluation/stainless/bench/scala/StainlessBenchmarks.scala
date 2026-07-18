@@ -21,8 +21,8 @@ abstract class StainlessBenchmarks extends CompilationBenchmarks:
     compiler.compile(Seq(source("vec")), options, outDir)
 
   @Benchmark
-  def mergeSortLength =
-    compiler.compile(Seq(source("mergeSortLength")), options, outDir)
+  def mergeSort =
+    compiler.compile(Seq(source("mergeSort")), options, outDir)
 
   // Georg-equivalent benchmarks
   @Benchmark

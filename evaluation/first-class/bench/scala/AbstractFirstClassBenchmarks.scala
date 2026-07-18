@@ -12,12 +12,12 @@ abstract class AbstractFirstClassBenchmarks extends CompilationBenchmarks:
   def source(name: String): String = s"${BenchSources.dir}/$name-$suffix.scala"
 
   @Benchmark
-  def maxAbstract =
-    DottyCompiler.compile(Seq(source("maxAbstract")), options, outDir)
+  def maxGen =
+    DottyCompiler.compile(Seq(source("maxGen")), options, outDir)
 
   @Benchmark
-  def maxAbstractBig =
-    DottyCompiler.compile(Seq(source("maxAbstractBig")), options, outDir)
+  def maxGenBig =
+    DottyCompiler.compile(Seq(source("maxGenBig")), options, outDir)
 
   @Benchmark
   def sqrt =
@@ -40,8 +40,8 @@ abstract class AbstractFirstClassBenchmarks extends CompilationBenchmarks:
     DottyCompiler.compile(Seq(source("range")), options, outDir)
 
   @Benchmark
-  def mergeSortLength =
-    DottyCompiler.compile(Seq(source("mergeSortLength")), options, outDir)
+  def mergeSort =
+    DottyCompiler.compile(Seq(source("mergeSort")), options, outDir)
 
   @Benchmark
   def fibMemo =

@@ -1,6 +1,6 @@
 import stainless.lang._
 
-object MergeSortLength {
+object MergeSort {
 
   def safeDiv(x: BigInt, y: BigInt): BigInt = {
     require(x >= 0 && y > 1)

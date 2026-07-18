@@ -1,9 +1,9 @@
-// Port of mergeSortLength-first-class.scala to Georg's syntax, using a
+// Port of mergeSort-first-class.scala to Georg's syntax, using a
 // monomorphic class instead of a generic trait, an (Int, Int) => Boolean
 // parameter instead of the Ordering context bound, and ??? stubs instead
 // of runtimeChecked. Does not pass the liquid type check, see
 // SchmidBenchmarks.scala.
-object MergeSortLength {
+object MergeSort {
   type Pos = {v: Int if v >= 0}
 
   def safeDiv(x: Pos, y: {v: Pos if v > 1}): {res: Pos if res < x} = ???

@@ -2,26 +2,35 @@
 \centering
 \captionsetup{font=small}
 \footnotesize
-\begin{tabular}{l rrrrr rrrrr rrrrr}
+\begin{tabular}{l rrrr rrrr rrrr}
 \toprule
- & \multicolumn{5}{c}{First-class} & \multicolumn{5}{c}{Schmid} & \multicolumn{5}{c}{Stainless} \\
-\cmidrule(lr){2-6} \cmidrule(lr){7-11} \cmidrule(lr){12-16} 
-Benchmark & LoC & Base & Time & $\Delta$ & $\Delta$\% & LoC & Base & Time & $\Delta$ & $\Delta$\% & LoC & Base & Time & $\Delta$ & $\Delta$\% \\
+ & \multicolumn{4}{c}{First-class} & \multicolumn{4}{c}{Schmid} & \multicolumn{4}{c}{Stainless} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-9} \cmidrule(lr){10-13} 
+Benchmark & LoC & Base & Time & $\Delta$\% & LoC & Base & Time & $\Delta$\% & LoC & Base & Time & $\Delta$\% \\
 \midrule
-\texttt{fansi} & $824$ & $369$ & $407$ & $38$ & $10\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
-\texttt{fibMemo} & $15$ & $169$ & $192$ & $22$ & $13\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
-\texttt{hofsafety1} & $3$ & $105$ & $113$ & $7$ & $7\%$ & $5$ & $172$ & $301$ & $128$ & $75\%$ & --- & --- & --- & --- & --- \\
-\texttt{list1} & $3$ & $144$ & $152$ & $8$ & $6\%$ & $5$ & $187$ & $336$ & $149$ & $79\%$ & --- & --- & --- & --- & --- \\
-\texttt{list2} & $3$ & $138$ & $148$ & $10$ & $7\%$ & $5$ & $185$ & $375$ & $189$ & $102\%$ & --- & --- & --- & --- & --- \\
-\texttt{matrix} & $42$ & $175$ & $237$ & $62$ & $35\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
-\texttt{matrixDims} & $14$ & $148$ & $166$ & $18$ & $12\%$ & $8$ & $327$ & --- & --- & --- & $19$ & $180$ & $235$ & $55$ & $31\%$ \\
-\texttt{maximum} & $11$ & $166$ & $200$ & $34$ & $20\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
-\texttt{maximumBig} & $15$ & $182$ & $293$ & $111$ & $61\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
-\texttt{postuple} & $2$ & $91$ & $101$ & $9$ & $10\%$ & $4$ & $351$ & $410$ & $59$ & $17\%$ & $7$ & $202$ & $208$ & $6$ & $3\%$ \\
-\texttt{range} & $15$ & $187$ & $224$ & $37$ & $20\%$ & --- & --- & --- & --- & --- & $28$ & $225$ & --- & --- & --- \\
-\texttt{vec} & $15$ & $131$ & $161$ & $30$ & $23\%$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{arrfold} & $20$ & --- & --- & --- & $20$ & $1837 \pm 0$ & $2812 \pm 0$ & $53 \pm 0\%$ & $21$ & --- & --- & --- \\
+\texttt{collect} & $15$ & $2609 \pm 0$ & $2832 \pm 0$ & $9 \pm 0\%$ & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{fansi} & $824$ & $4874 \pm 0$ & $5337 \pm 0$ & $9 \pm 0\%$ & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{fibMemo} & $15$ & $2742 \pm 0$ & $2903 \pm 0$ & $6 \pm 0\%$ & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{hof1} & $5$ & $2247 \pm 0$ & $2439 \pm 0$ & $9 \pm 0\%$ & $5$ & $1442 \pm 0$ & $2343 \pm 0$ & $63 \pm 0\%$ & --- & --- & --- & --- \\
+\texttt{hof2} & $8$ & $2018 \pm 0$ & $2156 \pm 0$ & $7 \pm 0\%$ & $8$ & $2632 \pm 0$ & $2052 \pm 0$ & $-22 \pm 0\%$ & --- & --- & --- & --- \\
+\texttt{intarray} & $11$ & $2312 \pm 0$ & $2526 \pm 0$ & $9 \pm 0\%$ & $11$ & $2206 \pm 0$ & $1657 \pm 0$ & $-25 \pm 0\%$ & $14$ & $3336 \pm 0$ & $4967 \pm 0$ & $49 \pm 0\%$ \\
+\texttt{list1} & $5$ & $2350 \pm 0$ & $2526 \pm 0$ & $8 \pm 0\%$ & $5$ & $1631 \pm 0$ & $1660 \pm 0$ & $2 \pm 0\%$ & --- & --- & --- & --- \\
+\texttt{list2} & $5$ & $4100 \pm 0$ & $2817 \pm 0$ & $-31 \pm 0\%$ & $5$ & $1570 \pm 0$ & $1658 \pm 0$ & $6 \pm 0\%$ & --- & --- & --- & --- \\
+\texttt{matrix} & $51$ & $2863 \pm 0$ & $3327 \pm 0$ & $16 \pm 0\%$ & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{matrixDims} & $13$ & $2601 \pm 0$ & $2864 \pm 0$ & $10 \pm 0\%$ & $23$ & $1352 \pm 0$ & $1811 \pm 0$ & $34 \pm 0\%$ & $21$ & $3062 \pm 0$ & $6546 \pm 0$ & $114 \pm 0\%$ \\
+\texttt{max} & $4$ & $2338 \pm 0$ & $2174 \pm 0$ & $-7 \pm 0\%$ & $4$ & $1565 \pm 0$ & $1674 \pm 0$ & $7 \pm 0\%$ & $6$ & $2709 \pm 0$ & $4205 \pm 0$ & $55 \pm 0\%$ \\
+\texttt{maxGen} & $11$ & $4632 \pm 0$ & $2928 \pm 0$ & $-37 \pm 0\%$ & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{maxGenBig} & $15$ & $4155 \pm 0$ & $3607 \pm 0$ & $-13 \pm 0\%$ & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{mergeSort} & $29$ & $3462 \pm 0$ & $3239 \pm 0$ & $-6 \pm 0\%$ & $37$ & --- & --- & --- & $58$ & --- & --- & --- \\
+\texttt{postuple} & $4$ & $3053 \pm 0$ & $2394 \pm 0$ & $-22 \pm 0\%$ & $4$ & $1473 \pm 0$ & $1580 \pm 0$ & $7 \pm 0\%$ & $9$ & $3006 \pm 0$ & $4289 \pm 0$ & $43 \pm 0\%$ \\
+\texttt{range} & $19$ & $3249 \pm 0$ & $3013 \pm 0$ & $-7 \pm 0\%$ & --- & --- & --- & --- & --- & --- & --- & --- \\
+\texttt{rational} & $6$ & $2522 \pm 0$ & $2534 \pm 0$ & $0 \pm 0\%$ & $6$ & $1568 \pm 0$ & $1711 \pm 0$ & $9 \pm 0\%$ & $10$ & $2693 \pm 0$ & $4447 \pm 0$ & $65 \pm 0\%$ \\
+\texttt{sqrt} & $9$ & $2705 \pm 0$ & $2487 \pm 0$ & $-8 \pm 0\%$ & $9$ & $1976 \pm 0$ & $1604 \pm 0$ & $-19 \pm 0\%$ & $12$ & $2562 \pm 0$ & $4086 \pm 0$ & $59 \pm 0\%$ \\
+\texttt{sumnat} & $10$ & $2712 \pm 0$ & $2380 \pm 0$ & $-12 \pm 0\%$ & $10$ & $1911 \pm 0$ & $1638 \pm 0$ & $-14 \pm 0\%$ & $14$ & $2719 \pm 0$ & $7043 \pm 0$ & $159 \pm 0\%$ \\
+\texttt{vec} & $12$ & $2618 \pm 0$ & $2609 \pm 0$ & $-0 \pm 0\%$ & --- & --- & --- & --- & $20$ & $2902 \pm 0$ & $4787 \pm 0$ & $65 \pm 0\%$ \\
 \bottomrule
 \end{tabular}
-\caption{Compilation time benchmarks (ms/op, single-shot). Each platform shows unchecked (baseline) and checked times, with absolute and relative overhead. Note to reviewers: these results are preliminary and noisy. We will rerun with more iterations for the final version and show error margins. We also expect more values for Stainless to be added.}
+\caption{Compilation time benchmarks (ms/op, single-shot), as mean $\pm$ 95\% confidence interval across runs. Each platform shows unchecked (baseline) and checked times, with relative overhead. The overhead interval is propagated from the base and checked intervals.}
 \label{fig:bench-table}
 \end{figure*}

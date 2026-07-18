@@ -4,7 +4,7 @@ object TestStainless:
   def main(args: Array[String]): Unit =
     try
       StainlessCompiler.compile(
-        Seq(s"${bench.BenchSources.dir}/mergeSortLength-stainless.scala"),
+        Seq(s"${bench.BenchSources.dir}/mergeSort-stainless.scala"),
         Seq("-P:stainless:verify:yes", "-P:stainless:check-measures:no"),
         "out"
       )
