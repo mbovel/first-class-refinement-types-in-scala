@@ -9,3 +9,5 @@ paper/paper-diff.*
 smt-sessions/
 evaluation/results/
 artifact/
+.metals
+.vscode
