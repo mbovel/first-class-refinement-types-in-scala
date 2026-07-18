@@ -3,8 +3,7 @@
 Compilation-time benchmarks for Stainless, run as a Dotty compiler plugin:
 
 - **Stainless verify** (`StainlessVerifyBenchmarks`): Stainless extraction and verification via compiler plugin (`-P:stainless:verify:yes`), using native Z3.
-- **Stainless no-verify** (`StainlessNoVerifyBenchmarks`): Stainless extraction only, no verification (`-P:stainless:verify:no`).
-- **Base** (`StainlessBaseBenchmarks`): same programs without contracts, compiled with plain Dotty (no plugin), as a baseline.
+- **Base** (`StainlessBaseBenchmarks`): Stainless extraction only, no verification (`-P:stainless:verify:no`), as the baseline.
 
 ## Prerequisites
 
@@ -32,10 +31,7 @@ All commands are run from the `evaluation/stainless/` directory.
 # Stainless with verification
 sbt 'bench / Jmh / run -wi 0 -i 1 StainlessVerifyBenchmarks'
 
-# Stainless extraction only (no verification)
-sbt 'bench / Jmh / run -wi 0 -i 1 StainlessNoVerifyBenchmarks'
-
-# Base (plain Dotty, no contracts)
+# Base (extraction only, no verification)
 sbt 'bench / Jmh / run -wi 0 -i 1 StainlessBaseBenchmarks'
 ```
 
@@ -49,7 +45,6 @@ sbt 'bench / Jmh / run -wi 0 -i 1 StainlessVerifyBenchmarks.matrixDims'
 
 ```sh
 sbt 'bench / Jmh / run StainlessVerifyBenchmarks'
-sbt 'bench / Jmh / run StainlessNoVerifyBenchmarks'
 sbt 'bench / Jmh / run StainlessBaseBenchmarks'
 ```
 
@@ -59,8 +54,10 @@ Source files are in the shared `../sources/` directory, distinguished by suffix:
 
 | Suffix | Description |
 |--------|-------------|
-| `*-stainless.scala` | Stainless style (`require`/`ensuring`, `BigInt`) |
-| `*-stainless-base.scala` | Same programs, no contracts, plain Scala |
+| `*-stainless.scala` | Stainless style (`require`/`ensuring`) |
+
+Both suites compile the same `*-stainless.scala` sources; they differ only in
+whether verification runs, so the measured delta is the verification time.
 
 ## Stainless plugin modifications
 
