@@ -20,6 +20,9 @@ if [[ -n "${JDK8_HOME:-}" ]]; then
 elif ! java -version 2>&1 | grep -q '"1\.8'; then
   if command -v cs >/dev/null 2>&1; then
     echo "==> Switching to JDK 8 via coursier..."
+    # coursier's env snippet reads $JAVA_HOME before setting it; define it so
+    # the bare reference survives `set -u`.
+    export JAVA_HOME="${JAVA_HOME:-}"
     eval "$(cs java --jvm temurin:8 --env)"
   else
     echo "error: JDK 8 is required to build refined-dotty (set JDK8_HOME or install coursier)" >&2
@@ -38,7 +41,20 @@ cp refined-dotty/interfaces/target/dotty-interfaces-0.1-SNAPSHOT.jar lib/
 cp refined-dotty/lib/leon_2.11-3.0.jar refined-dotty/lib/scala-smtlib_2.11.jar lib/
 # sbt interface jar: resolved into the local Ivy cache by the refined-dotty
 # build above; not available on Maven Central, so ship it in lib/ too.
-cp "$HOME/.ivy2/cache/org.scala-sbt/interface/jars/interface-0.13.11.jar" lib/
+# The Ivy cache may be relocated via SBT_OPTS/JAVA_OPTS (e.g. to a local disk
+# instead of an NFS home); honor those overrides like sbt does.
+IVY_HOME="$HOME/.ivy2"
+prev=
+for tok in ${SBT_OPTS:-} ${JAVA_OPTS:-}; do
+  case "$tok" in
+    -Dsbt.ivy.home=*|-Divy.home=*) IVY_HOME="${tok#*=}" ;;
+  esac
+  if [[ "$prev" == "--ivy" || "$prev" == "-ivy" ]]; then
+    IVY_HOME="$tok"
+  fi
+  prev="$tok"
+done
+cp "$IVY_HOME/cache/org.scala-sbt/interface/jars/interface-0.13.11.jar" lib/
 
 echo "==> Done. Jars are in lib/:"
 ls -lh lib/
