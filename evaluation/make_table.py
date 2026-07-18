@@ -15,6 +15,7 @@ import argparse
 import json
 import math
 import statistics
+import sys
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -83,7 +84,12 @@ def parse_results(path, samples):
     """Accumulate raw JMH samples from one results file into
     {(column, bench): [ms, ...]}."""
     with open(path) as f:
-        data = json.load(f)
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError:
+            print(f"warning: skipping invalid or incomplete results file: {path}",
+                  file=sys.stderr)
+            return
     for entry in data:
         parts = entry["benchmark"].split(".")  # e.g. "bench.FirstClassBenchmarks.fibMemo"
         col = SUITES.get(parts[-2])
@@ -116,11 +122,29 @@ def load_all(results_dir):
 
 
 def count_loc(bench, col):
-    """Count non-empty lines in the source file for a checked benchmark."""
+    """Count source lines in the checked benchmark file, skipping blank lines
+    and comment-only lines (`//` and leading `/* ... */` blocks)."""
     path = SOURCES_DIR / f"{bench}-{SOURCE_SUFFIX[col]}.scala"
     if not path.exists():
         return None
-    return sum(1 for line in open(path) if line.strip())
+    count = 0
+    in_block = False
+    for line in open(path):
+        s = line.strip()
+        if in_block:
+            if "*/" not in s:
+                continue
+            s = s.split("*/", 1)[1].strip()
+            in_block = False
+        while s.startswith("/*"):
+            if "*/" in s:
+                s = s.split("*/", 1)[1].strip()
+            else:
+                in_block = True
+                s = ""
+        if s and not s.startswith("//"):
+            count += 1
+    return count
 
 
 def pct_overhead(b, c):
