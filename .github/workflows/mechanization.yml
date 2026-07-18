@@ -14,10 +14,13 @@ jobs:
     # benchmarks workflow; this job gives a fast signal on the proofs alone.
     container:
       image: rocq/rocq-prover:9.2
+      # The image's default user (rocq, uid 1000) cannot write the
+      # runner-owned workspace and temp directories.
+      options: --user root
     env:
       OPAMROOT: /home/rocq/.opam
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Compile the mechanization
         run: opam exec -- make -C mechanization
