@@ -1,0 +1,31 @@
+name: Docker artifact
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  docker:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build image
+        run: docker build -t refinement-artifact .
+
+      - name: Run the artifact image (mechanization + all suites, dry run)
+        run: |
+          mkdir -p results
+          docker run -v "$PWD/results:/work/evaluation/results" refinement-artifact
+
+      - name: Check result files
+        run: |
+          ls -lR results
+          test -s results/0/first-class.json
+          test -s results/0/stainless.json
+          test -s results/0/schmid.json

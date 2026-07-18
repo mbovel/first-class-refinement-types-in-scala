@@ -4,11 +4,11 @@
 #
 # The Docker image is stored as a plain `docker save` tar; the zip's own
 # compression is applied once, and evaluators load it directly after
-# unzipping with `docker load -i evaluation-image.tar`.
+# unzipping with `docker load -i artifact-image.tar`.
 #
 # Requires the image to be built first:
 #
-#   docker build --platform linux/amd64 -t refinement-bench evaluation
+#   docker build --platform linux/amd64 -t refinement-artifact .
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -18,9 +18,9 @@ NAME=first-class-refinement-types
 OUT_DIR="$SCRIPT_DIR/artifact"
 STAGING="$OUT_DIR/$NAME"
 
-if ! docker image inspect refinement-bench >/dev/null 2>&1; then
-  echo "error: refinement-bench image not found; build it first:" >&2
-  echo "  docker build --platform linux/amd64 -t refinement-bench evaluation" >&2
+if ! docker image inspect refinement-artifact >/dev/null 2>&1; then
+  echo "error: refinement-artifact image not found; build it first:" >&2
+  echo "  docker build --platform linux/amd64 -t refinement-artifact ." >&2
   exit 1
 fi
 
@@ -59,7 +59,7 @@ echo "==> Recording version..."
 git rev-parse HEAD > "$STAGING/VERSION"
 
 echo "==> Saving Docker image..."
-docker save refinement-bench -o "$STAGING/evaluation-image.tar"
+docker save refinement-artifact -o "$STAGING/artifact-image.tar"
 
 echo "==> Creating zip..."
 cd "$OUT_DIR"

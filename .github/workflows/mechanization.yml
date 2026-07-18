@@ -7,13 +7,17 @@ on:
     branches: [main]
 
 jobs:
-  docker:
+  check:
     runs-on: ubuntu-24.04
+    # Stock Rocq image rather than the artifact Dockerfile: building the full
+    # artifact image takes ~30 minutes and is covered by the docker job of the
+    # benchmarks workflow; this job gives a fast signal on the proofs alone.
+    container:
+      image: rocq/rocq-prover:9.2
+    env:
+      OPAMROOT: /home/rocq/.opam
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build image
-        run: docker build -t refinement-mech mechanization
-
-      - name: Check the mechanization
-        run: docker run --rm refinement-mech
+      - name: Compile the mechanization
+        run: opam exec -- make -C mechanization

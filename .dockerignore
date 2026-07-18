@@ -1,0 +1,36 @@
+# Git metadata, CI, and directories that are not part of the image.
+**/.git
+**/.gitignore
+**/.gitmodules
+**/.gitattributes
+**/.DS_Store
+.github
+Dockerfile
+.dockerignore
+paper
+artifact
+pr-diff.patch
+
+# Evaluation build residue and outputs that the image build regenerates.
+**/target
+**/.bsp
+**/.bloop
+**/.metals
+**/.stainless-cache
+evaluation/stainless/lib
+evaluation/schmid/lib
+evaluation/first-class/bench/out
+evaluation/stainless/bench/out
+evaluation/schmid/out
+evaluation/results
+
+# Mechanization build artifacts: the image must compile from clean sources.
+**/*.vo
+**/*.vos
+**/*.vok
+**/*.glob
+**/*.aux
+**/.lia.cache
+mechanization/refinement_types/Makefile
+mechanization/refinement_types/Makefile.conf
+mechanization/refinement_types/CoqMakefile*

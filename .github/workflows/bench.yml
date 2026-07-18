@@ -130,24 +130,3 @@ jobs:
         working-directory: evaluation
         run: ./run.sh --suite schmid --dry-run
 
-  docker:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Build image
-        run: docker build -t refinement-bench evaluation
-
-      - name: Run all suites (dry run)
-        run: |
-          mkdir -p results
-          docker run -v "$PWD/results:/work/evaluation/results" refinement-bench --suite all --dry-run
-
-      - name: Check result files
-        run: |
-          ls -lR results
-          test -s results/0/first-class.json
-          test -s results/0/stainless.json
-          test -s results/0/schmid.json

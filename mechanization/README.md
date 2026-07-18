@@ -10,9 +10,9 @@ make
 
 ## Docker
 
-To build and check the mechanization under Rocq 9.2 in a container:
+The top-level artifact image includes Rocq 9.2. From the repository root:
 
 ```bash
-docker build -t refinement-mech .
-docker run --rm refinement-mech
+docker build -t refinement-artifact .
+docker run --rm refinement-artifact mechanization
 ```
