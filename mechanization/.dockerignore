@@ -1,0 +1,11 @@
+# Local build artifacts: the image must compile from clean sources.
+**/*.vo
+**/*.vos
+**/*.vok
+**/*.glob
+**/*.aux
+**/.lia.cache
+refinement_types/Makefile
+refinement_types/Makefile.conf
+refinement_types/CoqMakefile*
+.github

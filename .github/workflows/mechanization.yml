@@ -1,0 +1,19 @@
+name: Mechanization
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  docker:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t refinement-mech mechanization
+
+      - name: Check the mechanization
+        run: docker run --rm refinement-mech
