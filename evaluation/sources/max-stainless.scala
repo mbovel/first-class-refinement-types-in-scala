@@ -1,7 +1,7 @@
 import stainless.lang._
 
-object MaxBench:
-
-  def max(x: BigInt, y: BigInt): BigInt = {
-    if x > y then x else y
-  }.ensuring(res => res >= x && res >= y)
+object Max {
+  def max(x: Int, y: Int): Int = {
+    if (x > y) x else y
+  }.ensuring(v => v >= x && v >= y)
+}

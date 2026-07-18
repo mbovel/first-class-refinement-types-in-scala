@@ -1,10 +1,18 @@
-case class IntArray(length: BigInt):
-  require(length >= 0)
+import stainless.lang._
 
-  def access(i: BigInt): Unit =
-    require(i >= 0 && i < length)
-    ()
+object IntArray {
 
-def test(): Unit =
-  val a = IntArray(3)
-  a.access(1)
+  case class IntArray(length: Int) {
+    require(length >= 0)
+
+    def access(i: Int): Unit = {
+      require(0 <= i && i < length)
+      ()
+    }
+  }
+
+  def test(): Unit = {
+    val a = new IntArray(3)
+    a.access(1)
+  }
+}

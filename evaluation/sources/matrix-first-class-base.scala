@@ -1,3 +1,5 @@
+
+
 case class CheckedArray(size: Int):
   private val data = new Array[Double](size)
   def apply(i: Int): Double = data(i)

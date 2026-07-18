@@ -20,9 +20,9 @@ abstract class StainlessBenchmarks extends CompilationBenchmarks:
   def vec =
     compiler.compile(Seq(source("vec")), options, outDir)
 
-  //@Benchmark
-  //def mergeSortLength =
-  //  compiler.compile(Seq(source("mergeSortLength")), options, outDir)
+  @Benchmark
+  def mergeSortLength =
+    compiler.compile(Seq(source("mergeSortLength")), options, outDir)
 
   // Georg-equivalent benchmarks
   @Benchmark
@@ -58,7 +58,8 @@ class StainlessBaseBenchmarks extends StainlessBenchmarks:
   override def suffix = "stainless"
   override def options = Seq("-P:stainless:verify:no")
 
-/** Stainless with verification but without termination checking. */
+/** Stainless with verification (including termination measures; the plugin
+ *  only understands the verify and ghost-elim options). */
 class StainlessVerifyBenchmarks extends StainlessBenchmarks:
   override def suffix = "stainless"
-  override def options = Seq("-P:stainless:verify:yes", "-P:stainless:check-measures:no")
+  override def options = Seq("-P:stainless:verify:yes")

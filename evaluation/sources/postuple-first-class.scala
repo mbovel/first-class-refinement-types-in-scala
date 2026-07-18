@@ -1,3 +1,4 @@
-class PosTuple(val a: Int)(val b: Int with a + b > 0)
-
-val t = PosTuple(0)(1)
+object Foo {
+  class PosTuple(val a: Int)(val b: {v: Int with a + v > 0})
+  new PosTuple(0)(1)
+}

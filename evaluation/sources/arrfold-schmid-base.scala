@@ -1,4 +1,5 @@
 object Foo {
+
   class IntArray(val length: Int, init: Int) {
     private val data = Array.fill(length)(init)
 

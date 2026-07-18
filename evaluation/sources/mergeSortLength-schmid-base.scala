@@ -1,4 +1,5 @@
-object mergeSortLength {
+object MergeSortLength {
+
 
   def safeDiv(x: Int, y: Int): Int = ???
 

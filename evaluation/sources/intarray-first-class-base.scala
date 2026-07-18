@@ -1,10 +1,13 @@
-type NonNeg = Int
+object IntArray {
 
-class IntArray(val length: NonNeg, init: Int):
-  private val data = Array.fill(length)(init)
 
-  def access(i: NonNeg): Int =
-    data(i)
+  case class IntArray(length: Int) {
+    def access(i: Int): Unit =
+      ()
+  }
 
-val a = IntArray(3, 0)
-val r = a.access(1)
+  def test(): Unit = {
+    val a = new IntArray(3)
+    a.access(1)
+  }
+}

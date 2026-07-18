@@ -1,15 +1,16 @@
 import stainless.lang._
 
-object Sqrt:
+object Sqrt {
 
-  def max(x: BigInt, y: BigInt): BigInt = {
-    if x > y then x else y
-  }.ensuring(res => res >= x && res >= y)
+  def max(x: Int, y: Int): Int = {
+    if (x > y) x else y
+  }.ensuring(v => v >= x && v >= y)
 
-  def sqrt(z: BigInt): BigInt = {
+  def sqrt(z: Int): Int = {
     require(z >= 0)
     z
   }
 
-  def test(u: BigInt): BigInt =
+  def test(u: Int): Int =
     sqrt(max(0, u))
+}

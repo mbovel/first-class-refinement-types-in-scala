@@ -1,4 +1,6 @@
-class Rational(p: Int, q: Int with q != 0):
-  val asFloat = p / q
-
-val r = Rational(1, 2).asFloat
+object Foo {
+  class Rational(p: Int, q: {v: Int with v != 0}) {
+    val asFloat = p / q
+  }
+  new Rational(1, 2).asFloat
+}

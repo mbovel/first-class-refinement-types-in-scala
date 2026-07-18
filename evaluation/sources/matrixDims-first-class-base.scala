@@ -1,4 +1,6 @@
 object Foo {
+
+
   case class Matrix(width: Int, height: Int)
 
   def transpose(m: Matrix): Matrix =

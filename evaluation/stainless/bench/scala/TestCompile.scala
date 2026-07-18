@@ -11,9 +11,9 @@ object TestCompile {
   def main(args: Array[String]): Unit = {
     val dir = "out"
     new java.io.File(dir).mkdirs()
-    val defaultFiles = Seq("max", "sqrt", "sumnat", "intarray", "postuple", "rational", "matrixDims", "vec")
+    val defaultFiles = Seq("max", "sqrt", "sumnat", "intarray", "postuple", "rational", "matrixDims", "vec", "mergeSortLength")
     val files = if (args.nonEmpty) args.toSeq else defaultFiles
-    val options = Seq("-P:stainless:verify:yes", "-P:stainless:check-measures:no")
+    val options = Seq("-P:stainless:verify:yes")
     for (f <- files) {
       println(s"Testing $f.scala... ")
       try {

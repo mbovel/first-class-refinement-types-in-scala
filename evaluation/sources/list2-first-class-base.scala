@@ -1,4 +1,5 @@
-type NonNeg = Int
+object Foo {
 
-val nnList = List[NonNeg](1, 2, 3)
-val nnListRev: List[NonNeg] = nnList.reverse
+  val nnList = List[Int](1, 2, 3)
+  val nnListRev: List[Int] = nnList.reverse
+}

@@ -1,3 +1,4 @@
-class PosTuple(val a: Int)(val b: Int)
-
-val t = PosTuple(0)(1)
+object Foo {
+  class PosTuple(val a: Int)(val b: Int)
+  new PosTuple(0)(1)
+}

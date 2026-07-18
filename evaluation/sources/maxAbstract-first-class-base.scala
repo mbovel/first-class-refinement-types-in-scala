@@ -10,7 +10,7 @@ def max[T: Ordering as ord, U <: T](x: U, y: U): U =
 
 def maximum[T: Ordering, U <: T](xs: List[U]): U = xs.reduce(max)
 
-type Even = Int
 
-def test: Even =
+
+def test: Int =
   maximum(List(2, 4))
