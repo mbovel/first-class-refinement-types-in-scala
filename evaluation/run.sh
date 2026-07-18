@@ -7,7 +7,8 @@
 # (suites are interleaved)
 #
 # JMH results are written to <results-dir>/<run>/<suite>.json, where <run> is
-# 0 for a dry run and 1..N for full runs.
+# the run's start date and time (e.g. 2026-07-18-2200, with a -dry suffix for
+# dry runs), so results from separate invocations accumulate side by side.
 set -euo pipefail
 
 usage() {
@@ -97,10 +98,9 @@ if [[ -n "$RUNS" && ! "$RUNS" =~ ^[1-9][0-9]*$ ]]; then
 fi
 
 JMH_ARGS=""
-RUN_IDS=($(seq 1 "${RUNS:-1}"))
+N_RUNS="${RUNS:-1}"
 if [[ "$DRY_RUN" == 1 ]]; then
   JMH_ARGS=" -wi 0 -i 1"
-  RUN_IDS=(0)
 fi
 
 if [[ -z "$RESULTS_DIR" ]]; then
@@ -111,20 +111,27 @@ elif [[ "$RESULTS_DIR" != /* ]]; then
 fi
 mkdir -p "$RESULTS_DIR"
 RESULTS_DIR="$(cd "$RESULTS_DIR" && pwd)"
-# Hidden files (e.g. macOS .DS_Store) do not count as content.
-if [[ -n "$(ls "$RESULTS_DIR")" ]]; then
-  echo "error: results directory is not empty: $RESULTS_DIR" >&2
-  exit 1
-fi
 
 for suite in "${SUITES[@]}"; do
   check_suite "$suite"
 done
 
-for run in "${RUN_IDS[@]}"; do
+for ((run = 1; run <= N_RUNS; run++)); do
+  RUN_ID="$(date +%Y-%m-%d-%H%M)"
+  if [[ "$DRY_RUN" == 1 ]]; then
+    RUN_ID="$RUN_ID-dry"
+  fi
+  # Disambiguate runs starting within the same minute.
+  if [[ -e "$RESULTS_DIR/$RUN_ID" ]]; then
+    n=2
+    while [[ -e "$RESULTS_DIR/$RUN_ID-$n" ]]; do
+      n=$((n + 1))
+    done
+    RUN_ID="$RUN_ID-$n"
+  fi
+  mkdir -p "$RESULTS_DIR/$RUN_ID"
   for suite in "${SUITES[@]}"; do
-    echo "==> Run $run: $suite benchmarks..."
-    mkdir -p "$RESULTS_DIR/$run"
-    (cd "$suite" && sbt "bench / Jmh / run$JMH_ARGS -foe true -gc true -rf json -rff $RESULTS_DIR/$run/$suite.json")
+    echo "==> Run $RUN_ID: $suite benchmarks..."
+    (cd "$suite" && sbt "bench / Jmh / run$JMH_ARGS -foe true -gc true -rf json -rff $RESULTS_DIR/$RUN_ID/$suite.json")
   done
 done
