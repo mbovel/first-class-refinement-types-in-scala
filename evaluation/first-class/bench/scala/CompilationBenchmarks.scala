@@ -18,7 +18,7 @@ import org.openjdk.jmh.annotations.{
 
 @Fork(
   value = 1,
-  jvmArgsPrepend = Array("-XX:+PrintCommandLineFlags", "-Xms8G", "-Xmx8G", "--sun-misc-unsafe-memory-access=allow"),
+  jvmArgsPrepend = Array("-XX:+PrintCommandLineFlags", "-Xms8G", "-Xmx8G"),
 )
 @Warmup(iterations = 150)
 @Measurement(iterations = 20)
