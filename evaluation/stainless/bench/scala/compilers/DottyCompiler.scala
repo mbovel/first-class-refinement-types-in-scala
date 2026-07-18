@@ -7,13 +7,16 @@ import dotty.tools.dotc.Driver
  *  This is a simpler approach that bypasses the sbt bridge interface.
  */
 object DottyCompiler extends Compiler:
-  /** Classpath containing the scala3-library and scala-library jars,
-   *  extracted from the JVM's class path property.
+  /** Classpath containing the scala3-library, scala-library and
+   *  stainless-library jars, extracted from the JVM's class path property.
+   *  The stainless library is included so that the contract-free base
+   *  programs can keep `stainless.math.wrapping` (a plain identity function
+   *  without the plugin).
    */
   private val stdlibClasspath: String =
     System.getProperty("java.class.path", "")
       .split(java.io.File.pathSeparator)
-      .filter(p => p.contains("scala3-library") || p.contains("scala-library"))
+      .filter(p => p.contains("scala3-library") || p.contains("scala-library") || p.contains("stainless-library"))
       .mkString(java.io.File.pathSeparator)
 
   def compile(sources: Seq[String], options: Seq[String], outputDir: String, shouldFail: Boolean = false): Unit =

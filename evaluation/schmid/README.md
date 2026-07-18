@@ -59,7 +59,9 @@ Source files are in the shared `../sources/` directory, using Georg's `{ v: Type
 | `arrfold-schmid.scala` | Generic `arrFold[A]` with `arrSum` and `arrMax` |
 | `rational-schmid.scala` | `Rational` class with `q != 0` constraint |
 
-These are the exact programs from Georg's test suite (`LiquidTyperTests.scala`).
+These are the programs from Georg's test suite (`LiquidTyperTests.scala`),
+lightly restyled to match the first-class variants (e.g. `sumnat` is wrapped in
+an object and drops the redundant `AnyInt` alias).
 
 In addition, `mergeSortLength-schmid.scala` is a direct port of the first-class
 `mergeSortLength` benchmark, but it crashes the LiquidTyper and is therefore

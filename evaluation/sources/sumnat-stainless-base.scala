@@ -1,10 +1,17 @@
-type NonNeg = Int
+import stainless.lang._
+import stainless.math.wrapping
 
-def safeAdd(x: NonNeg, y: NonNeg): NonNeg =
-  if x + y < 0 then 2147483647 else x + y
+object Test {
 
-def sumNat(n: Int): NonNeg =
-  if n <= 0 then
-    0
-  else
-    safeAdd(sumNat(n - 1), n)
+  def safeAdd(x: Int, y: Int): Int = {
+
+    if wrapping(x + y) < 0 then 2147483647 else wrapping(x + y)
+  }
+
+  def sumNat(n: Int): Int = {
+    if n <= 0 then
+      0
+    else
+      safeAdd(sumNat(n - 1), n)
+  }
+}

@@ -1,11 +1,12 @@
-object Foo {
+object Test {
+
+
   def safeAdd(x: Int, y: Int): Int =
-    if (x + y < 0) 2147483647 else x + y
+    if x + y < 0 then 2147483647 else x + y
 
   def sumNat(n: Int): Int =
-    if (n <= 0) {
+    if n <= 0 then
       0
-    } else {
+    else
       safeAdd(sumNat(n - 1), n)
-    }
 }

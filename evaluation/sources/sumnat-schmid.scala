@@ -1,14 +1,12 @@
-object Foo {
-  type NonNeg = { v: Int if v >= 0 }
-  type AnyInt = { v: Int if true }
+object Test {
+  type NonNeg = {v: Int if v >= 0}
 
   def safeAdd(x: NonNeg, y: NonNeg): NonNeg =
-    if (x + y < 0) 2147483647 else x + y
+    if x + y < 0 then 2147483647 else x + y
 
-  def sumNat(n: AnyInt): NonNeg =
-    if (n <= 0) {
+  def sumNat(n: Int): NonNeg =
+    if n <= 0 then
       0
-    } else {
+    else
       safeAdd(sumNat(n - 1), n)
-    }
 }

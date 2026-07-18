@@ -39,11 +39,9 @@ abstract class AbstractFirstClassBenchmarks extends CompilationBenchmarks:
   def range =
     DottyCompiler.compile(Seq(source("range")), options, outDir)
 
-  // Fails to compile in the first-class variant:
-  // https://github.com/mbovel/first-class-refinement-types-in-scala/actions/runs/29086185876
-  // @Benchmark
-  // def mergeSortLength =
-  //   DottyCompiler.compile(Seq(source("mergeSortLength")), options, outDir)
+  @Benchmark
+  def mergeSortLength =
+    DottyCompiler.compile(Seq(source("mergeSortLength")), options, outDir)
 
   @Benchmark
   def fibMemo =
@@ -54,9 +52,9 @@ abstract class AbstractFirstClassBenchmarks extends CompilationBenchmarks:
   def max =
     DottyCompiler.compile(Seq(source("max")), options, outDir)
 
-  // @Benchmark
-  // def sumnat =
-  //   DottyCompiler.compile(Seq(source("sumnat")), options, outDir)
+  @Benchmark
+  def sumnat =
+    DottyCompiler.compile(Seq(source("sumnat")), options, outDir)
 
   @Benchmark
   def intarray =
@@ -93,6 +91,6 @@ abstract class AbstractFirstClassBenchmarks extends CompilationBenchmarks:
   // def arrfold =
   //   DottyCompiler.compile(Seq(source("arrfold")), options, outDir)
 
-  // @Benchmark
-  // def rational =
-  //   DottyCompiler.compile(Seq(source("rational")), options, outDir)
+  @Benchmark
+  def rational =
+    DottyCompiler.compile(Seq(source("rational")), options, outDir)
