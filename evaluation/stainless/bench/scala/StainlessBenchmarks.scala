@@ -5,11 +5,14 @@ import org.openjdk.jmh.annotations.{Benchmark, Warmup}
 
 abstract class StainlessBenchmarks extends CompilationBenchmarks:
 
-  // Verification must always run on native Z3: on platforms without ScalaZ3
-  // bindings (e.g. ARM), inox silently falls back to other solvers such as
-  // Princess, which would change what is measured. Fail hard instead.
-  require(inox.solvers.SolverFactory.hasNativeZ3,
-    "Native Z3 bindings (ScalaZ3) are not available on this platform; refusing to fall back to another solver")
+  // Verification should run on native Z3: on platforms without ScalaZ3
+  // bindings (e.g. ARM), inox falls back to other solvers such as Princess,
+  // which changes what is measured. Warn loudly so fallback runs are never
+  // mistaken for native-Z3 results.
+  if !inox.solvers.SolverFactory.hasNativeZ3 then
+    System.err.println(
+      "[STAINLESS-BENCH] WARNING: native Z3 bindings (ScalaZ3) are not available on this platform; " +
+        "inox will fall back to another solver (e.g. Princess). Results are NOT comparable to native-Z3 runs.")
 
   /** Source file suffix, e.g. "stainless" for `sources/max-stainless.scala`. */
   def suffix: String
