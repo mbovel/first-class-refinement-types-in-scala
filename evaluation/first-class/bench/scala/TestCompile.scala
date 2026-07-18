@@ -12,7 +12,7 @@ object TestCompile {
     val dir = "out"
     new java.io.File(dir).mkdirs()
     val defaultFiles = Seq("maxAbstract", "maxAbstractBig", "sqrt", "vec", "matrix",
-                           "matrixDims", "range", "fibMemo", "max", "intarray", "postuple",
+                           "matrixDims", "range", "fibMemo", "max", "arrfold", "intarray", "postuple",
                            "list1", "list2", "hof1", "hof2", "fansi", "collect")
     val files = if (args.nonEmpty) args.toSeq else defaultFiles
     val options = Seq("-language:experimental.qualifiedTypes")

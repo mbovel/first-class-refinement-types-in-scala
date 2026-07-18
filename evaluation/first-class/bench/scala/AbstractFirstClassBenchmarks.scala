@@ -88,11 +88,9 @@ abstract class AbstractFirstClassBenchmarks extends CompilationBenchmarks:
   def collect =
     DottyCompiler.compile(Seq(source("collect")), options, outDir)
   
-  // Fails to compile: the checker cannot yet prove i + 1: NonNeg from
-  // i: NonNeg in arrFold's rec loop (arithmetic entailment):
-  // @Benchmark
-  // def arrfold =
-  //   DottyCompiler.compile(Seq(source("arrfold")), options, outDir)
+  @Benchmark
+  def arrfold =
+    DottyCompiler.compile(Seq(source("arrfold")), options, outDir)
 
   @Benchmark
   def rational =
