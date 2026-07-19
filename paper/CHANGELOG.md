@@ -4,6 +4,8 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
 `oopsla-2026-initial`). A visual diff can be generated with
 `./make-diff.sh`.
 
+## Done
+
 - **Non-terminating predicates: properties established formally (§2.3).**
   (8b60bad) Promoted the non-termination discussion to its own
   subsection and stated the metatheoretic properties of the design as lemmas,
@@ -43,3 +45,50 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
   official Scala compiler benchmark suite shows no noticeable regression,
   addressing reviewer A's backward-compatibility and performance question.
 - **Typos and smaller fixes** addressing individual reviewer comments.
+
+## TODO
+
+Revisions promised in the OOPSLA response or requested by the metareview
+that are not yet in the paper:
+
+- **Highlight non-terminating predicates as a key contribution.** The
+  metareview explicitly asked for this. The §2.3 subsection with lemmas is
+  done and the Rocq theorems exist in `ExamplesPartialSoundness.v`
+  (`sem_implies_and_true`, `sem_implies_and_false_terminating`,
+  `refine_diverge_eq_refine_true`, `no_converging_term_has_refine_false`),
+  but the Contributions list (§1) still has only its original three bullets:
+  design, soundness, implementation.
+- **Add the four promised related-work references.** Flux, Thrust, and the
+  refined library are in, but these are absent from both `paper.tex` and
+  `references.bib`:
+  - Generic Refinement Types (POPL 2025)
+  - Checker Framework / pluggable types (ICSE SEIP 2011)
+  - Lightweight verification of array indexing (ISSTA 2018)
+  - Combining expressive type systems and deductive verification
+    (OOPSLA 2021)
+- **Rename and introduce the δ function in E-BinOp.** The response promised
+  "We will change the name of the delta function and introduce it".
+  `fig-eval.tex` still uses `\delta(op, v_a, v_b)`, it is never introduced
+  in the prose, and it clashes with the δ used for type-variable
+  assignments in §3.5.
+- **Remove "qualified type" leftovers.** The response promised "refinement
+  type" consistently. Two remain in the §4 implementation list: the
+  *Adaptation* item ("when the expected type is a qualified type") and
+  *Argument hoisting* ("contains qualified types"). (The occurrence quoting
+  Schmid and Kunčak is fine.)
+- **Fix reviewer B's L108-109 comma splice**, marked "Fixed, thanks" in the
+  response but not actually fixed: "it requires no additional type system
+  mechanism, it follows directly from subtyping" should use a semicolon.
+
+Borderline / soft promises, currently unaddressed:
+
+- **Dafny "subset types" clarification** — the response answered reviewer B,
+  but the paper still calls Dafny a refinement-type system with only the
+  leino2010 citation. A footnote or the subset-types citation would preempt
+  the complaint.
+- **Design-choice motivations in §3** — offered conditionally ("Are there
+  specific rules you would like us to motivate?"). The "bad bounds"
+  motivation exists but only in related work (§5), not in §3 where
+  reviewer A wanted the why.
+- **"Pre-installs a provisional type"** — the response offered to expand;
+  the sentence is still one line.
