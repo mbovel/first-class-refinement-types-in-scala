@@ -45,10 +45,12 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
   official Scala compiler benchmark suite shows no noticeable regression,
   addressing reviewer A's backward-compatibility and performance question.
 - **Non-terminating predicates highlighted as a key contribution (§1).**
-  Added a dedicated bullet to the Contributions list — the
-  partial-correctness treatment of predicates with no termination checking,
-  backed by the §2.3 lemmas proved in Rocq — and a sentence to the abstract,
-  as requested by the metareview.
+  As requested by the metareview: the design bullet of the Contributions
+  list now names the partial-correctness semantics with no termination
+  checking as a distinctive design choice, the soundness bullet states that
+  soundness needs no termination assumptions and points to the §2.3 lemmas
+  proved in Rocq, and the abstract gained a sentence. The bullets keep
+  their one-to-one correspondence with sections 2--4.
 - **Typos and smaller fixes** addressing individual reviewer comments.
 
 ## TODO
