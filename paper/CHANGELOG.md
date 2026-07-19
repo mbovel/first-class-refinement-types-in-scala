@@ -29,4 +29,11 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
   use an interpreter-based approach with step-indexed logical relations for
   multi-pass compiler verification; the previous text misattributed the
   combination of definitional interpreters with semantic typing to them.
+- **Named variables in the metatheory lemmas (§3.6).** The weakening,
+  substitution, and avoidance lemmas were previously stated in de Bruijn style
+  to match the mechanization, an unannounced notation shift the reviewers found
+  jarring. They are now stated with named variables like the rest of the paper:
+  explicit shifts `A[↑]` become freshness side conditions `x ∉ FV(A)`, and
+  environment extension `v, ρ` becomes `ρ[x ↦ v]`. A notation remark records
+  that the mechanization states these lemmas in de Bruijn form.
 - **Typos and smaller fixes** addressing individual reviewer comments.

@@ -545,22 +545,24 @@ To provide a conventional syntactic interface, we also define inductive syntacti
 
 This separation between syntactic and semantic judgments allows us to state and use typing rules in the familiar inductive style, while the soundness guarantee flows from the semantic interpretation.
 
-\paragraph{Notation.} The remaining lemmas are stated in de~Bruijn style to match the mechanization, unlike the rest of the paper where we use named variables and omit explicit shifts (\S\ref{sec:language}). We write $A[\uparrow]$ for the shift that increments every free index in~$A$ by one, $A[i \bind j]$ for the substitution of index~$j$ for index~$i$, and $v, \rho$ for the environment $\rho$ extended with a most-recent binding~$v$.
+\paragraph{Notation.} As in the rest of the paper, we state the remaining lemmas with named variables (\S\ref{sec:language}), writing $\mathrm{FV}(A)$ for the free (term and type) variables of~$A$. The mechanization states them in de~Bruijn form, where extending the environment corresponds to an explicit index shift on the type and the freshness side conditions below are implicit.
 
 \paragraph{Weakening and substitution for the interpretation.}
-The semantic typing and subtyping proofs require that the value interpretation is well-behaved under changes to the environment. The key lemmas establish that extending an environment corresponds to shifting indices in the type, and that substituting a variable corresponds to removing it from the environment.
+The semantic typing and subtyping proofs require that the value interpretation is well-behaved under changes to the environment. The key lemmas establish that the interpretation depends only on the variables the type mentions: extending the environment with a fresh binding leaves it unchanged, and a variable can be substituted away when the environment determines its value.
 
 \begin{lemma}[Term weakening]\label{lem:interp-term-weaken}
-  $\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho} = \mathcal{V}\llbracket A[\uparrow] \rrbracket_{\delta}^{v, \rho}$
+  If\/ $x \notin \mathrm{FV}(A)$, then
+  $\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho} = \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho[x \bind v]}$.
 \end{lemma}
 
 \begin{lemma}[Term substitution]\label{lem:interp-term-subst}
-  If\/ $\rho(i) = v$, then
-  $\mathcal{V}\llbracket A \rrbracket_{\delta}^{v, \rho} = \mathcal{V}\llbracket A[0 \bind i] \rrbracket_{\delta}^{\rho}$.
+  If\/ $\rho(y) = v$, then
+  $\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho[x \bind v]} = \mathcal{V}\llbracket A[x \bind y] \rrbracket_{\delta}^{\rho}$.
 \end{lemma}
 
 \begin{lemma}[Type weakening]\label{lem:interp-type-weaken}
-  $\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho} = \mathcal{V}\llbracket A[\uparrow] \rrbracket_{\delta, S}^{\rho}$
+  If\/ $X \notin \mathrm{FV}(A)$, then
+  $\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho} = \mathcal{V}\llbracket A \rrbracket_{\delta[X \bind S]}^{\rho}$.
 \end{lemma}
 
 \begin{lemma}[Type substitution]\label{lem:interp-type-subst}
@@ -573,9 +575,10 @@ The semantic typing and subtyping proofs require that the value interpretation i
 The interpretation lemmas above reduce questions about the semantic types to questions about evaluation under modified environments. These in turn require corresponding lemmas about the evaluator. The difficulty is that evaluation results are not preserved exactly: when the environment is extended, closures capture the larger environment, producing structurally different values. To handle this, we define a \emph{compatibility relation} $r_1 \approx r_2$ on results that relates first-order values to themselves and closures to closures with correspondingly extended captured environments. The evaluation weakening lemmas then take the following simulation-style form:
 
 \begin{lemma}[Evaluation weakening]\label{lem:eval-weaken}
+  Suppose $x \notin \mathrm{FV}(a)$.
   If\/ $\rho \vdash a \Downarrow^? r$, then there exists $r' \approx r$ such that
-  $v, \rho \vdash \mbox{$a[\uparrow]$} \Downarrow^? r'$.
-  Conversely, if\/ $v, \rho \vdash \mbox{$a[\uparrow]$} \Downarrow^? r$, then there exists $r' \approx r$ such that $\rho \vdash a \Downarrow^? r'$.
+  $\rho[x \bind v] \vdash a \Downarrow^? r'$.
+  Conversely, if\/ $\rho[x \bind v] \vdash a \Downarrow^? r$, then there exists $r' \approx r$ such that $\rho \vdash a \Downarrow^? r'$.
 \end{lemma}
 
 \noindent This simulation-style argument is needed because the definitional interpreter uses closures rather than substitution: evaluating a lambda under a longer environment produces a closure capturing that longer environment. Analogous lemmas handle term substitution, with a corresponding substitution compatibility relation.
@@ -586,12 +589,12 @@ The $\textsf{avoid}$ operation (\S\ref{sec:typing}) must preserve the subtyping 
 \begin{lemma}[Avoidance soundness]\label{lem:avoid}
   For all $v$:
   \begin{enumerate}[nosep]
-    \item $\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \implies \mathcal{V}\llbracket \textsf{avoid}(A, i)^{+} \rrbracket_{\delta}^{\rho}(v)$\quad (positive: supertype)
-    \item $\mathcal{V}\llbracket \textsf{avoid}(A, i)^{-} \rrbracket_{\delta}^{\rho}(v) \implies \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v)$\quad (negative: subtype)
+    \item $\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \implies \mathcal{V}\llbracket \textsf{avoid}(A, x)^{+} \rrbracket_{\delta}^{\rho}(v)$\quad (positive: supertype)
+    \item $\mathcal{V}\llbracket \textsf{avoid}(A, x)^{-} \rrbracket_{\delta}^{\rho}(v) \implies \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v)$\quad (negative: subtype)
   \end{enumerate}
 \end{lemma}
 
-\noindent These are proven together by induction on~$A$, flipping polarity at contravariant positions. The $\textsf{avoid}(B, x)$ appearing in the typing rules (e.g., \textsc{T-Let}) is $\textsf{avoid}(B, 0)^{+}$: it removes the most recently bound variable in positive polarity, producing a supertype.
+\noindent These are proven together by induction on~$A$, flipping polarity at contravariant positions. The $\textsf{avoid}(B, x)$ appearing in the typing rules (e.g., \textsc{T-Let}) uses positive polarity, $\textsf{avoid}(B, x)^{+}$, producing a supertype of~$B$.
 
 \paragraph{Positivity and fold/unfold.}
 The fold and unfold rules for $\mu X.\, A$ require showing that the interpretation of the recursive type coincides with its one-step unfolding: $\mathcal{V}\llbracket \mu X.\, A \rrbracket = \mathcal{V}\llbracket A[X \bind \mu X.\, A] \rrbracket$. The key ingredients, adapted from Hamza et~al.~\cite{hamza2019}, are:
