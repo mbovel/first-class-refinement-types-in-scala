@@ -6,7 +6,7 @@
 # --runs N repeats the whole selection N times, with runs as the outer loop
 # (suites are interleaved)
 #
-# JMH results are written to <results-dir>/<run>/<suite>.json, where <run> is
+# JMH results are written to <results-dir>/<suite>/<run>.json, where <run> is
 # the run's start date and time (e.g. 2026-07-18-2200, with a -dry suffix for
 # dry runs), so results from separate invocations accumulate side by side.
 set -euo pipefail
@@ -57,7 +57,7 @@ case "$SUITE" in
     SUITES=("$SUITE")
     ;;
   all)
-    SUITES=(first-class stainless schmid)
+    SUITES=(stainless schmid first-class)
     ;;
   "")
     usage
@@ -116,22 +116,32 @@ for suite in "${SUITES[@]}"; do
   check_suite "$suite"
 done
 
+run_exists() {
+  local id="$1" suite
+  for suite in "${SUITES[@]}"; do
+    if [[ -e "$RESULTS_DIR/$suite/$id.json" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 for ((run = 1; run <= N_RUNS; run++)); do
   RUN_ID="$(date +%Y-%m-%d-%H%M)"
   if [[ "$DRY_RUN" == 1 ]]; then
     RUN_ID="$RUN_ID-dry"
   fi
   # Disambiguate runs starting within the same minute.
-  if [[ -e "$RESULTS_DIR/$RUN_ID" ]]; then
+  if run_exists "$RUN_ID"; then
     n=2
-    while [[ -e "$RESULTS_DIR/$RUN_ID-$n" ]]; do
+    while run_exists "$RUN_ID-$n"; do
       n=$((n + 1))
     done
     RUN_ID="$RUN_ID-$n"
   fi
-  mkdir -p "$RESULTS_DIR/$RUN_ID"
   for suite in "${SUITES[@]}"; do
     echo "==> Run $RUN_ID: $suite benchmarks..."
-    (cd "$suite" && sbt "bench / Jmh / run$JMH_ARGS -foe true -gc true -rf json -rff $RESULTS_DIR/$RUN_ID/$suite.json")
+    mkdir -p "$RESULTS_DIR/$suite"
+    (cd "$suite" && sbt "bench / Jmh / run$JMH_ARGS -foe true -gc true -rf json -rff $RESULTS_DIR/$suite/$RUN_ID.json")
   done
 done

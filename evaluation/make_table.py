@@ -5,7 +5,7 @@ Generate the benchmark results table comparing compilation times across:
 - Schmid: Georg Schmid's liquid types on Dotty 0.1 vs. unchecked baseline
 - Stainless: Stainless with verification vs. Stainless without verification
 
-Reads JMH JSON results from <results-dir>/<run>/<suite>.json as written by
+Reads JMH JSON results from <results-dir>/<suite>/<run>.json as written by
 run.sh, pooling samples across runs, and produces a LaTeX table with absolute
 times and deltas (written to the paper directory) plus the same table on
 stdout for quick inspection.
@@ -274,7 +274,7 @@ def print_stdout_table(table):
 def main():
     parser = argparse.ArgumentParser(description="Generate the benchmark results LaTeX table from JMH JSON results.")
     parser.add_argument("--results-dir", type=Path, default=DEFAULT_RESULTS_DIR,
-                        help="directory containing <run>/<suite>.json files (default: results/)")
+                        help="directory containing <suite>/<run>.json files (default: results/)")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT,
                         help="output .tex path (default: ../paper/bench_table.tex)")
     args = parser.parse_args()
