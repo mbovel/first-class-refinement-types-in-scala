@@ -20,24 +20,24 @@
   \mathcal{V}\llbracket \bot \rrbracket_{\delta}^{\rho}(v) &\triangleq& \bot
   \\[0.5em]
   \mathcal{V}\llbracket \Pi x{:}A.\, B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
-    \exists \rho_f, b.\; v = \langle \rho_f, \lambda x.\, b \rangle \land \forall v_a.\; \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v_a) \implies \mathcal{E}\llbracket B \rrbracket_{\delta}^{\rho_f[x \mapsto v_a]}(b)
+    \exists \rho_f, b.\; v = \langle \rho_f, \lambda x.\, b \rangle \land \forall v_a.\; \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v_a) \implies \mathcal{E}\llbracket B \rrbracket_{\delta}^{\rho_f[x \bind v_a]}(b)
   \\[0.5em]
   \mathcal{V}\llbracket \forall (X :> L <: U).\, B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
-    \exists \rho_f, b.\; v = \langle \rho_f, \Lambda X.\, b \rangle \land \forall S.\; \mathcal{V}\llbracket L \rrbracket_{\delta}^{\rho} \subseteq S \subseteq \mathcal{V}\llbracket U \rrbracket_{\delta}^{\rho} \implies \mathcal{E}\llbracket B \rrbracket_{\delta[X \mapsto S]}^{\rho_f}(b)
+    \exists \rho_f, b.\; v = \langle \rho_f, \Lambda X.\, b \rangle \land \forall S.\; \mathcal{V}\llbracket L \rrbracket_{\delta}^{\rho} \subseteq S \subseteq \mathcal{V}\llbracket U \rrbracket_{\delta}^{\rho} \implies \mathcal{E}\llbracket B \rrbracket_{\delta[X \bind S]}^{\rho_f}(b)
   \\[0.5em]
   \mathcal{V}\llbracket \Sigma x{:}A.\, B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
-    \exists v_1, v_2.\; v = (v_1, v_2) \land \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v_1) \land \mathcal{V}\llbracket B \rrbracket_{\delta}^{\rho[x \mapsto v_1]}(v_2)
+    \exists v_1, v_2.\; v = (v_1, v_2) \land \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v_1) \land \mathcal{V}\llbracket B \rrbracket_{\delta}^{\rho[x \bind v_1]}(v_2)
   \\[0.5em]
   \mathcal{V}\llbracket A + B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
     (\exists w.\; v = \textsf{inl}(w) \land \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(w)) \lor (\exists w.\; v = \textsf{inr}(w) \land \mathcal{V}\llbracket B \rrbracket_{\delta}^{\rho}(w))
   \\[0.5em]
-  \mathcal{V}\llbracket \{x : A \mid p\} \rrbracket_{\delta}^{\rho}(v) &\triangleq& \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \land \mathcal{E}\llbracket \texttt{True} \rrbracket_{\delta}^{\rho[x \mapsto v]}(p)
+  \mathcal{V}\llbracket \{x : A \mid p\} \rrbracket_{\delta}^{\rho}(v) &\triangleq& \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \land \mathcal{E}\llbracket \texttt{True} \rrbracket_{\delta}^{\rho[x \bind v]}(p)
   \\[0.5em]
   \mathcal{V}\llbracket A \lor B \rrbracket_{\delta}^{\rho}(v) &\triangleq& \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \lor \mathcal{V}\llbracket B \rrbracket_{\delta}^{\rho}(v)
   \\[0.5em]
   \mathcal{V}\llbracket A \land B \rrbracket_{\delta}^{\rho}(v) &\triangleq& \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \land \mathcal{V}\llbracket B \rrbracket_{\delta}^{\rho}(v)
   \\[0.5em]
-  \mathcal{V}\llbracket \mu X.\, A \rrbracket_{\delta}^{\rho}(v) &\triangleq& \forall n.\; F^n(v) \quad \text{where } F^0(v) = \top,\; F^{n+1}(v) = \mathcal{V}\llbracket A \rrbracket_{\delta[X \mapsto F^n]}^{\rho}(v)
+  \mathcal{V}\llbracket \mu X.\, A \rrbracket_{\delta}^{\rho}(v) &\triangleq& \forall n.\; F^n(v) \quad \text{where } F^0(v) = \top,\; F^{n+1}(v) = \mathcal{V}\llbracket A \rrbracket_{\delta[X \bind F^n]}^{\rho}(v)
 \end{array}
 \end{math}
 
