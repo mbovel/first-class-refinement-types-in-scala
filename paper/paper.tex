@@ -697,6 +697,9 @@ All call sites already guard the arguments with the same bounds, so the refineme
 
 The current overhead is acceptable for a prototype but leaves room for improvement. The solver is invoked hundreds of times per file, often with repeated queries, because Scala's subtype checker may re-check the same pair of types multiple times during inference. Caching solver results would eliminate most of this redundancy. The solver itself is also unoptimized: it is a textbook e-graph implementation with no indexing or incremental updates.
 
+\paragraph{Impact on code that does not use the feature.}
+Because refinement checking is integrated into the compiler rather than layered on top, a natural concern is whether it affects existing code. To assess this, we run the full Dotty continuous-integration suite with the feature enabled. It passes unchanged: this includes compiling the Scala compiler itself (${\sim}200\,000$ lines of code), its ${\sim}10\,000$ compilation tests (${\sim}300\,000$ lines), and a community build of 50 open-source projects (${\sim}700\,000$ lines), indicating that the extension introduces no backward incompatibility. On the official Scala compiler benchmark suite,\footnote{\url{https://lampepfl.github.io/scala3-benchmarks/}} enabling the feature shows no noticeable regression on either the 11 ``Big'' benchmarks, which compile real-world libraries totalling ${\sim}70\,000$ lines, or the 20 ``Small'' benchmarks. In short, when the feature is unused, it adds no measurable compilation cost and changes no behavior.
+
 \input{bench_table}
 
 %\input{bench_overhead_pct}

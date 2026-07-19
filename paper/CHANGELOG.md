@@ -36,4 +36,10 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
   explicit shifts `A[↑]` become freshness side conditions `x ∉ FV(A)`, and
   environment extension `v, ρ` becomes `ρ[x ↦ v]`. A notation remark records
   that the mechanization states these lemmas in de Bruijn form.
+- **Impact on code that does not use the feature (§4.4).** Added a paragraph
+  reporting that the full Dotty CI passes with the feature enabled — the Scala
+  compiler itself (~200K LOC), its ~10K compilation tests (~300K LOC), and a
+  community build of 50 open-source projects (~700K LOC) — and that the
+  official Scala compiler benchmark suite shows no noticeable regression,
+  addressing reviewer A's backward-compatibility and performance question.
 - **Typos and smaller fixes** addressing individual reviewer comments.
