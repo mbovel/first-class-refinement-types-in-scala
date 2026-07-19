@@ -44,6 +44,11 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
   community build of 50 open-source projects (~700K LOC) — and that the
   official Scala compiler benchmark suite shows no noticeable regression,
   addressing reviewer A's backward-compatibility and performance question.
+- **Non-terminating predicates highlighted as a key contribution (§1).**
+  Added a dedicated bullet to the Contributions list — the
+  partial-correctness treatment of predicates with no termination checking,
+  backed by the §2.3 lemmas proved in Rocq — and a sentence to the abstract,
+  as requested by the metareview.
 - **Typos and smaller fixes** addressing individual reviewer comments.
 
 ## TODO
@@ -51,13 +56,6 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
 Revisions promised in the OOPSLA response or requested by the metareview
 that are not yet in the paper:
 
-- **Highlight non-terminating predicates as a key contribution.** The
-  metareview explicitly asked for this. The §2.3 subsection with lemmas is
-  done and the Rocq theorems exist in `ExamplesPartialSoundness.v`
-  (`sem_implies_and_true`, `sem_implies_and_false_terminating`,
-  `refine_diverge_eq_refine_true`, `no_converging_term_has_refine_false`),
-  but the Contributions list (§1) still has only its original three bullets:
-  design, soundness, implementation.
 - **Add the four promised related-work references.** Flux, Thrust, and the
   refined library are in, but these are absent from both `paper.tex` and
   `references.bib`:
