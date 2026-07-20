@@ -37,7 +37,7 @@
 {\rho \vdash (a_1, a_2) \Downarrow (v_1, v_2)}
 
 \infrule[E-BinOp]
-{\rho \vdash a \Downarrow v_a \andalso \rho \vdash b \Downarrow v_b \andalso \delta(\mathit{op}, v_a, v_b) = r}
+{\rho \vdash a \Downarrow v_a \andalso \rho \vdash b \Downarrow v_b \andalso \textsf{evalop}(\mathit{op}, v_a, v_b) = r}
 {\rho \vdash a \;\mathit{op}\; b \Downarrow r}
 
 \infrule[E-IfTrue]
