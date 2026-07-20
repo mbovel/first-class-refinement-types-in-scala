@@ -1,9 +1,8 @@
 val sharedScalacOptions = Seq("-feature", "-Werror", "-deprecation")
 
-val dottyVersion = "3.8.4-RC1-bin-20260316-3082482-NIGHTLY"
+val dottyVersion = "3.7.2"
 
 scalaVersion := dottyVersion
-scalaOrganization := "ch.epfl.lara"
 
 // Stainless jars, built by setup.sh
 val stainlessAssemblyJar = file("lib/stainless-assembly.jar")
@@ -15,11 +14,10 @@ lazy val bench =
     .dependsOn()
     .settings(
       scalaVersion := dottyVersion,
-      scalaOrganization := "ch.epfl.lara",
       scalacOptions ++= sharedScalacOptions,
       libraryDependencies ++= Seq(
-        "ch.epfl.lara" %% "scala3-compiler" % dottyVersion,
-        "ch.epfl.lara" %% "scala3-library" % dottyVersion,
+        "org.scala-lang" %% "scala3-compiler" % dottyVersion,
+        "org.scala-lang" %% "scala3-library" % dottyVersion,
       ),
       Compile / unmanagedJars ++= Seq(
         Attributed.blank(stainlessAssemblyJar),

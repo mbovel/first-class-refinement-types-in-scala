@@ -2,8 +2,8 @@
 
 Compilation-time benchmarks for Stainless, run as a Dotty compiler plugin:
 
-- **Stainless verify** (`StainlessVerifyBenchmarks`): Stainless extraction and verification via compiler plugin (`-P:stainless:verify:yes`), using native Z3.
-- **Base** (`StainlessBaseBenchmarks`): Stainless extraction only, no verification (`-P:stainless:verify:no`), as the baseline.
+- **Stainless verify** (`StainlessVerifyBenchmarks`): Stainless extraction and verification via compiler plugin (`-P:stainless:verify:yes`), using native Z3. Verification-related options (per-VC timeout, no VC cache, no termination or overflow checking) are set in `stainless.conf`.
+- **Base** (`StainlessBaseBenchmarks`): contract-free sources compiled with the same Dotty and classpath but without the Stainless plugin, mirroring the feature-off baselines of the other platforms.
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ All commands are run from the `evaluation/stainless/` directory.
 # Stainless with verification
 sbt 'bench / Jmh / run -wi 0 -i 1 StainlessVerifyBenchmarks'
 
-# Base (extraction only, no verification)
+# Base (no plugin, contract-free sources)
 sbt 'bench / Jmh / run -wi 0 -i 1 StainlessBaseBenchmarks'
 ```
 
@@ -55,17 +55,15 @@ Source files are in the shared `../sources/` directory, distinguished by suffix:
 | Suffix | Description |
 |--------|-------------|
 | `*-stainless.scala` | Stainless style (`require`/`ensuring`) |
-
-Both suites compile the same `*-stainless.scala` sources; they differ only in
-whether verification runs, so the measured delta is the verification time.
+| `*-stainless-base.scala` | Same programs without contracts |
 
 ## Stainless plugin modifications
 
-The Stainless fork (`mbovel/stainless@refinement-types-eval`) includes:
+The Stainless fork branch (`mbovel/stainless@refinement-types-eval-v0.9.9.3`)
+is the released `v0.9.9.3` (Scala 3.7.2) plus:
 
 1. **ScalaZ3 bundled in assembly jar**: removed the `assemblyExcludedJars` filter for ScalaZ3 and added `.dylib` to native lib detection, so Z3 native libraries are included directly in the assembly jar.
 2. **Verification failures as compilation errors**: when `report.isSuccess` is false, emits a Dotty `Diagnostic.Error("Stainless verification failed")` so benchmark harness detects failures.
 3. **Suppressed non-error output**: INFO, DEBUG, WARNING, and progress messages from the Stainless reporter adapter are suppressed; only ERROR/FATAL/INTERNAL messages are forwarded to Dotty.
-4. **`GhostAccessRewriter` compatibility**: added explicit `run` override for compatibility with the Dotty nightly.
-5. **Scala nightly bump**: updated from `3.8.3-RC1` to `3.8.4-RC1-bin-20260316-3082482-NIGHTLY`.
-6. **Inox submodule**: pointed to `mbovel/inox@refinement-types-eval` fork.
+4. **`GhostAccessRewriter` compatibility**: added explicit `run` override for compatibility with newer Dotty versions.
+5. **Inox submodule**: pointed to `mbovel/inox@refinement-types-eval-v0.9.9.3`, which pins the exact upstream inox commit released with `v0.9.9.3` (no modifications).
