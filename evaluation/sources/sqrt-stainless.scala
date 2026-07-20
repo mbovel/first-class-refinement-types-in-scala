@@ -1,4 +1,5 @@
 import stainless.lang._
+import stainless.annotation._
 
 object Sqrt {
 
@@ -6,11 +7,12 @@ object Sqrt {
     if (x > y) x else y
   }.ensuring(v => v >= x && v >= y)
 
-  def sqrt(z: Int): Int = {
+  @extern
+  def sqrt(z: Int): Double = {
     require(z >= 0)
-    z
+    scala.math.sqrt(z.toDouble)
   }
 
-  def test(u: Int): Int =
+  def test(u: Int): Double =
     sqrt(max(0, u))
 }

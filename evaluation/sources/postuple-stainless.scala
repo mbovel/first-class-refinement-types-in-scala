@@ -1,11 +1,11 @@
 import stainless.lang._
 
 object Foo {
-  case class PosTuple(a: BigInt, b: BigInt) {
+  case class PosTuple(a: Int, b: Int) {
     require(a + b > 0)
   }
 
   def test(): Unit = {
-    val t = PosTuple(BigInt(0), BigInt(1))
+    val t = PosTuple(0, 1)
   }
 }

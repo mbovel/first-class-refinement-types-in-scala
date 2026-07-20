@@ -70,8 +70,8 @@ class StainlessBaseBenchmarks extends StainlessBenchmarks:
   override def compiler = StainlessNoPluginCompiler
   override def options = Seq()
 
-/** Stainless with verification (including termination measures; the plugin
- *  only understands the verify and ghost-elim options). */
+/** Stainless with verification. Termination and overflow checking are
+ *  disabled in stainless.conf to match the other platforms. */
 class StainlessVerifyBenchmarks extends StainlessBenchmarks:
   override def suffix = "stainless"
   override def options = Seq("-P:stainless:verify:yes")

@@ -1,7 +1,7 @@
 import stainless.lang._
 
 trait Vec[T]:
-  def len: BigInt
+  def len: Int
 
   def concat(b: Vec[T]): Vec[T] = {
     (??? : Vec[T])
@@ -12,8 +12,8 @@ trait Vec[T]:
   }
 
 def example3(
-  n: BigInt,
-  m: BigInt,
+  n: Int,
+  m: Int,
   v1: Vec[Int],
   v2: Vec[Int],
   v3: Vec[String]

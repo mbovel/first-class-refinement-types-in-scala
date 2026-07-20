@@ -2,20 +2,20 @@ import stainless.lang._
 
 object MergeSort {
 
-  def safeDiv(x: BigInt, y: BigInt): BigInt = {
-    (??? : BigInt)
+  def safeDiv(x: Int, y: Int): Int = {
+    (??? : Int)
   }
 
   trait SafeSeq[T] {
-    def len: BigInt = {
-      (??? : BigInt)
+    def len: Int = {
+      (??? : Int)
     }
 
-    def apply(i: BigInt): T = {
+    def apply(i: Int): T = {
       (??? : T)
     }
 
-    def splitAt(i: BigInt): (SafeSeq[T], SafeSeq[T]) = {
+    def splitAt(i: Int): (SafeSeq[T], SafeSeq[T]) = {
       (??? : (SafeSeq[T], SafeSeq[T]))
     }
 
@@ -27,7 +27,7 @@ object MergeSort {
       (??? : T)
     }
 
-    def take(n: BigInt): SafeSeq[T] = {
+    def take(n: Int): SafeSeq[T] = {
       (??? : SafeSeq[T])
     }
 

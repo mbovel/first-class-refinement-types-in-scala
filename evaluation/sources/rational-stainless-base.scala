@@ -1,11 +1,11 @@
 import stainless.lang._
 
 object Foo {
-  case class Rational(p: BigInt, q: BigInt) {
+  case class Rational(p: Int, q: Int) {
     val asFloat = p / q
   }
 
   def test(): Unit = {
-    val r = Rational(BigInt(1), BigInt(2)).asFloat
+    val r = Rational(1, 2).asFloat
   }
 }
