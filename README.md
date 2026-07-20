@@ -65,9 +65,23 @@ docker run --platform linux/amd64 --entrypoint bash -it refinement-bench
 
 ## Building from source (optional — not needed for evaluation)
 
-The image can be rebuilt from this repository with
-`docker build --platform linux/amd64 -t refinement-bench evaluation`
-(~20 min, network required), and the suites can also be run natively without
+The image can be rebuilt from this repository. First initialize the
+compiler submodules (`implementation` deliberately without `--recursive`:
+its community-build submodules are large and not needed):
+
+```sh
+git submodule update --init implementation
+git submodule update --init --recursive evaluation/stainless/stainless
+git submodule update --init evaluation/schmid/refined-dotty
+```
+
+Then build from the repository root (~20 min, network required):
+
+```sh
+docker build --platform linux/amd64 -t refinement-bench .
+```
+
+The suites can also be run natively without
 Docker (see [evaluation/first-class/README.md](evaluation/first-class/README.md),
 [evaluation/stainless/README.md](evaluation/stainless/README.md), and
 [evaluation/schmid/README.md](evaluation/schmid/README.md); the Stainless and

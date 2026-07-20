@@ -1,10 +1,10 @@
 [submodule "evaluation/stainless/stainless"]
 	path = evaluation/stainless/stainless
-	url = git@github.com:mbovel/stainless.git
+	url = https://github.com/mbovel/stainless.git
 	branch = refinement-types-eval-v0.9.9.3
 [submodule "evaluation/schmid/refined-dotty"]
 	path = evaluation/schmid/refined-dotty
-	url = git@github.com:mbovel/dotty.git
+	url = https://github.com/mbovel/dotty.git
 	branch = liquidtyper-fix
 [submodule "implementation"]
 	path = implementation
