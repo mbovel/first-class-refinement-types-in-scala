@@ -3,12 +3,16 @@
 Generate the benchmark results table comparing compilation times across:
 - First-class: first-class refinement types on Scala 3.8 vs. unchecked baseline
 - Schmid: Georg Schmid's liquid types on Dotty 0.1 vs. unchecked baseline
-- Stainless: Stainless with verification vs. Stainless without verification
+- Stainless: Stainless with verification vs. contract-free sources compiled
+  with the same Dotty, without the Stainless plugin
 
 Reads JMH JSON results from <results-dir>/<suite>/<run>.json as written by
-run.sh, pooling samples across runs, and produces a LaTeX table with absolute
-times and deltas (written to the paper directory) plus the same table on
-stdout for quick inspection.
+run.sh. Each JMH fork (one JVM invocation) is reduced to its mean, and the
+reported score and 95% confidence interval are computed across these per-fork
+means: iterations within a fork share JIT/GC state and are autocorrelated, so
+the fork is the independent unit. Produces a LaTeX table with absolute times
+and deltas (written to the paper directory) plus the same table on stdout for
+quick inspection.
 """
 
 import argparse
@@ -41,7 +45,7 @@ COLUMN_LABELS = {
     "first_class": "First-class",
     "schmid_base": "Base 0.1",
     "schmid": "Schmid",
-    "stainless_base": "Stainless (no verif.)",
+    "stainless_base": "Base (no plugin)",
     "stainless": "Stainless",
 }
 
@@ -81,8 +85,8 @@ T_95 = {
 # ---------------------------------------------------------------------------
 
 def parse_results(path, samples):
-    """Accumulate raw JMH samples from one results file into
-    {(column, bench): [ms, ...]}."""
+    """Accumulate per-fork mean times from one results file into
+    {(column, bench): [fork_mean_ms, ...]}."""
     with open(path) as f:
         try:
             data = json.load(f)
@@ -96,12 +100,13 @@ def parse_results(path, samples):
         if col is None:
             continue
         bench = parts[-1]
-        raw = [x for fork in entry["primaryMetric"]["rawData"] for x in fork]
-        samples.setdefault((col, bench), []).extend(raw)
+        for fork in entry["primaryMetric"]["rawData"]:
+            if fork:
+                samples.setdefault((col, bench), []).append(statistics.mean(fork))
 
 
 def confidence95(raw):
-    """95% confidence interval half-width for a list of samples."""
+    """95% confidence interval half-width for a list of per-fork means."""
     n = len(raw)
     if n < 2:
         return 0.0
@@ -111,13 +116,15 @@ def confidence95(raw):
 
 
 def load_all(results_dir):
-    """Load results from all runs, return {(column, bench): {score, error, n}}."""
+    """Load results from all runs, return {(column, bench): {score, error, n}}
+    where score is the mean of the per-fork means, error the 95% confidence
+    interval half-width across forks, and n the number of forks."""
     samples = {}
     for path in sorted(results_dir.glob("*/*.json")):
         parse_results(path, samples)
     return {
-        key: {"score": statistics.mean(raw), "error": confidence95(raw), "n": len(raw)}
-        for key, raw in samples.items()
+        key: {"score": statistics.mean(means), "error": confidence95(means), "n": len(means)}
+        for key, means in samples.items()
     }
 
 
@@ -235,7 +242,7 @@ def generate_latex_table(table):
 
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
-    lines.append(r"\caption{Compilation time benchmarks (ms/op, single-shot), as mean $\pm$ 95\% confidence interval across runs. Each platform shows the unchecked baseline time and the relative overhead of checking; the checked time is $\text{base} \times (1 + \Delta)$. The overhead interval is propagated from the base and checked intervals.}")
+    lines.append(r"\caption{Compilation time benchmarks (ms/op, single-shot). Each run (JMH fork) is reduced to its mean; scores are the mean of the per-run means $\pm$ the 95\% confidence interval across runs (Student's $t$). Each platform shows the unchecked baseline time and the relative overhead of checking; the checked time is $\text{base} \times (1 + \Delta)$. The overhead interval is propagated from the base and checked intervals.}")
     lines.append(r"\label{fig:bench-table}")
     lines.append(r"\end{figure*}")
     return "\n".join(lines)
