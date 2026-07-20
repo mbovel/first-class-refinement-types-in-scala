@@ -58,10 +58,6 @@ abstract class StainlessBenchmarks extends CompilationBenchmarks:
   def postuple =
     compiler.compile(Seq(source("postuple")), options, outDir)
 
-  //@Benchmark
-  //def arrfold =
-  //  compiler.compile(Seq(source("arrfold")), options, outDir)
-
   @Benchmark
   def rational =
     compiler.compile(Seq(source("rational")), options, outDir)
