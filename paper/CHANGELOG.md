@@ -1,11 +1,11 @@
 # Changelog
 
-Main changes to the paper since the OOPSLA 2026 submission (tag
-`oopsla-2026-initial`). A visual diff can be generated with
-`./make-diff.sh`.
+Main changes to the paper since the OOPSLA 2026 submission:
 
-## Done
-
+- **Non-terminating predicates highlighted as a key contribution (§1).**
+  As requested by the metareview: the design bullet of the Contributions
+  list now names the partial-correctness semantics with no termination
+  checking as a distinctive design choice.
 - **Non-terminating predicates: properties established formally (§2.3).**
   (8b60bad) Promoted the non-termination discussion to its own
   subsection and stated the metatheoretic properties of the design as lemmas,
@@ -16,21 +16,18 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
   `{x: A | true}`, and `A` are mutual subtypes, and no converging term has type
   `{x: A | false}`. Predicates are now explicitly framed as operational,
   never translated into a classical logic.
-- **Clarified the depth-bounded interpreter (§3.2).** (b0bc60f) The fuel
+- **Clarified the depth-bounded interpreter (§3.2).** The fuel
   parameter bounds the *depth* of evaluation, not the total number of steps:
   when evaluating an application, the function, the argument, and the body are
   all evaluated with the same, decremented fuel. The previous prose incorrectly
   suggested that fuel is decremented only for the body, and the listing did not
   decrement the fuel at all.
-- **Skolem terms instead of skolem types (§4.2).** (4bb4920) An implementation
-  detail, unrelated to the reviews and largely orthogonal to the subject of the
-  paper: the implementation no longer reuses Scala's built-in skolem types; it
-  now uses its own custom skolem terms in predicates. The "Hoisting and
-  skolems" section was reworded accordingly.
-- **Fixed a miscitation in related work (§5).** (37883cb) Paraskevopoulou et al.
-  use an interpreter-based approach with step-indexed logical relations for
-  multi-pass compiler verification; the previous text misattributed the
-  combination of definitional interpreters with semantic typing to them.
+- **Renamed and introduced the E-BinOp operation function (§3.2).** The
+  former δ (which clashed with the type-variable assignment δ of §3.5) is
+  now `evalop`, mirroring `eval_bin_op` in the mechanization, and the
+  operational-semantics prose introduces it: comparisons, boolean
+  connectives, first-order equality, 32-bit wrapping arithmetic, undefined
+  (stuck) on ill-typed operands.
 - **Named variables in the metatheory lemmas (§3.6).** The weakening,
   substitution, and avoidance lemmas were previously stated in de Bruijn style
   to match the mechanization, an unannounced notation shift the reviewers found
@@ -38,58 +35,36 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
   explicit shifts `A[↑]` become freshness side conditions `x ∉ FV(A)`, and
   environment extension `v, ρ` becomes `ρ[x ↦ v]`. A notation remark records
   that the mechanization states these lemmas in de Bruijn form.
+- **Skolem terms instead of skolem types (§4.2).** An implementation
+  detail, unrelated to the reviews and largely orthogonal to the subject of the
+  paper: the implementation no longer reuses Scala's built-in skolem types; it
+  now uses its own custom skolem terms in predicates. The "Hoisting and
+  skolems" section was reworded accordingly.
 - **Impact on code that does not use the feature (§4.4).** Added a paragraph
   reporting that the full Dotty CI passes with the feature enabled — the Scala
   compiler itself (~200K LOC), its ~10K compilation tests (~300K LOC), and a
   community build of 50 open-source projects (~700K LOC) — and that the
   official Scala compiler benchmark suite shows no noticeable regression,
   addressing reviewer A's backward-compatibility and performance question.
-- **Non-terminating predicates highlighted as a key contribution (§1).**
-  As requested by the metareview: the design bullet of the Contributions
-  list now names the partial-correctness semantics with no termination
-  checking as a distinctive design choice, the soundness bullet states that
-  soundness needs no termination assumptions and points to the §2.3 lemmas
-  proved in Rocq, and the abstract gained a sentence. The bullets keep
-  their one-to-one correspondence with sections 2--4.
-- **Fixed reviewer B's L108-109 comma splice (§2).** "it requires no
-  additional type system mechanism; it follows directly from subtyping" —
-  marked "Fixed, thanks" in the response, now actually fixed.
-- **Removed "qualified type" leftovers (§4).** The response promised
-  "refinement type" consistently; the *Adaptation* and *Argument hoisting*
-  items of the implementation list now say "refinement type(s)". (The
-  occurrence quoting Schmid and Kunčak is intentional.)
-- **Added the four promised related-work references (§5).** Generic
-  Refinement Types (`lehmann2025`) joins the Rust passage, and a new
-  *Pluggable type systems* paragraph cites the Checker Framework
-  (`dietl2011`), array-indexing verification (`kellogg2018`), and their
-  combination with deductive verification (`lanzinger2021`).
-- **Reworked the mutation passage in related work (§5).** It now opens with
-  the invalidation problem (invariant vs. flow-sensitive refinements of
-  mutable locations, under aliasing), presents each Rust system as an answer
-  to it, and links the separation-checking sketch of §2.2 without equating
-  capabilities with ownership.
+- **Fixed a miscitation in related work (§5).** Paraskevopoulou et al.
+  use an interpreter-based approach with step-indexed logical relations for
+  multi-pass compiler verification; the previous text misattributed the
+  combination of definitional interpreters with semantic typing to them.
+- **Expanded the Liquid Haskell comparison (§5).** Now covers three axes —
+  separate plugin vs. in-compiler refinements, per-function termination
+  obligations vs. solver-local ones, and SMT over decidable theories vs.
+  e-graphs with normalization — noting that the recent PLEX extension
+  (Ferrarini et al., 2026) adds exactly such normalization to Liquid
+  Haskell's Proof by Logical Evaluation layer.
+- **Reworked the passage on refinement types and mutation (§5).** It now
+  opens with the invalidation problem (invariant vs. flow-sensitive
+  refinements of mutable locations, under aliasing), presents each Rust
+  system as an answer to it, adds the promised Generic Refinement Types
+  reference (Lehmann et al., 2025), and links the separation-checking
+  sketch of §2.2.
+- **Added a *Pluggable type systems* paragraph (§5)** with the remaining
+  promised references: the Checker Framework (Dietl et al., 2011) — same
+  goal as refinement types, same separate-phase architecture — its
+  application to array-indexing verification (Kellogg et al., 2018), and
+  its combination with deductive verification (Lanzinger et al., 2021).
 - **Typos and smaller fixes** addressing individual reviewer comments.
-
-## TODO
-
-Revisions promised in the OOPSLA response or requested by the metareview
-that are not yet in the paper:
-
-- **Rename and introduce the δ function in E-BinOp.** The response promised
-  "We will change the name of the delta function and introduce it".
-  `fig-eval.tex` still uses `\delta(op, v_a, v_b)`, it is never introduced
-  in the prose, and it clashes with the δ used for type-variable
-  assignments in §3.5.
-
-Borderline / soft promises, currently unaddressed:
-
-- **Dafny "subset types" clarification** — the response answered reviewer B,
-  but the paper still calls Dafny a refinement-type system with only the
-  leino2010 citation. A footnote or the subset-types citation would preempt
-  the complaint.
-- **Design-choice motivations in §3** — offered conditionally ("Are there
-  specific rules you would like us to motivate?"). The "bad bounds"
-  motivation exists but only in related work (§5), not in §3 where
-  reviewer A wanted the why.
-- **"Pre-installs a provisional type"** — the response offered to expand;
-  the sentence is still one line.
