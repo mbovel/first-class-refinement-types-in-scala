@@ -51,6 +51,9 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
   soundness needs no termination assumptions and points to the §2.3 lemmas
   proved in Rocq, and the abstract gained a sentence. The bullets keep
   their one-to-one correspondence with sections 2--4.
+- **Fixed reviewer B's L108-109 comma splice (§2).** "it requires no
+  additional type system mechanism; it follows directly from subtyping" —
+  marked "Fixed, thanks" in the response, now actually fixed.
 - **Removed "qualified type" leftovers (§4).** The response promised
   "refinement type" consistently; the *Adaptation* and *Argument hoisting*
   items of the implementation list now say "refinement type(s)". (The
@@ -75,9 +78,6 @@ that are not yet in the paper:
   `fig-eval.tex` still uses `\delta(op, v_a, v_b)`, it is never introduced
   in the prose, and it clashes with the δ used for type-variable
   assignments in §3.5.
-- **Fix reviewer B's L108-109 comma splice**, marked "Fixed, thanks" in the
-  response but not actually fixed: "it requires no additional type system
-  mechanism, it follows directly from subtyping" should use a semicolon.
 
 Borderline / soft promises, currently unaddressed:
 
