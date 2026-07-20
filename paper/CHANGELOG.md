@@ -58,6 +58,16 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
   "refinement type" consistently; the *Adaptation* and *Argument hoisting*
   items of the implementation list now say "refinement type(s)". (The
   occurrence quoting Schmid and Kunčak is intentional.)
+- **Added the four promised related-work references (§5).** Generic
+  Refinement Types (`lehmann2025`) joins the Rust passage, and a new
+  *Pluggable type systems* paragraph cites the Checker Framework
+  (`dietl2011`), array-indexing verification (`kellogg2018`), and their
+  combination with deductive verification (`lanzinger2021`).
+- **Reworked the mutation passage in related work (§5).** It now opens with
+  the invalidation problem (invariant vs. flow-sensitive refinements of
+  mutable locations, under aliasing), presents each Rust system as an answer
+  to it, and links the separation-checking sketch of §2.2 without equating
+  capabilities with ownership.
 - **Typos and smaller fixes** addressing individual reviewer comments.
 
 ## TODO
@@ -65,14 +75,6 @@ Main changes to the paper since the OOPSLA 2026 submission (tag
 Revisions promised in the OOPSLA response or requested by the metareview
 that are not yet in the paper:
 
-- **Add the four promised related-work references.** Flux, Thrust, and the
-  refined library are in, but these are absent from both `paper.tex` and
-  `references.bib`:
-  - Generic Refinement Types (POPL 2025)
-  - Checker Framework / pluggable types (ICSE SEIP 2011)
-  - Lightweight verification of array indexing (ISSTA 2018)
-  - Combining expressive type systems and deductive verification
-    (OOPSLA 2021)
 - **Rename and introduce the δ function in E-BinOp.** The response promised
   "We will change the name of the delta function and introduce it".
   `fig-eval.tex` still uses `\delta(op, v_a, v_b)`, it is never introduced
