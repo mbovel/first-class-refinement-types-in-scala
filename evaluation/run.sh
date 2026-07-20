@@ -58,7 +58,7 @@ case "$SUITE" in
     SUITES=("$SUITE")
     ;;
   all)
-    SUITES=(stainless schmid first-class)
+    SUITES=(schmid first-class stainless)
     ;;
   "")
     usage

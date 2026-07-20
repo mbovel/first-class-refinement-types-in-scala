@@ -1,0 +1,1660 @@
+[
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.arrfold",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 91.17475160000001,
+            "scoreError" : 5.044769523067665,
+            "scoreConfidence" : [
+                86.12998207693234,
+                96.21952112306768
+            ],
+            "scorePercentiles" : {
+                "0.0" : 87.496476,
+                "50.0" : 88.700807,
+                "90.0" : 102.70874800000003,
+                "95.0" : 109.64289855,
+                "99.0" : 109.955808,
+                "99.9" : 109.955808,
+                "99.99" : 109.955808,
+                "99.999" : 109.955808,
+                "99.9999" : 109.955808,
+                "100.0" : 109.955808
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    93.069573,
+                    88.229498,
+                    87.631951,
+                    88.783073,
+                    87.875963,
+                    88.752953,
+                    88.648661,
+                    93.808909,
+                    93.106561,
+                    88.123025,
+                    88.494558,
+                    88.158035,
+                    87.75842,
+                    88.843842,
+                    87.913332,
+                    91.258649,
+                    91.888126,
+                    103.697619,
+                    109.955808,
+                    87.496476
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.hof1",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 79.48367404999999,
+            "scoreError" : 6.350820027330723,
+            "scoreConfidence" : [
+                73.13285402266926,
+                85.83449407733072
+            ],
+            "scorePercentiles" : {
+                "0.0" : 74.058346,
+                "50.0" : 76.26898650000001,
+                "90.0" : 95.9644812,
+                "95.0" : 96.5270397,
+                "99.0" : 96.553353,
+                "99.9" : 96.553353,
+                "99.99" : 96.553353,
+                "99.999" : 96.553353,
+                "99.9999" : 96.553353,
+                "100.0" : 96.553353
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    79.810422,
+                    78.147883,
+                    75.15721,
+                    74.654035,
+                    75.16212,
+                    75.931798,
+                    75.696146,
+                    76.493914,
+                    79.091263,
+                    78.505876,
+                    96.027087,
+                    96.553353,
+                    76.044059,
+                    75.593114,
+                    75.170948,
+                    74.795774,
+                    78.759948,
+                    95.401029,
+                    78.619156,
+                    74.058346
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.hof2",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 78.67570945,
+            "scoreError" : 6.245188943296366,
+            "scoreConfidence" : [
+                72.43052050670363,
+                84.92089839329637
+            ],
+            "scorePercentiles" : {
+                "0.0" : 73.482059,
+                "50.0" : 76.2401945,
+                "90.0" : 95.06433500000004,
+                "95.0" : 101.07382705,
+                "99.0" : 101.301506,
+                "99.9" : 101.301506,
+                "99.99" : 101.301506,
+                "99.999" : 101.301506,
+                "99.9999" : 101.301506,
+                "100.0" : 101.301506
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    101.301506,
+                    78.22014,
+                    74.915195,
+                    76.956707,
+                    96.747927,
+                    75.47206,
+                    76.085478,
+                    75.34402,
+                    76.394911,
+                    79.912007,
+                    78.624704,
+                    73.482059,
+                    75.956006,
+                    74.660421,
+                    75.620061,
+                    75.052215,
+                    74.5311,
+                    77.695313,
+                    77.681253,
+                    78.861106
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.intarray",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 83.0997392,
+            "scoreError" : 10.830642409565284,
+            "scoreConfidence" : [
+                72.26909679043472,
+                93.93038160956529
+            ],
+            "scorePercentiles" : {
+                "0.0" : 72.445093,
+                "50.0" : 75.4433585,
+                "90.0" : 97.6976208,
+                "95.0" : 114.90867859999999,
+                "99.0" : 115.813033,
+                "99.9" : 115.813033,
+                "99.99" : 115.813033,
+                "99.999" : 115.813033,
+                "99.9999" : 115.813033,
+                "100.0" : 115.813033
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    73.15539,
+                    74.920189,
+                    75.240092,
+                    97.442703,
+                    72.445093,
+                    73.644885,
+                    73.729596,
+                    94.846315,
+                    94.903196,
+                    73.16125,
+                    91.155407,
+                    76.508214,
+                    94.464521,
+                    73.829887,
+                    73.085409,
+                    97.725945,
+                    115.813033,
+                    74.024189,
+                    75.646625,
+                    86.252845
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.list1",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 90.59813165000001,
+            "scoreError" : 11.611224417284548,
+            "scoreConfidence" : [
+                78.98690723271547,
+                102.20935606728456
+            ],
+            "scorePercentiles" : {
+                "0.0" : 79.976728,
+                "50.0" : 84.2389715,
+                "90.0" : 111.3307753,
+                "95.0" : 122.79893089999999,
+                "99.0" : 123.393782,
+                "99.9" : 123.393782,
+                "99.99" : 123.393782,
+                "99.999" : 123.393782,
+                "99.9999" : 123.393782,
+                "100.0" : 123.393782
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    84.516614,
+                    83.660206,
+                    83.961329,
+                    111.49676,
+                    123.393782,
+                    81.392522,
+                    82.009288,
+                    80.640604,
+                    81.097489,
+                    84.543795,
+                    85.015029,
+                    109.836913,
+                    80.388322,
+                    80.336611,
+                    103.239285,
+                    102.502637,
+                    79.976728,
+                    82.830666,
+                    84.692236,
+                    106.431817
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.list2",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 84.7415268,
+            "scoreError" : 10.5192988592568,
+            "scoreConfidence" : [
+                74.22222794074321,
+                95.2608256592568
+            ],
+            "scorePercentiles" : {
+                "0.0" : 77.716155,
+                "50.0" : 79.53441849999999,
+                "90.0" : 104.37433580000001,
+                "95.0" : 124.83488229999999,
+                "99.0" : 125.894902,
+                "99.9" : 125.894902,
+                "99.99" : 125.894902,
+                "99.999" : 125.894902,
+                "99.9999" : 125.894902,
+                "100.0" : 125.894902
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    104.694508,
+                    82.878297,
+                    81.779376,
+                    101.492786,
+                    79.607554,
+                    78.783776,
+                    79.065728,
+                    79.431722,
+                    85.323602,
+                    125.894902,
+                    81.711645,
+                    77.716155,
+                    79.461283,
+                    79.385122,
+                    78.803836,
+                    78.870375,
+                    78.383681,
+                    79.29354,
+                    81.115969,
+                    81.136679
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.matrixDims",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 73.04974575000003,
+            "scoreError" : 4.164286711363645,
+            "scoreConfidence" : [
+                68.88545903863638,
+                77.21403246136367
+            ],
+            "scorePercentiles" : {
+                "0.0" : 70.113352,
+                "50.0" : 71.642307,
+                "90.0" : 73.7010269,
+                "95.0" : 91.84264445,
+                "99.0" : 92.796999,
+                "99.9" : 92.796999,
+                "99.99" : 92.796999,
+                "99.999" : 92.796999,
+                "99.9999" : 92.796999,
+                "100.0" : 92.796999
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    72.716899,
+                    71.586877,
+                    73.621097,
+                    73.513326,
+                    70.113352,
+                    92.796999,
+                    71.577897,
+                    70.742298,
+                    72.032761,
+                    71.633667,
+                    73.221712,
+                    73.709908,
+                    73.524956,
+                    70.200403,
+                    71.397695,
+                    71.076361,
+                    71.115252,
+                    71.149852,
+                    71.650947,
+                    73.612656
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.max",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 79.67885600000001,
+            "scoreError" : 10.534611992108093,
+            "scoreConfidence" : [
+                69.14424400789191,
+                90.21346799210811
+            ],
+            "scorePercentiles" : {
+                "0.0" : 71.664672,
+                "50.0" : 73.5941215,
+                "90.0" : 96.7123151,
+                "95.0" : 114.21011544999999,
+                "99.0" : 115.121124,
+                "99.9" : 115.121124,
+                "99.99" : 115.121124,
+                "99.999" : 115.121124,
+                "99.9999" : 115.121124,
+                "100.0" : 115.121124
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    72.226558,
+                    72.699983,
+                    73.008636,
+                    73.580211,
+                    74.456131,
+                    75.088667,
+                    75.299278,
+                    71.664672,
+                    73.608032,
+                    73.269319,
+                    72.132567,
+                    72.341219,
+                    72.220448,
+                    96.900953,
+                    95.014574,
+                    93.507399,
+                    72.757533,
+                    75.289598,
+                    115.121124,
+                    93.390218
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.postuple",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 78.3670316,
+            "scoreError" : 11.01150369162303,
+            "scoreConfidence" : [
+                67.35552790837697,
+                89.37853529162304
+            ],
+            "scorePercentiles" : {
+                "0.0" : 70.297075,
+                "50.0" : 72.209379,
+                "90.0" : 98.44367770000001,
+                "95.0" : 116.05635319999999,
+                "99.0" : 116.950366,
+                "99.9" : 116.950366,
+                "99.99" : 116.950366,
+                "99.999" : 116.950366,
+                "99.9999" : 116.950366,
+                "100.0" : 116.950366
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    73.791039,
+                    92.429704,
+                    71.975602,
+                    72.436217,
+                    71.161142,
+                    71.79669,
+                    73.361565,
+                    87.681417,
+                    70.297075,
+                    72.650889,
+                    71.194993,
+                    99.07011,
+                    71.567577,
+                    92.805787,
+                    71.982541,
+                    116.950366,
+                    73.519307,
+                    71.203753,
+                    70.368565,
+                    71.096293
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.rational",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 77.79110349999999,
+            "scoreError" : 8.16883157194791,
+            "scoreConfidence" : [
+                69.62227192805209,
+                85.9599350719479
+            ],
+            "scorePercentiles" : {
+                "0.0" : 71.501835,
+                "50.0" : 72.9385445,
+                "90.0" : 96.47577700000001,
+                "95.0" : 97.48905495,
+                "99.0" : 97.542191,
+                "99.9" : 97.542191,
+                "99.99" : 97.542191,
+                "99.999" : 97.542191,
+                "99.9999" : 97.542191,
+                "100.0" : 97.542191
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    96.44254,
+                    74.807187,
+                    96.47947,
+                    71.673396,
+                    72.653596,
+                    72.94669,
+                    72.415174,
+                    71.501835,
+                    72.930399,
+                    75.356382,
+                    76.363092,
+                    97.542191,
+                    93.129297,
+                    72.495554,
+                    72.244542,
+                    72.267623,
+                    72.510005,
+                    72.727296,
+                    75.074969,
+                    74.260832
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.sqrt",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 77.31839185000001,
+            "scoreError" : 6.686585255008225,
+            "scoreConfidence" : [
+                70.63180659499179,
+                84.00497710500824
+            ],
+            "scorePercentiles" : {
+                "0.0" : 71.841175,
+                "50.0" : 74.19350850000001,
+                "90.0" : 93.79515060000001,
+                "95.0" : 95.2584079,
+                "99.0" : 95.322566,
+                "99.9" : 95.322566,
+                "99.99" : 95.322566,
+                "99.999" : 95.322566,
+                "99.9999" : 95.322566,
+                "100.0" : 95.322566
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    85.839883,
+                    75.020247,
+                    91.59687,
+                    72.865116,
+                    94.039404,
+                    72.925856,
+                    71.997047,
+                    71.841175,
+                    72.374511,
+                    76.35491,
+                    75.248209,
+                    73.942696,
+                    72.404251,
+                    73.608852,
+                    77.098167,
+                    72.181089,
+                    72.451332,
+                    95.322566,
+                    74.811335,
+                    74.444321
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidBaseBenchmarks.sumnat",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 74.18721310000001,
+            "scoreError" : 4.6246590978223985,
+            "scoreConfidence" : [
+                69.5625540021776,
+                78.81187219782241
+            ],
+            "scorePercentiles" : {
+                "0.0" : 71.615882,
+                "50.0" : 72.79101399999999,
+                "90.0" : 74.8089298,
+                "95.0" : 95.39786844999998,
+                "99.0" : 96.480565,
+                "99.9" : 96.480565,
+                "99.99" : 96.480565,
+                "99.999" : 96.480565,
+                "99.9999" : 96.480565,
+                "100.0" : 96.480565
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    73.43385,
+                    72.226618,
+                    72.232928,
+                    73.350509,
+                    72.184537,
+                    73.199557,
+                    74.826634,
+                    74.340589,
+                    71.615882,
+                    73.090556,
+                    72.50274,
+                    72.783864,
+                    72.641342,
+                    72.703573,
+                    72.610671,
+                    96.480565,
+                    74.649592,
+                    71.795603,
+                    74.276488,
+                    72.798164
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.arrfold",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 128.40068455,
+            "scoreError" : 11.830550816172343,
+            "scoreConfidence" : [
+                116.57013373382765,
+                140.23123536617234
+            ],
+            "scorePercentiles" : {
+                "0.0" : 117.095793,
+                "50.0" : 119.9701685,
+                "90.0" : 151.7689604,
+                "95.0" : 158.09684295,
+                "99.0" : 158.427806,
+                "99.9" : 158.427806,
+                "99.99" : 158.427806,
+                "99.999" : 158.427806,
+                "99.9999" : 158.427806,
+                "100.0" : 158.427806
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    119.618451,
+                    118.420883,
+                    118.488824,
+                    119.774111,
+                    117.264555,
+                    117.095793,
+                    120.472278,
+                    124.337332,
+                    158.427806,
+                    119.817827,
+                    120.12251,
+                    139.094174,
+                    139.815331,
+                    117.785356,
+                    136.19196,
+                    151.808545,
+                    151.412699,
+                    139.921558,
+                    119.033199,
+                    119.110499
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.hof1",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 99.37757079999999,
+            "scoreError" : 8.767608027042565,
+            "scoreConfidence" : [
+                90.60996277295742,
+                108.14517882704256
+            ],
+            "scorePercentiles" : {
+                "0.0" : 94.195847,
+                "50.0" : 96.61173600000001,
+                "90.0" : 101.1103844,
+                "95.0" : 139.54139289999998,
+                "99.0" : 141.558353,
+                "99.9" : 141.558353,
+                "99.99" : 141.558353,
+                "99.999" : 141.558353,
+                "99.9999" : 141.558353,
+                "100.0" : 141.558353
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    95.620043,
+                    96.793698,
+                    95.756043,
+                    96.739906,
+                    99.161497,
+                    99.37841,
+                    98.782911,
+                    95.501878,
+                    97.298282,
+                    96.327328,
+                    101.219151,
+                    141.558353,
+                    95.986292,
+                    98.884879,
+                    100.131485,
+                    94.195847,
+                    95.18789,
+                    96.111632,
+                    96.432325,
+                    96.483566
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.hof2",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 101.3359691,
+            "scoreError" : 10.438547172902007,
+            "scoreConfidence" : [
+                90.897421927098,
+                111.774516272902
+            ],
+            "scorePercentiles" : {
+                "0.0" : 94.006689,
+                "50.0" : 96.468399,
+                "90.0" : 125.22126080000001,
+                "95.0" : 136.49655195,
+                "99.0" : 137.066502,
+                "99.9" : 137.066502,
+                "99.99" : 137.066502,
+                "99.999" : 137.066502,
+                "99.9999" : 137.066502,
+                "100.0" : 137.066502
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    96.364334,
+                    121.205099,
+                    97.870622,
+                    137.066502,
+                    94.459709,
+                    125.667501,
+                    95.351039,
+                    95.320389,
+                    96.572464,
+                    96.255159,
+                    98.595978,
+                    105.383751,
+                    95.162015,
+                    95.266866,
+                    95.054853,
+                    95.446608,
+                    94.006689,
+                    96.934435,
+                    97.510311,
+                    97.225058
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.intarray",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 96.6471765,
+            "scoreError" : 2.631180627035711,
+            "scoreConfidence" : [
+                94.01599587296428,
+                99.27835712703572
+            ],
+            "scorePercentiles" : {
+                "0.0" : 93.898469,
+                "50.0" : 95.5120115,
+                "90.0" : 100.141009,
+                "95.0" : 106.64833829999999,
+                "99.0" : 106.984828,
+                "99.9" : 106.984828,
+                "99.99" : 106.984828,
+                "99.999" : 106.984828,
+                "99.9999" : 106.984828,
+                "100.0" : 106.984828
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    97.289864,
+                    97.073501,
+                    94.44138,
+                    95.620663,
+                    95.40336,
+                    94.170246,
+                    106.984828,
+                    94.637611,
+                    99.114784,
+                    98.351064,
+                    97.303852,
+                    94.434098,
+                    94.511498,
+                    94.507598,
+                    95.241216,
+                    95.162465,
+                    96.851475,
+                    97.690524,
+                    100.255034,
+                    93.898469
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.list1",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 103.89704569999999,
+            "scoreError" : 7.76207724772308,
+            "scoreConfidence" : [
+                96.13496845227691,
+                111.65912294772308
+            ],
+            "scorePercentiles" : {
+                "0.0" : 98.431505,
+                "50.0" : 100.08083049999999,
+                "90.0" : 125.85671390000003,
+                "95.0" : 128.85212655,
+                "99.0" : 128.933442,
+                "99.9" : 128.933442,
+                "99.99" : 128.933442,
+                "99.999" : 128.933442,
+                "99.9999" : 128.933442,
+                "100.0" : 128.933442
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    112.802942,
+                    100.671084,
+                    100.230829,
+                    99.776644,
+                    103.481115,
+                    105.874102,
+                    104.461525,
+                    99.167625,
+                    100.613222,
+                    99.65857,
+                    99.442418,
+                    98.963793,
+                    100.661712,
+                    128.933442,
+                    127.307133,
+                    98.604678,
+                    98.431505,
+                    99.652539,
+                    99.275204,
+                    99.930832
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.list2",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 102.39548160000002,
+            "scoreError" : 5.017014656448723,
+            "scoreConfidence" : [
+                97.3784669435513,
+                107.41249625644875
+            ],
+            "scorePercentiles" : {
+                "0.0" : 98.857284,
+                "50.0" : 100.5591635,
+                "90.0" : 106.7734344,
+                "95.0" : 124.45042834999998,
+                "99.0" : 125.374557,
+                "99.9" : 125.374557,
+                "99.99" : 125.374557,
+                "99.999" : 125.374557,
+                "99.9999" : 125.374557,
+                "100.0" : 125.374557
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    100.441863,
+                    102.498035,
+                    99.745854,
+                    106.891984,
+                    101.478153,
+                    100.676464,
+                    98.857284,
+                    100.831817,
+                    100.030886,
+                    101.622994,
+                    125.374557,
+                    100.39507,
+                    99.894745,
+                    100.764994,
+                    100.105976,
+                    99.342008,
+                    100.218877,
+                    99.864593,
+                    105.706488,
+                    103.16699
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.matrixDims",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 108.63630790000002,
+            "scoreError" : 10.06564423723459,
+            "scoreConfidence" : [
+                98.57066366276543,
+                118.70195213723461
+            ],
+            "scorePercentiles" : {
+                "0.0" : 101.50364,
+                "50.0" : 104.76135149999999,
+                "90.0" : 130.0579964,
+                "95.0" : 145.33569129999998,
+                "99.0" : 146.099134,
+                "99.9" : 146.099134,
+                "99.99" : 146.099134,
+                "99.999" : 146.099134,
+                "99.9999" : 146.099134,
+                "100.0" : 146.099134
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    107.701999,
+                    130.83028,
+                    106.266933,
+                    104.379353,
+                    101.876115,
+                    101.753494,
+                    102.407471,
+                    103.008077,
+                    111.129185,
+                    146.099134,
+                    106.179441,
+                    101.671552,
+                    102.045446,
+                    101.871424,
+                    102.44189,
+                    101.50364,
+                    105.14335,
+                    106.851307,
+                    106.458623,
+                    123.107444
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.max",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 101.43174425,
+            "scoreError" : 8.57733898375528,
+            "scoreConfidence" : [
+                92.85440526624471,
+                110.00908323375528
+            ],
+            "scorePercentiles" : {
+                "0.0" : 96.248229,
+                "50.0" : 97.905406,
+                "90.0" : 120.54818410000003,
+                "95.0" : 134.87232179999998,
+                "99.0" : 135.548519,
+                "99.9" : 135.548519,
+                "99.99" : 135.548519,
+                "99.999" : 135.548519,
+                "99.9999" : 135.548519,
+                "100.0" : 135.548519
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    97.25669,
+                    99.657697,
+                    97.782896,
+                    97.386612,
+                    97.624524,
+                    97.896857,
+                    135.548519,
+                    107.260666,
+                    122.024575,
+                    97.620163,
+                    96.935526,
+                    96.248229,
+                    97.991787,
+                    97.503812,
+                    98.089898,
+                    98.726515,
+                    100.426383,
+                    96.731643,
+                    97.913955,
+                    98.007938
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.postuple",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 96.0192715,
+            "scoreError" : 10.002332552084868,
+            "scoreConfidence" : [
+                86.01693894791514,
+                106.02160405208487
+            ],
+            "scorePercentiles" : {
+                "0.0" : 89.298994,
+                "50.0" : 91.349796,
+                "90.0" : 123.66460010000002,
+                "95.0" : 124.90735169999999,
+                "99.0" : 124.938651,
+                "99.9" : 124.938651,
+                "99.99" : 124.938651,
+                "99.999" : 124.938651,
+                "99.9999" : 124.938651,
+                "100.0" : 124.938651
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    92.446598,
+                    91.288146,
+                    89.564657,
+                    90.658659,
+                    92.020153,
+                    95.515221,
+                    124.312665,
+                    90.475607,
+                    90.75512,
+                    91.383266,
+                    92.299716,
+                    89.990032,
+                    91.316326,
+                    124.938651,
+                    93.928493,
+                    117.832016,
+                    91.74479,
+                    89.528757,
+                    91.087563,
+                    89.298994
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.rational",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 102.02439555000001,
+            "scoreError" : 2.946461774458084,
+            "scoreConfidence" : [
+                99.07793377554192,
+                104.9708573244581
+            ],
+            "scorePercentiles" : {
+                "0.0" : 98.310372,
+                "50.0" : 101.026119,
+                "90.0" : 106.2809166,
+                "95.0" : 111.9288659,
+                "99.0" : 112.223887,
+                "99.9" : 112.223887,
+                "99.99" : 112.223887,
+                "99.999" : 112.223887,
+                "99.9999" : 112.223887,
+                "100.0" : 112.223887
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    99.06684,
+                    101.293533,
+                    99.600425,
+                    100.691766,
+                    101.575425,
+                    99.777586,
+                    106.323465,
+                    105.041152,
+                    112.223887,
+                    99.280082,
+                    101.560345,
+                    100.290702,
+                    101.11107,
+                    100.941168,
+                    101.932019,
+                    105.786259,
+                    105.897981,
+                    98.310372,
+                    100.16329,
+                    99.620544
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.sqrt",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 107.32650395,
+            "scoreError" : 10.820056844479417,
+            "scoreConfidence" : [
+                96.50644710552058,
+                118.14656079447943
+            ],
+            "scorePercentiles" : {
+                "0.0" : 98.624958,
+                "50.0" : 103.43039350000001,
+                "90.0" : 132.73505850000004,
+                "95.0" : 145.36411305000001,
+                "99.0" : 145.935762,
+                "99.9" : 145.935762,
+                "99.99" : 145.935762,
+                "99.999" : 145.935762,
+                "99.9999" : 145.935762,
+                "100.0" : 145.935762
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    145.935762,
+                    114.392322,
+                    116.825538,
+                    103.361688,
+                    98.624958,
+                    99.962483,
+                    99.645739,
+                    103.499099,
+                    101.621179,
+                    98.726089,
+                    104.082486,
+                    103.744022,
+                    134.502783,
+                    99.484408,
+                    99.001752,
+                    98.717499,
+                    107.47488,
+                    108.839594,
+                    102.898772,
+                    105.189026
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "bench.SchmidRefinementBenchmarks.sumnat",
+        "mode" : "ss",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/localhome/bovel/.coursier-archive-cache/https/github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u492b09.tar.gz/jdk8u492-b09/jre/bin/java",
+        "jvmArgs" : [
+            "-XX:+PrintCommandLineFlags",
+            "-Xms8G",
+            "-Xmx8G"
+        ],
+        "jdkVersion" : "1.8.0_492",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "25.492-b09",
+        "warmupIterations" : 150,
+        "warmupTime" : "single-shot",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 20,
+        "measurementTime" : "single-shot",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 97.5712513,
+            "scoreError" : 9.752782200122926,
+            "scoreConfidence" : [
+                87.81846909987708,
+                107.32403350012292
+            ],
+            "scorePercentiles" : {
+                "0.0" : 92.943275,
+                "50.0" : 94.58822699999999,
+                "90.0" : 101.00006030000002,
+                "95.0" : 142.45464404999996,
+                "99.0" : 144.617921,
+                "99.9" : 144.617921,
+                "99.99" : 144.617921,
+                "99.999" : 144.617921,
+                "99.9999" : 144.617921,
+                "100.0" : 144.617921
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    97.829165,
+                    93.966596,
+                    95.480891,
+                    95.33019,
+                    94.749224,
+                    93.634752,
+                    94.278618,
+                    101.352382,
+                    144.617921,
+                    93.848794,
+                    94.964146,
+                    94.123577,
+                    94.916276,
+                    94.079637,
+                    93.631762,
+                    94.42723,
+                    96.311559,
+                    96.743084,
+                    92.943275,
+                    94.195947
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    }
+]
+
+
