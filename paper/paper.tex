@@ -548,10 +548,8 @@ To provide a conventional syntactic interface, we also define inductive syntacti
 
 This separation between syntactic and semantic judgments allows us to state and use typing rules in the familiar inductive style, while the soundness guarantee flows from the semantic interpretation.
 
-\paragraph{Notation.} As in the rest of the paper, we state the remaining lemmas with named variables (\S\ref{sec:language}), writing $\mathrm{FV}(A)$ for the free (term and type) variables of~$A$. The mechanization states them in de~Bruijn form, where extending the environment corresponds to an explicit index shift on the type and the freshness side conditions below are implicit.
-
 \paragraph{Weakening and substitution for the interpretation.}
-The semantic typing and subtyping proofs require that the value interpretation is well-behaved under changes to the environment. The key lemmas establish that the interpretation depends only on the variables the type mentions: extending the environment with a fresh binding leaves it unchanged, and a variable can be substituted away when the environment determines its value.
+The semantic typing and subtyping proofs require that the value interpretation is well-behaved under changes to the environment. The key lemmas establish that the interpretation depends only on the variables the type mentions: extending the environment with a fresh binding leaves it unchanged, and a variable can be substituted away when the environment determines its value. We write $\mathrm{FV}(A)$ for the free (term and type) variables of~$A$.\footnote{The mechanization states these lemmas in de~Bruijn form, where extending the environment corresponds to an explicit index shift on the type and the freshness side conditions are implicit.}
 
 \begin{lemma}[Term weakening]\label{lem:interp-term-weaken}
   If\/ $x \notin \mathrm{FV}(A)$, then
