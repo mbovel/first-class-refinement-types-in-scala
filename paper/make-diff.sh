@@ -92,13 +92,15 @@ perl -i -ne '
 # environment whose \end{acks} must start a line, which latexdiff markup
 # would otherwise break.
 #
-# --math-markup=whole marks changed formulas as a whole: the default
-# fine-grained math markup splits inline math across \DIFdel/\DIFadd,
-# leaving unbalanced $ (e.g. "\DIFdel{$} \Downarrow^? r'$}" in the
-# reworked metatheory lemmas), which does not compile.
+# --math-markup=coarse (the default, made explicit) marks changed runs
+# within math environments. Finer levels split inline math across
+# \DIFdel/\DIFadd and do not compile; --math-markup=whole compiles but
+# re-marks entire flalign* figures for any single changed row, doubling
+# the floats (which then all pile up at the end of the document). Coarse
+# works given the two source preprocessing steps above.
 "${latexdiff[@]}" \
   --config 'VERBATIMENV=(?:verbatim[*]?|lstlisting|acks)' \
-  --math-markup=whole \
+  --math-markup=coarse \
   "$tmp/old-flat.tex" "$tmp/new-flat.tex" > "$paper_dir/$out"
 
 echo "Wrote $paper_dir/$out (diff against $rev)"
