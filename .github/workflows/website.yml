@@ -1,0 +1,54 @@
+name: Website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    # Same stock Rocq image as the Mechanization workflow: coqdoc needs the
+    # compiled proofs (.glob files), so this rebuilds the mechanization.
+    container:
+      image: rocq/rocq-prover:9.2
+      # The image's default user (rocq, uid 1000) cannot write the
+      # runner-owned workspace and temp directories.
+      options: --user root
+    env:
+      OPAMROOT: /home/rocq/.opam
+    steps:
+      - uses: actions/checkout@v5
+
+      # Only this submodule: a recursive checkout would also clone the large
+      # dotty and stainless submodules, which the doc build does not need.
+      - name: Check out coqdocjs
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git submodule update --init mechanization/coqdocjs
+
+      - name: Generate coqdoc
+        run: opam exec -- mechanization/gendoc.sh
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: website
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
