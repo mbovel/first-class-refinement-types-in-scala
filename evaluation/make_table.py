@@ -154,6 +154,12 @@ def count_loc(bench, col):
     return count
 
 
+def abs_overhead(b, c):
+    """Absolute overhead (ms) of checked c over base b, with a 95% CI
+    half-width combining the two intervals in quadrature."""
+    return c["score"] - b["score"], math.sqrt(b["error"] ** 2 + c["error"] ** 2)
+
+
 def pct_overhead(b, c):
     """Relative overhead (%) of checked c over base b, with a 95% CI
     half-width propagated from the two intervals (delta method on the
@@ -208,7 +214,7 @@ def generate_latex_table(table):
     # Sub-header
     sub_header = "Benchmark"
     for _ in PLATFORMS:
-        sub_header += r" & LoC & Base & $\Delta$\%"
+        sub_header += r" & LoC & Base (ms) & $\Delta$ (ms)"
     sub_header += r" \\"
     lines.append(sub_header)
     lines.append(r"\midrule")
@@ -233,8 +239,8 @@ def generate_latex_table(table):
             if has_base and has_checked:
                 b = table[bench][base_col]
                 c = table[bench][checked_col]
-                pct, pct_err = pct_overhead(b, c)
-                row += f" & ${pct:.0f} \\pm {pct_err:.0f}\\%$"
+                delta, delta_err = abs_overhead(b, c)
+                row += f" & ${delta:.0f} \\pm {delta_err:.0f}$"
             else:
                 row += " & ---"
         row += r" \\"
@@ -242,7 +248,7 @@ def generate_latex_table(table):
 
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
-    lines.append(r"\caption{Compilation time benchmarks (ms/op, single-shot). Each run (JMH fork) is reduced to its mean; scores are the mean of the per-run means $\pm$ the 95\% confidence interval across runs (Student's $t$). Each platform shows the unchecked baseline time and the relative overhead of checking; the checked time is $\text{base} \times (1 + \Delta)$. The overhead interval is propagated from the base and checked intervals.}")
+    lines.append(r"\caption{Compilation time benchmarks (ms/op, single-shot). Each run (JMH fork) is reduced to its mean; scores are the mean of the per-run means $\pm$ the 95\% confidence interval across runs (Student's $t$). Each platform shows the unchecked baseline time and the absolute overhead of checking; the checked time is $\text{base} + \Delta$. The overhead interval combines the base and checked intervals in quadrature.}")
     lines.append(r"\label{fig:bench-table}")
     lines.append(r"\end{figure*}")
     return "\n".join(lines)

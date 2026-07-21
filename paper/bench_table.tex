@@ -6,31 +6,31 @@
 \toprule
  & \multicolumn{3}{c}{First-class} & \multicolumn{3}{c}{Schmid} & \multicolumn{3}{c}{Stainless} \\
 \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} 
-Benchmark & LoC & Base & $\Delta$\% & LoC & Base & $\Delta$\% & LoC & Base & $\Delta$\% \\
+Benchmark & LoC & Base (ms) & $\Delta$ (ms) & LoC & Base (ms) & $\Delta$ (ms) & LoC & Base (ms) & $\Delta$ (ms) \\
 \midrule
-\texttt{arrfold} & $20$ & $143 \pm 12$ & $10 \pm 37\%$ & $20$ & $166 \pm 21$ & $37 \pm 19\%$ & --- & --- & --- \\
-\texttt{collect} & $15$ & $151 \pm 13$ & $18 \pm 49\%$ & --- & --- & --- & --- & --- & --- \\
-\texttt{fansi} & $530$ & $305 \pm 41$ & $19 \pm 49\%$ & --- & --- & --- & --- & --- & --- \\
-\texttt{fibMemo} & $15$ & $152 \pm 16$ & $25 \pm 46\%$ & --- & --- & --- & --- & --- & --- \\
-\texttt{hof1} & $5$ & $110 \pm 13$ & $26 \pm 54\%$ & $5$ & $162 \pm 39$ & $23 \pm 37\%$ & --- & --- & --- \\
-\texttt{hof2} & $8$ & $117 \pm 19$ & $13 \pm 38\%$ & $8$ & $157 \pm 37$ & $28 \pm 37\%$ & --- & --- & --- \\
-\texttt{intarray} & $11$ & $137 \pm 10$ & $22 \pm 42\%$ & $11$ & $159 \pm 37$ & $15 \pm 28\%$ & $14$ & $110 \pm 13$ & $95 \pm 72\%$ \\
-\texttt{list1} & $5$ & $142 \pm 13$ & $16 \pm 37\%$ & $5$ & $174 \pm 47$ & $16 \pm 35\%$ & --- & --- & --- \\
-\texttt{list2} & $5$ & $147 \pm 21$ & $10 \pm 24\%$ & $5$ & $169 \pm 48$ & $16 \pm 35\%$ & --- & --- & --- \\
-\texttt{matrix} & $51$ & $172 \pm 54$ & $6 \pm 38\%$ & --- & --- & --- & --- & --- & --- \\
-\texttt{matrixDims} & $13$ & $155 \pm 38$ & $-1 \pm 26\%$ & $13$ & $160 \pm 48$ & $30 \pm 41\%$ & $21$ & $106 \pm 18$ & $195 \pm 111\%$ \\
-\texttt{max} & $4$ & $120 \pm 34$ & $-7 \pm 27\%$ & $4$ & $160 \pm 47$ & $21 \pm 36\%$ & $6$ & $82 \pm 17$ & $142 \pm 105\%$ \\
-\texttt{maxGen} & $11$ & $175 \pm 67$ & $-8 \pm 37\%$ & --- & --- & --- & --- & --- & --- \\
-\texttt{maxGenBig} & $15$ & $193 \pm 87$ & $-1 \pm 45\%$ & --- & --- & --- & --- & --- & --- \\
-\texttt{mergeSort} & $29$ & $164 \pm 58$ & $-1 \pm 36\%$ & --- & --- & --- & $53$ & $97 \pm 12$ & $6176 \pm 942\%$ \\
-\texttt{postuple} & $4$ & $120 \pm 45$ & $-1 \pm 38\%$ & $4$ & $153 \pm 27$ & $19 \pm 22\%$ & $9$ & $102 \pm 10$ & $51 \pm 22\%$ \\
-\texttt{range} & $19$ & $165 \pm 61$ & $1 \pm 40\%$ & --- & --- & --- & --- & --- & --- \\
-\texttt{rational} & $6$ & $120 \pm 45$ & $-6 \pm 36\%$ & $6$ & $145 \pm 19$ & $47 \pm 27\%$ & $10$ & $101 \pm 10$ & $65 \pm 18\%$ \\
-\texttt{sqrt} & $9$ & $122 \pm 43$ & $-4 \pm 35\%$ & $9$ & $152 \pm 17$ & $31 \pm 16\%$ & $14$ & $78 \pm 9$ & $140 \pm 31\%$ \\
-\texttt{sumnat} & $10$ & $114 \pm 34$ & $-0 \pm 31\%$ & $10$ & $155 \pm 16$ & $20 \pm 13\%$ & --- & --- & --- \\
-\texttt{vec} & $12$ & $124 \pm 43$ & $-8 \pm 33\%$ & --- & --- & --- & $20$ & $88 \pm 11$ & $310 \pm 94\%$ \\
+\texttt{arrfold} & $20$ & $93 \pm 2$ & $4 \pm 3$ & $20$ & $90 \pm 2$ & $30 \pm 2$ & --- & --- & --- \\
+\texttt{collect} & $15$ & $103 \pm 2$ & $3 \pm 3$ & --- & --- & --- & --- & --- & --- \\
+\texttt{fansi} & $530$ & $186 \pm 3$ & $1 \pm 4$ & --- & --- & --- & --- & --- & --- \\
+\texttt{fibMemo} & $15$ & $104 \pm 1$ & $6 \pm 2$ & --- & --- & --- & --- & --- & --- \\
+\texttt{hof1} & $5$ & $77 \pm 5$ & $2 \pm 5$ & $5$ & $78 \pm 4$ & $17 \pm 4$ & --- & --- & --- \\
+\texttt{hof2} & $8$ & $76 \pm 2$ & $3 \pm 3$ & $8$ & $78 \pm 3$ & $18 \pm 3$ & --- & --- & --- \\
+\texttt{intarray} & $11$ & $93 \pm 1$ & $4 \pm 3$ & $11$ & $76 \pm 3$ & $19 \pm 4$ & $14$ & $68 \pm 2$ & $46 \pm 2$ \\
+\texttt{list1} & $5$ & $95 \pm 1$ & $3 \pm 2$ & $5$ & $82 \pm 2$ & $19 \pm 2$ & --- & --- & --- \\
+\texttt{list2} & $5$ & $94 \pm 1$ & $4 \pm 3$ & $5$ & $82 \pm 3$ & $17 \pm 3$ & --- & --- & --- \\
+\texttt{matrix} & $51$ & $102 \pm 2$ & $11 \pm 3$ & --- & --- & --- & --- & --- & --- \\
+\texttt{matrixDims} & $13$ & $94 \pm 2$ & $5 \pm 3$ & $13$ & $76 \pm 3$ & $30 \pm 4$ & $21$ & $67 \pm 1$ & $94 \pm 3$ \\
+\texttt{max} & $4$ & $69 \pm 2$ & $6 \pm 3$ & $4$ & $74 \pm 1$ & $24 \pm 2$ & $6$ & $49 \pm 1$ & $56 \pm 2$ \\
+\texttt{maxGen} & $11$ & $102 \pm 2$ & $4 \pm 2$ & --- & --- & --- & --- & --- & --- \\
+\texttt{maxGenBig} & $15$ & $111 \pm 1$ & $13 \pm 2$ & --- & --- & --- & --- & --- & --- \\
+\texttt{mergeSort} & $29$ & $97 \pm 1$ & $9 \pm 3$ & --- & --- & --- & $53$ & $62 \pm 2$ & $3188 \pm 322$ \\
+\texttt{postuple} & $4$ & $72 \pm 3$ & $5 \pm 4$ & $4$ & $74 \pm 2$ & $18 \pm 3$ & $9$ & $67 \pm 1$ & $38 \pm 2$ \\
+\texttt{range} & $19$ & $101 \pm 3$ & $3 \pm 3$ & --- & --- & --- & --- & --- & --- \\
+\texttt{rational} & $6$ & $71 \pm 2$ & $6 \pm 3$ & $6$ & $74 \pm 1$ & $27 \pm 2$ & $10$ & $68 \pm 2$ & $46 \pm 2$ \\
+\texttt{sqrt} & $9$ & $74 \pm 1$ & $6 \pm 1$ & $9$ & $77 \pm 2$ & $25 \pm 3$ & $14$ & $49 \pm 2$ & $67 \pm 2$ \\
+\texttt{sumnat} & $10$ & $69 \pm 2$ & $8 \pm 2$ & $10$ & $75 \pm 1$ & $20 \pm 2$ & --- & --- & --- \\
+\texttt{vec} & $12$ & $74 \pm 2$ & $4 \pm 2$ & --- & --- & --- & $20$ & $56 \pm 1$ & $134 \pm 2$ \\
 \bottomrule
 \end{tabular}
-\caption{Compilation time benchmarks (ms/op, single-shot). Each run (JMH fork) is reduced to its mean; scores are the mean of the per-run means $\pm$ the 95\% confidence interval across runs (Student's $t$). Each platform shows the unchecked baseline time and the relative overhead of checking; the checked time is $\text{base} \times (1 + \Delta)$. The overhead interval is propagated from the base and checked intervals.}
+\caption{Compilation time benchmarks (ms/op, single-shot). Each run (JMH fork) is reduced to its mean; scores are the mean of the per-run means $\pm$ the 95\% confidence interval across runs (Student's $t$). Each platform shows the unchecked baseline time and the absolute overhead of checking; the checked time is $\text{base} + \Delta$. The overhead interval combines the base and checked intervals in quadrature.}
 \label{fig:bench-table}
 \end{figure*}
