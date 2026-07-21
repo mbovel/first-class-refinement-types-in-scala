@@ -10,3 +10,6 @@
 	path = implementation
 	url = https://github.com/mbovel/dotty.git
 	branch = qualifiers-ci
+[submodule "mechanization/coqdocjs"]
+	path = mechanization/coqdocjs
+	url = https://github.com/rocq-community/coqdocjs

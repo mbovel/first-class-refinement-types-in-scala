@@ -9,5 +9,7 @@ paper/paper-diff.*
 smt-sessions/
 evaluation/results/
 artifact/
+mechanization/refinement_types/html/
+website/mechanization/
 .metals
 .vscode
