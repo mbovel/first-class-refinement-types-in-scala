@@ -125,6 +125,6 @@ for ((run = 1; run <= N_RUNS; run++)); do
     fi
     echo "==> Run $run: $suite benchmarks ($RUN_ID)..."
     mkdir -p "$RESULTS_DIR/$suite"
-    (cd "$suite" && sbt "clean; bench / Jmh / run$JMH_ARGS -foe true -gc true -rf json -rff $RESULTS_DIR/$suite/$RUN_ID.json")
+    (cd "$suite" && sbt "clean; bench / Jmh / run$JMH_ARGS -rf json -rff $RESULTS_DIR/$suite/$RUN_ID.json")
   done
 done

@@ -19,7 +19,7 @@ import org.openjdk.jmh.annotations.{
   jvmArgsPrepend = Array("-XX:+PrintCommandLineFlags", "-Xms8G", "-Xmx8G")
 )
 @Warmup(iterations = 180)
-@Measurement(iterations = 20)
+@Measurement(iterations = 40)
 @BenchmarkMode(Array(org.openjdk.jmh.annotations.Mode.SingleShotTime))
 @State(Scope.Benchmark)
 @OutputTimeUnit(MILLISECONDS)
