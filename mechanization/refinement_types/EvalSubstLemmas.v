@@ -1,3 +1,10 @@
+(** * Evaluation Substitution (§3.6)
+
+    Substitution analogue of evaluation weakening (Lemma 3.7): replacing an
+    environment entry by a variable reference (substituting [tvar i] for the
+    removed binding) preserves evaluation results, up to the corresponding
+    substitution compatibility relation [res_subst_compat]. *)
+
 From Stdlib Require Import Lists.List.
 Import ListNotations.
 From Stdlib Require Import Arith.PeanoNat.
@@ -10,6 +17,8 @@ Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Eval.
 Require Import RefinementTypes.Tactics.
 Require Import RefinementTypes.ListLemmas.
+
+(** ** Substitution compatibility relation *)
 
 Inductive val_subst_compat : Value -> Value -> Prop :=
 | vsc_unit : val_subst_compat vunit vunit
@@ -170,6 +179,8 @@ Proof.
         [inversion Hrc1 | inversion Hrc1 |].
       rewrite Hs1. subst. eexists; split; [constructor | reflexivity].
 Qed.
+
+(** ** Substitution simulation *)
 
 Lemma eval_term_subst_compat_fwd: forall fuel t env1 env2 sigma r,
   env_subst_compat env1 env2 sigma ->
@@ -1014,6 +1025,8 @@ Proof.
           as [[[?|]|] [Hrca Ha1]]; [inversion Hrca | inversion Hrca |].
         rewrite Ha1. eexists; split; [constructor | reflexivity].
 Qed.
+
+(** ** Corollaries: substituting a variable for an environment entry *)
 
 (** Forward: result from big env implies result for substituted env. *)
 Lemma eval_subst_env_fwd: forall fuel p venv_prefix va venv i r,

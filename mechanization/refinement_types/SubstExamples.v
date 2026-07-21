@@ -1,7 +1,14 @@
+(** * Substitution Tests
+
+    Executable unit tests ([Example]s proved by [reflexivity]) pinning down
+    the behaviour of renaming and substitution on representative cases,
+    in particular how they propagate into refinement predicates and type
+    annotations. *)
+
 Require Import RefinementTypes.Syntax.
 Require Import RefinementTypes.Subst.
 
-(** * Renaming examples *)
+(** ** Renaming examples *)
 
 (** Shift type variables by 1 in a type. *)
 Example ren_ty_shift_tvar :
@@ -53,7 +60,7 @@ Example ren_tm_tabs_annotation :
   tabs (TRefine TBool (tvar 2)) (tvar 0).
 Proof. reflexivity. Qed.
 
-(** * Substitution examples *)
+(** ** Substitution examples *)
 
 (** Basic type variable substitution. *)
 Example subst_ty_basic :
@@ -104,7 +111,7 @@ Example subst_tm_refine_free :
   TRefine TBool tunit.
 Proof. reflexivity. Qed.
 
-(** * ty_subst examples *)
+(** ** ty_subst examples *)
 
 (** ty_subst replaces type var 0. *)
 Example ty_subst_basic :
@@ -117,14 +124,14 @@ Example ty_subst_refine_propagates :
   TRefine TBool (ttapp (tvar 0) TInt32).
 Proof. reflexivity. Qed.
 
-(** KEY TEST from TySubstExamples: ty_subst correctly shifts term variables
-    when going under TFun's term binder. *)
+(** KEY TEST: ty_subst correctly shifts term variables when going under
+    TFun's term binder. *)
 Example ty_subst_shifts_under_tfun :
   ty_subst (TFun (TVar 0) (TVar 0)) (TRefine TBool (tvar 1)) =
   TFun (TRefine TBool (tvar 1)) (TRefine TBool (tvar 2)).
 Proof. reflexivity. Qed.
 
-(** * Identity substitution *)
+(** ** Identity substitution *)
 
 Example subst_ty_id :
   subst_ty TVar tvar (TFun (TVar 0) (TRefine TBool (tvar 0))) =
@@ -136,7 +143,7 @@ Example subst_tm_id :
   tabs (TRefine TBool (tvar 0)) (tvar 0).
 Proof. reflexivity. Qed.
 
-(** * Cross-sort independence *)
+(** ** Cross-sort independence *)
 
 (** Type substitution does not affect term variables. *)
 Example subst_ty_preserves_tmvar :

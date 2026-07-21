@@ -1,5 +1,7 @@
+(** * Well-Formedness Lemmas
 
-
+    Extension, lookup, and shifting lemmas for the three well-formedness
+    predicates of [Wf]: [wf_env], [wf_benv], and [wf_facts]. *)
 
 
 From Stdlib Require Import Lists.List.

@@ -1,3 +1,15 @@
+(** * Syntax (Figure 5)
+
+    Abstract syntax of the core calculus. Types and terms are mutually
+    inductive, since refinement types [TRefine A p] embed a term [p] as a
+    predicate. Bindings use de Bruijn indices.
+
+    Two presentational differences with the paper: Figure 5 has singleton
+    base types [True] and [False] where the mechanization uses a single
+    [TBool], and the mechanization includes a primitive diverging term
+    [tdiverge] while the paper leaves "diverge" informal (any closed term
+    that never terminates). *)
+
 From Stdlib Require Import Lists.List.
 Import ListNotations.
 From Stdlib Require Import Arith.PeanoNat.
@@ -5,7 +17,7 @@ From Stdlib Require Import ZArith.BinInt.
 
 Definition var := nat.
 
-(** Binary operations *)
+(** ** Binary operations *)
 Inductive BinOp :=
   | OpEq | OpNeq                           (* Equality and inequality *)
   | OpLt | OpLe | OpGe | OpGt              (* Ordering comparisons *)
@@ -15,7 +27,7 @@ Inductive BinOp :=
 Lemma bin_op_eq_dec : forall (x y : BinOp), {x = y} + {x <> y}.
 Proof. decide equality. Defined.
 
-(** Types and Terms are mutually inductive.
+(** ** Types and terms
 
     Binding structure (for de Bruijn substitution):
     - TFun A B:       B binds 1 term var
@@ -68,7 +80,11 @@ with Term : Type :=
   | tdiverge : Term                                (* diverging term *)
   | tloop : Term -> Term -> Term.                  (* loop a body — body binds 1 term var *)
 
-(** Values are the results of evaluation. Closures capture their environment. *)
+(** ** Values
+
+    Values are the results of evaluation, distinct from terms: while term
+    lambdas may have free variables, closures capture their environment as a
+    list of values. *)
 Inductive Value : Type :=
   | vunit : Value
   | vbool : bool -> Value
@@ -79,12 +95,10 @@ Inductive Value : Type :=
   | vabs  : list Value -> Term -> Value    (* term abstraction closure *)
   | vtabs : list Value -> Term -> Value.  (* type abstraction closure *)
 
-(**
-Custom induction principle for Value
+(** ** Custom induction principle for values
 
-Because Value contains nested lists, we need a custom induction principle
-that properly handles the list structure.
-*)
+    Because [Value] contains nested lists, we need a custom induction
+    principle that properly handles the list structure. *)
 Section Value_ind_nested.
   Variable P : Value -> Prop.
   Hypothesis Hunit : P vunit.
@@ -115,7 +129,7 @@ Section Value_ind_nested.
     end.
 End Value_ind_nested.
 
-(** Decidable equality for Ty and Term *)
+(** ** Decidable equality for types and terms *)
 Fixpoint ty_eq_dec (x y: Ty) : {x = y} + {x <> y}
 with term_eq_dec (x y: Term) : {x = y} + {x <> y}.
 Proof.

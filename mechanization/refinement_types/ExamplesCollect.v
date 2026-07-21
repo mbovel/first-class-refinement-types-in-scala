@@ -1,4 +1,11 @@
-(** Example: collect (filter into a refined list) using a loop. *)
+(** * Example: collect (Figure 4)
+
+    The [collect] function of Figure 4: filtering elements satisfying a
+    predicate into a refined list, encoded with a loop over equi-recursive
+    lists. Exercises bounded polymorphism, higher-order predicates,
+    refinement types, and tail-recursive iteration. The evaluation tests
+    below run it through the interpreter; note that results come out in
+    reverse order since the encoding prepends to the accumulator. *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.
@@ -6,7 +13,7 @@ From Stdlib Require Import ZArith.BinInt.
 Require Import RefinementTypes.Syntax.
 Require Import RefinementTypes.Eval.
 
-(** * Type abbreviations *)
+(** ** Type abbreviations *)
 
 (** List[X] = mu self. Unit + (X, self) *)
 Definition ListTy (tv : nat) : Ty :=
@@ -22,7 +29,7 @@ Definition RefinedByP (tv pv : nat) : Ty :=
 Definition ListTy_refined (tv pv : nat) : Ty :=
   TMuAll (TSum TUnit (TSigma (RefinedByP (S tv) pv) (TVar 0))).
 
-(** * Type of collect
+(** ** Type of collect
 
     collect = [T] => [S >: T] =>
       (xs: List[T]) => (p: S => Bool) => (acc: List[{v: T | p(v)}]) =>
@@ -55,7 +62,7 @@ Definition collect_ty : Ty :=
           (TFun (ListTy_refined 1 1)                   (* acc: List[{v:T|p(v)}] *)
             (ListTy_refined 1 2))))).                  (* => List[{v:T|p(v)}] *)
 
-(** * Term: collect
+(** ** Term: collect
 
     collect = [T] => [S >: T <: Top] =>
       \(xs: List[T]). \(p: S => Bool). \(acc: List[{v:T|p(v)}]).
@@ -113,7 +120,7 @@ Definition collect_tm : Term :=
                         (tpair (tvar 0) (tvar 3))))
                   ))
               )))))).
-(** * Evaluation tests *)
+(** ** Evaluation tests *)
 
 Fixpoint list_term (elems : list Term) : Term :=
   match elems with

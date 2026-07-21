@@ -1,3 +1,8 @@
+(** * Well-Formed Environments (Figure 8)
+
+    The well-formedness predicate wf(δ, Γ, ρ) of the paper, split into its
+    three components: [wf_env] for term bindings, [wf_benv] for type
+    variable bounds, and [wf_facts] for equality facts. *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.
@@ -12,6 +17,8 @@ Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Eval.
 Require Import RefinementTypes.Interp.
 
+(** ** Term bindings *)
+
 (** Well-formed environment: each type T_i is interpreted with the suffix
     venv[i+1:], so that T_i only sees bindings that were introduced before it.
     Types in tenv use relative de Bruijn indices (variable 0 refers to the
@@ -23,6 +30,8 @@ Fixpoint wf_env (tvars: list SemTy) (tenv: list Ty) (venv: list Value) : Prop :=
       interp tvars venv' T v /\ wf_env tvars tenv' venv'
   | _, _ => False
   end.
+
+(** ** Equality facts *)
 
 (** Two terms evaluate to the same value in (possibly different) environments. *)
 Definition evals_to_same (venv1: list Value) (t1: Term)

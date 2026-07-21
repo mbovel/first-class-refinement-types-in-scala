@@ -1,3 +1,7 @@
+(** * List Lemmas
+
+    General-purpose lemmas about [Forall2] and [nth_error]. *)
+
 From Stdlib Require Import Lists.List.
 Import ListNotations.
 From Stdlib Require Import Arith.PeanoNat.

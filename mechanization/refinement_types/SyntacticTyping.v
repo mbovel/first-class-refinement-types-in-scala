@@ -1,6 +1,10 @@
-(** * Syntactic Typing
+(** * Syntactic Typing (Figure 9)
 
-    Inductive typing judgment mirroring the semantic typing rules. *)
+    Inductive typing judgment Γ ⊢ a : A mirroring the semantic typing
+    rules; each constructor corresponds to a rule of Figure 9 and to the
+    lemma of the same name in [SemanticTyping]. Adequacy — the syntactic
+    judgment implies the semantic one — is Theorem 3.1, proved in
+    [Adequacy]. *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.

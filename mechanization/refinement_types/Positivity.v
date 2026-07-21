@@ -1,8 +1,8 @@
-(** * Strict Positivity
+(** * Strict Positivity (Figure 11)
 
     Defines a predicate [spos i T] that checks whether type variable [i]
-    appears only in strictly positive positions in type [T]. This means [i]
-    never appears to the left of a function arrow.
+    appears only in strictly positive positions in type [T]: never to the
+    left of a function arrow, and never in the bounds of a universal type.
 
     Also defines [ty_var_absent i T] that checks whether type variable [i]
     does not appear at all in [T].

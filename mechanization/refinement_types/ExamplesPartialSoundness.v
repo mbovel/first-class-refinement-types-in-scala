@@ -1,8 +1,16 @@
-(** * Partial correctness and divergent predicates
+(** * Partial Correctness and Divergent Predicates (§2.3, Lemmas 2.1–2.3)
 
     These theorems establish the metatheoretic properties of accepting
     non-terminating refinement predicates under the partial-correctness
-    semantics.
+    semantics. They include the lemmas of §2.3 of the paper:
+    - Lemma 2.1 (And-True): [sem_implies_and_true]
+    - Lemma 2.2 (And-False): [sem_implies_and_false_terminating], with
+      [diverge_and_false_not_implies_false] showing that its termination
+      hypothesis is necessary
+    - Lemma 2.3 (diverging predicates are vacuous):
+      [refine_diverge_eq_refine_true] and [refine_true_eq_base] (part 1),
+      [no_converging_term_has_refine_false] (part 2), and
+      [diverge_not_sub_false] (part 3)
 
     The key observations are:
     - A refinement [{x: A | false}] is uninhabited (equivalent to [Bot]).
@@ -127,7 +135,8 @@ Proof.
     exists (vbool true). split; reflexivity.
 Qed.
 
-(** ** 3a. [{Unit | diverge}] is *not* a semantic subtype of [{Unit | false}].
+(** ** 3a. [{Unit | diverge}] is not a semantic subtype of [{Unit | false}]
+    (Lemma 2.3, part 3).
 
     [vunit] inhabits the first but not the second, so the system is not
     degenerate: a diverging predicate is not equivalent to [false]. *)
@@ -148,7 +157,7 @@ Proof.
     destruct Heval as [v' [Heq Htrue]]. injection Heq as <-. discriminate.
 Qed.
 
-(** ** 3b. [{Unit | diverge && false}] is *not* a subtype of [{Unit | false}].
+(** ** 3b. [{Unit | diverge && false}] is not a subtype of [{Unit | false}].
 
     Strict left-to-right evaluation means [diverge && false] still diverges:
     the outer [false] is unreachable. So the refinement is vacuously
@@ -199,7 +208,8 @@ Proof.
   simpl. destruct va; reflexivity.
 Qed.
 
-(** ** 4. Entailment [Γ ⊨ t && true ⟹ t] holds for arbitrary [t].
+(** ** 4. Entailment [Γ ⊨ t && true ⟹ t] holds for arbitrary [t]
+    (Lemma 2.1, And-True).
 
     No termination assumption on [t] is needed: if [t && true] evaluates to
     [true] whenever it terminates, then so does [t]. A case analysis shows the
@@ -228,8 +238,8 @@ Qed.
 (** ** 5a. Entailment [Γ ⊨ t && false ⟹ false] fails for diverging [t].
 
     With [t = diverge], the left-hand side diverges, so it is vacuously true
-    under the partial-correctness reading, while [false] is not. This is the
-    entailment rule that *requires* a termination assumption. *)
+    under the partial-correctness reading, while [false] is not. This shows
+    that the termination hypothesis of Lemma 2.2 is necessary. *)
 
 Theorem diverge_and_false_not_implies_false :
   ~ sem_implies [] [] [] (tbin_op OpAnd tdiverge (tbool false)) (tbool false).
@@ -244,7 +254,8 @@ Proof.
   destruct Himp as [v [Heq Htrue]]. injection Heq as <-. discriminate.
 Qed.
 
-(** ** 5b. Entailment [Γ ⊨ t && false ⟹ false] holds when [t] terminates.
+(** ** 5b. Entailment [Γ ⊨ t && false ⟹ false] holds when [t] terminates
+    (Lemma 2.2, And-False).
 
     A term [t] semantically terminates in a context if it evaluates to a
     value in every well-formed environment. *)
@@ -281,7 +292,7 @@ Proof.
 Qed.
 
 (** ** 6. [{x: A | diverge}] and [{x: A | true}] have the same interpretation,
-    for any base type [A].
+    for any base type [A] (Lemma 2.3, part 1).
 
     This generalizes example 2 above: a diverging predicate is vacuous, so it
     is interchangeable with [true] as a refinement predicate. Together with
@@ -378,7 +389,8 @@ Proof.
   exact (proj2 (refine_true_eq_base A tvars venv v) Hv).
 Qed.
 
-(** ** 7. No converging term has type [{x: A | false}], for any [A].
+(** ** 7. No converging term has type [{x: A | false}], for any [A]
+    (Lemma 2.3, part 2).
 
     This generalizes example 1b above: if [t] evaluates to a value in some
     well-formed environment, then [t] cannot be semantically typed at

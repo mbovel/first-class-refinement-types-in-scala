@@ -1,12 +1,11 @@
-(** * Typing
+(** * Algorithmic Typing
 
-    This file defines the algorithmic typing rules and proves the full safety theorem:
-    if a term is algorithmically typed, evaluating it will not get stuck and the
-    returned value will be in the interpretation of its syntactic type.
+    A computable type checker [typeof] and its safety theorem: if a term is
+    algorithmically typed, evaluating it will not get stuck and the
+    returned value will be in the interpretation of its computed type.
 
     Note: this is included only as a test of the mechanization and is not
-    presented in the paper.
-*)
+    presented in the paper. *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.

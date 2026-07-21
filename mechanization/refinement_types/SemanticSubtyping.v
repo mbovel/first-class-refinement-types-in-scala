@@ -1,3 +1,8 @@
+(** * Semantic Subtyping (§3.5, Figures 8 and 10)
+
+    The semantic subtyping judgment Γ ⊨ A <: B ([sem_subtype], Figure 8),
+    and one soundness lemma per subtyping rule of Figure 10. *)
+
 From Stdlib Require Import Lists.List.
 Import ListNotations.
 From Stdlib Require Import Arith.PeanoNat.
@@ -14,6 +19,11 @@ Require Import RefinementTypes.Positivity.
 Require Import RefinementTypes.PositivityLemmas.
 Require Import RefinementTypes.SemanticImplies.
 
+(** ** The judgment (Figure 8) *)
+
+(** [A] is a semantic subtype of [B] if, in every well-formed environment,
+    every value in the interpretation of [A] is in the interpretation of
+    [B]. *)
 Definition sem_subtype (tbounds: TBounds) (tenv: list Ty) (facts: list ((nat * Term) * (nat * Term))) (A B: Ty) : Prop :=
   forall tvars venv,
     wf_env tvars tenv venv ->
@@ -21,12 +31,16 @@ Definition sem_subtype (tbounds: TBounds) (tenv: list Ty) (facts: list ((nat * T
     wf_facts venv facts ->
     forall v, interp tvars venv A v -> interp tvars venv B v.
 
+(** ** Reflexivity and transitivity *)
+
+(** S-Refl *)
 Lemma sem_subtype_refl: forall tbounds tenv facts A,
   sem_subtype tbounds tenv facts A A.
 Proof.
   intros * tvars venv Henv Hbenv Hfacts v Hinterp. exact Hinterp.
 Qed.
 
+(** S-Trans *)
 Lemma sem_subtype_trans: forall tbounds tenv facts A B C,
   sem_subtype tbounds tenv facts A B ->
   sem_subtype tbounds tenv facts B C ->
@@ -37,6 +51,8 @@ Proof.
   apply (HsubAB tvars venv Henv Hbenv Hfacts).
   exact HinterpA.
 Qed.
+
+(** ** Function and universal type subtyping rules *)
 
 (** S-Fun: contravariant in domain, covariant in codomain. *)
 Lemma sem_subtype_fun: forall tbounds tenv facts A1 A2 B1 B2,

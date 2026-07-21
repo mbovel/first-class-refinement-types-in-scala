@@ -1,10 +1,16 @@
+(** * Substitution Lemmas
+
+    Equational theory of the de Bruijn operations of [Subst]:
+    extensionality, identity, and composition laws for renaming and
+    substitution, and simplification lemmas for the [up] combinators. *)
+
 From Stdlib Require Import Arith.PeanoNat.
 From Stdlib Require Import Arith.Compare_dec.
 From Stdlib Require Import Psatz.
 Require Import RefinementTypes.Syntax.
 Require Import RefinementTypes.Subst.
 
-(** * Renaming extensionality *)
+(** ** Renaming extensionality *)
 
 Lemma ren_ty_ext xi_ty xi_tm zeta_ty zeta_tm T :
   (forall n, xi_ty n = zeta_ty n) ->
@@ -24,7 +30,7 @@ Proof.
     try (destruct m; simpl; auto; unfold funcomp; auto).
 Qed.
 
-(** * Up extensionality helpers *)
+(** ** Up extensionality helpers *)
 
 Lemma up_ty_ty_ext sigma_ty tau_ty :
   (forall n, sigma_ty n = tau_ty n) ->
@@ -56,7 +62,7 @@ Proof.
   unfold up_tm_tm, scons, funcomp. f_equal. auto using ren_tm_ext.
 Qed.
 
-(** * Substitution extensionality *)
+(** ** Substitution extensionality *)
 
 Lemma subst_ty_ext sigma_ty tau_ty sigma_tm tau_tm T :
   (forall n, sigma_ty n = tau_ty n) ->
@@ -75,7 +81,7 @@ Proof.
     auto using up_ty_ty_ext, up_ty_tm_ext, up_tm_ty_ext, up_tm_tm_ext.
 Qed.
 
-(** * Renaming identity *)
+(** ** Renaming identity *)
 
 Lemma upren_id : forall n, upren id n = id n.
 Proof. intros [|n]; reflexivity. Qed.
@@ -107,7 +113,7 @@ Proof. intros. apply ren_ty_ext; [reflexivity | exact upren_upren_id]. Qed.
 Lemma ren_tm_upren_upren_id : forall xi t, ren_tm xi (upren (upren id)) t = ren_tm xi id t.
 Proof. intros. apply ren_tm_ext; [reflexivity | exact upren_upren_id]. Qed.
 
-(** * Substitution identity *)
+(** ** Substitution identity *)
 
 Lemma up_ty_ty_id : forall n, up_ty_ty TVar n = TVar n.
 Proof. intros [|n]; reflexivity. Qed.
@@ -165,7 +171,7 @@ Proof.
   apply subst_tm_id.
 Qed.
 
-(** * Renaming-substitution connection *)
+(** ** Renaming-substitution connection *)
 
 Lemma up_ty_ty_ren xi_ty :
   forall n, up_ty_ty (xi_ty >> TVar) n = (upren xi_ty >> TVar) n.
@@ -204,7 +210,7 @@ Proof.
                up_tm_ty_up_tm_ty_ren, up_tm_tm_up_tm_tm_ren.
 Qed.
 
-(** * Renaming composition *)
+(** ** Renaming composition *)
 
 Lemma upren_comp xi zeta :
   forall n, upren (xi >> zeta) n = (upren xi >> upren zeta) n.
@@ -226,7 +232,7 @@ Proof.
     auto using upren_comp, upren_upren_comp.
 Qed.
 
-(** * Substitution after renaming *)
+(** ** Substitution after renaming *)
 
 Lemma up_ty_ty_subst_ren xi_ty sigma_ty :
   forall n, up_ty_ty (xi_ty >> sigma_ty) n = (upren xi_ty >> up_ty_ty sigma_ty) n.
@@ -279,7 +285,7 @@ Proof.
                up_tm_ty_up_tm_ty_subst_ren, up_tm_tm_up_tm_tm_subst_ren.
 Qed.
 
-(** * Renaming after substitution *)
+(** ** Renaming after substitution *)
 
 Lemma up_ty_ty_ren_subst xi_ty xi_tm sigma_ty :
   forall n, up_ty_ty (sigma_ty >> ren_ty xi_ty xi_tm) n =
@@ -348,7 +354,7 @@ Proof.
                up_tm_ty_up_tm_ty_ren_subst, up_tm_tm_up_tm_tm_ren_subst.
 Qed.
 
-(** * Substitution composition *)
+(** ** Substitution composition *)
 
 Lemma up_ty_ty_subst_comp tau_ty tau_tm sigma_ty :
   forall n, up_ty_ty (sigma_ty >> subst_ty tau_ty tau_tm) n =
@@ -431,7 +437,7 @@ Proof.
                up_tm_ty_up_tm_ty_subst_comp, up_tm_tm_up_tm_tm_subst_comp.
 Qed.
 
-(** * Iterated up_tm_tm lemmas *)
+(** ** Iterated up_tm_tm lemmas *)
 
 Lemma upn_tm_ext : forall n f g,
   (forall x, f x = g x) ->
@@ -473,7 +479,7 @@ Proof.
         intro k. unfold funcomp. lia.
 Qed.
 
-(** * Term-only shift substitution *)
+(** ** Term-only shift substitution *)
 
 (** Helper: term-only substitution with shift-by-k *)
 Definition tm_shift (k : nat) : var -> Term := fun n => tvar (n + k).

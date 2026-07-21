@@ -1,3 +1,14 @@
+(** * Interpretation Weakening (Lemmas 3.3 and 3.5)
+
+    The value interpretation is invariant under extending the value
+    environment (term weakening, Lemma 3.3) or the type variable
+    environment (type weakening, Lemma 3.5). The lemmas are stated in de
+    Bruijn form: extending the environment corresponds to an explicit index
+    shift on the type, and the freshness side conditions are implicit. The
+    paper's single-binding statements are the [interp_env_ren_term] and
+    [interp_env_ren_type] corollaries of the multi-element versions
+    [interp_weaken_term] and [interp_weaken_type]. *)
+
 From Stdlib Require Import Lists.List.
 Import ListNotations.
 From Stdlib Require Import Arith.PeanoNat.
@@ -14,7 +25,7 @@ Require Import RefinementTypes.EvalShiftLemmas.
 Require Import RefinementTypes.Interp.
 Require Import RefinementTypes.EvalTypeErasure.
 
-(** ** eval_to_true is invariant when type erasure is preserved *)
+(** ** Predicates: [eval_to_true] is invariant under type erasure *)
 
 Lemma eval_to_true_erase_eq : forall venv t1 t2,
   erase_ty_in_tm t1 = erase_ty_in_tm t2 ->
@@ -96,7 +107,7 @@ Proof.
       destruct (H fuel None Hr') as [w [Hw _]]. discriminate.
 Qed.
 
-(** ** Interpretation lemmas for term variables *)
+(** ** Term weakening (Lemma 3.3) *)
 
 Lemma interp_weaken_term: forall T tenv venv1 venv2 venv3,
   interp tenv (venv1 ++ venv3) T =
@@ -216,7 +227,7 @@ Proof.
   - intro n. simpl. unfold funcomp, tm_shift. f_equal. lia.
 Qed.
 
-(** ** Interpretation lemmas for type variables *)
+(** ** Type weakening (Lemma 3.5) *)
 
 Lemma interp_weaken_type: forall T tenv1 tenv2 tenv3 venv,
   interp (tenv1 ++ tenv3) venv T =

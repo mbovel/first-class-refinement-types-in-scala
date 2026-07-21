@@ -1,3 +1,13 @@
+(** * Evaluation Weakening (Lemma 3.7)
+
+    Weakening for the evaluator: inserting values in the middle of the
+    environment (with the matching de Bruijn shift on the term) preserves
+    evaluation results. Results are not preserved exactly, because closures
+    capture the extended environment; they are preserved up to the
+    compatibility relation [res_weaken_compat] (written ≈ in the paper),
+    which relates first-order values to themselves and closures to closures
+    with correspondingly extended captured environments. *)
+
 From Stdlib Require Import Lists.List.
 Import ListNotations.
 From Stdlib Require Import Arith.PeanoNat.
@@ -10,6 +20,8 @@ Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Eval.
 Require Import RefinementTypes.Tactics.
 Require Import RefinementTypes.ListLemmas.
+
+(** ** Weakening compatibility relation *)
 
 Inductive val_weaken_compat : Value -> Value -> Prop :=
 | vc_unit :
@@ -121,6 +133,8 @@ Proof.
         [inversion Hrc1 | inversion Hrc1 |].
       rewrite Hs2. subst. eexists; split; [constructor | reflexivity].
 Qed.
+
+(** ** Weakening simulation (Lemma 3.7) *)
 
 Lemma eval_weaken_compat: forall fuel t venv1 venv1' venv2 venv2' venv3 venv3' r,
   Forall2 val_weaken_compat venv1 venv1' ->
@@ -439,6 +453,8 @@ Proof.
           as [[[?|]|] [Hrca Ha2]]; [inversion Hrca | inversion Hrca |].
         rewrite Ha2. eexists; split; [constructor | reflexivity].
 Qed.
+
+(** ** Corollaries: shifting the environment *)
 
 (** Forward: small env result implies big env result (with res_weaken_compat). *)
 Lemma eval_shift_env_fwd: forall fuel p venv1 venv2 venv3 r,

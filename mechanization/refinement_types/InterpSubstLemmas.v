@@ -1,3 +1,11 @@
+(** * Interpretation Substitution (Lemmas 3.4 and 3.6)
+
+    A term or type variable can be substituted away in the interpretation
+    when the environment determines its value. The paper's single-binding
+    statements are the [interp_subst_term] and [interp_subst] corollaries
+    of the generalized versions [interp_subst_up_term] and
+    [interp_subst_gen]. *)
+
 From Stdlib Require Import Lists.List.
 Import ListNotations.
 From Stdlib Require Import Arith.PeanoNat.
@@ -16,7 +24,7 @@ Require Import RefinementTypes.Interp.
 Require Import RefinementTypes.EvalShiftLemmas.
 Require Import RefinementTypes.InterpShiftLemmas.
 
-(** * Term variable substitution in interpretation *)
+(** ** Term substitution (Lemma 3.4) *)
 
 (** Helper: eval_to_true is preserved by environment substitution *)
 Lemma eval_to_true_subst_env : forall p venv_prefix va venv i,
@@ -168,7 +176,7 @@ Proof.
   apply (interp_subst_up_term T tvars [] va venv i H).
 Qed.
 
-(** * Type variable substitution in interpretation *)
+(** ** Type substitution (Lemma 3.6) *)
 
 (** Helper: combined type + term weakening *)
 Lemma interp_weaken_both: forall T tvars1 tvars2 venv_prefix venv,

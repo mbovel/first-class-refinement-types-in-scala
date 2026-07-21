@@ -1,8 +1,10 @@
-(** * First-Order Types
+(** * First-Order Types (§3.4)
 
-    First-order types are types whose values support equality comparison.
-    This includes unit, booleans, integers, and refinements over first-order types.
-*)
+    First-order types are types whose values support equality comparison:
+    unit, booleans, integers, and refinements over first-order types. [fo]
+    is the firstorder(A) side condition of rule T-Self (Figure 9);
+    [bin_op_ty_compat] and [bin_op_result_ty] are compat(op, A) and
+    result(op, A) of rule T-BinOp. *)
 
 Require Import RefinementTypes.Syntax.
 Require Import RefinementTypes.Eval.

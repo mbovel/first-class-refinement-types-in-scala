@@ -1,7 +1,13 @@
-(** * Semantic Typing
+(** * Semantic Typing (§3.4, Figures 8 and 9)
 
-    This file defines the semantic typing judgment and proves the fundamental
-    lemmas for each syntactic construct. *)
+    The semantic typing judgment Γ ⊨ a : A ([sem_typed], Figure 8), and one
+    soundness lemma per typing rule of Figure 9. Composing these lemmas
+    along any derivation is the fundamental theorem of the logical
+    relation.
+
+    Note: the paper's rules T-True and T-False assign the singleton types
+    [True]/[False]; the mechanization has a single [TBool] and one rule
+    [sem_typed_bool]. *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.
@@ -27,8 +33,11 @@ Require Import RefinementTypes.Positivity.
 Require Import RefinementTypes.PositivityLemmas.
 Require Import RefinementTypes.SemanticSubtyping.
 
+(** ** The judgment (Figure 8) *)
+
 (** Semantic typing: a term [t] has type [T] if, in any well-formed
-    environment, evaluating [t] produces a value in the interpretation of [T]. *)
+    environment, whenever the evaluation of [t] terminates, it produces a
+    value in the interpretation of [T] (partial correctness). *)
 Definition sem_typed (tbounds: TBounds) (tenv: list Ty) (facts: list ((nat * Term) * (nat * Term))) (t: Term) (T: Ty) : Prop :=
   forall tvars venv,
     wf_env tvars tenv venv ->
@@ -36,12 +45,18 @@ Definition sem_typed (tbounds: TBounds) (tenv: list Ty) (facts: list ((nat * Ter
     wf_facts venv facts ->
     term_has_semtype venv t (interp tvars venv T).
 
+(** ** Constants *)
+
+(** [tdiverge] never terminates, so it vacuously has every type. (No
+    counterpart in Figure 9: the paper's core syntax leaves "diverge"
+    informal.) *)
 Lemma sem_typed_diverge: forall tbounds tenv facts T, sem_typed tbounds tenv facts tdiverge T.
 Proof.
   intros tbounds tenv facts T tvars venv Henv Hbenv Hfacts fuel r Heval.
   destruct fuel; discriminate.
 Qed.
 
+(** T-Unit *)
 Lemma sem_typed_unit: forall tbounds tenv facts, sem_typed tbounds tenv facts tunit TUnit.
 Proof.
   intros tbounds tenv facts tvars venv Henv Hbenv Hfacts fuel r Heval.
@@ -50,6 +65,7 @@ Proof.
   exists vunit. simpl. auto.
 Qed.
 
+(** T-True/T-False (merged: booleans have type [TBool]) *)
 Lemma sem_typed_bool: forall tbounds tenv facts b, sem_typed tbounds tenv facts (tbool b) TBool.
 Proof.
   intros tbounds tenv facts b tvars venv Henv Hbenv Hfacts.
@@ -59,6 +75,7 @@ Proof.
   exists (vbool b). simpl. split; [reflexivity|]. exists b. reflexivity.
 Qed.
 
+(** T-Int *)
 Lemma sem_typed_int32: forall tbounds tenv facts z, sem_typed tbounds tenv facts (tint32 z) TInt32.
 Proof.
   intros tbounds tenv facts z tvars venv Henv Hbenv Hfacts.
@@ -68,6 +85,10 @@ Proof.
   exists (vint32 z). simpl. split; [reflexivity|]. exists z. reflexivity.
 Qed.
 
+(** ** Variables, functions, and polymorphism *)
+
+(** T-Var: the looked-up type is shifted past the [S i] bindings introduced
+    after it. *)
 Lemma sem_typed_var: forall tbounds tenv facts i T,
   nth_error tenv i = Some T ->
   sem_typed tbounds tenv facts (tvar i) (subst_ty TVar (tm_shift (S i)) T).
@@ -89,6 +110,7 @@ Proof.
   rewrite <- Heq. exact Hinterp.
 Qed.
 
+(** T-Abs *)
 Lemma sem_typed_abs: forall tbounds tenv facts A b B,
   sem_typed (tbounds_shift_term tbounds) (A :: tenv) facts b B ->
   sem_typed tbounds tenv facts (tabs A b) (TFun A B).
@@ -107,6 +129,8 @@ Proof.
   - apply wf_facts_extend. exact Hfacts.
 Qed.
 
+(** T-App (ANF: the argument must be a variable, which is substituted for
+    the bound variable in the dependent result type). *)
 Lemma sem_typed_app_anf: forall tbounds tenv facts fn i A B,
   sem_typed tbounds tenv facts fn (TFun A B) ->
   sem_typed tbounds tenv facts (tvar i) A ->
@@ -139,6 +163,7 @@ Proof.
   - discriminate.
 Qed.
 
+(** T-TAbs *)
 Lemma sem_typed_tabs: forall tbounds tenv facts L U b A,
   sem_typed ((L, U) :: tbounds) (tenv_shift_type tenv) facts b A ->
   sem_typed tbounds tenv facts (ttabs L U b) (TForall L U A).
@@ -157,7 +182,7 @@ Proof.
   - exact Hfacts.
 Qed.
 
-(** Type application uses semantic substitution. *)
+(** T-TApp: type application uses semantic substitution. *)
 Lemma sem_typed_tapp: forall tbounds tenv facts fn L U A B,
   sem_typed tbounds tenv facts fn (TForall L U B) ->
   sem_subtype tbounds tenv facts L A ->
@@ -186,7 +211,10 @@ Proof.
   - destruct (Hfn _ _ Hevalfn) as [? [Habs _]]; discriminate.
 Qed.
 
-(** Let binding with equality witness. *)
+(** ** Let bindings and control flow *)
+
+(** T-Let: the body is typed with the equality fact [x ~ e]; the bound
+    variable is removed from the result type by [avoid_var0]. *)
 Lemma sem_typed_let: forall tbounds tenv facts e A b B z,
   sem_typed tbounds tenv facts e A ->
   sem_typed (tbounds_shift_term tbounds) (A :: tenv)
@@ -237,7 +265,7 @@ Proof.
   - destruct (He _ _ Hevale) as [? [Habs _]]; discriminate.
 Qed.
 
-(** Binary operations. *)
+(** T-BinOp *)
 Lemma sem_typed_bin_op: forall tbounds tenv facts op a b T,
   sem_typed tbounds tenv facts a T ->
   sem_typed tbounds tenv facts b T ->
@@ -265,7 +293,8 @@ Proof.
   - destruct (Ha _ _ Hevala) as [? [Habs _]]; discriminate.
 Qed.
 
-(** If-then-else. *)
+(** T-If: each branch is typed with an equality fact recording the value of
+    the condition. *)
 Lemma sem_typed_if: forall tbounds tenv facts c t e T1 T2,
   sem_typed tbounds tenv facts c TBool ->
   sem_typed tbounds tenv (((length tenv, c), (length tenv, tbool true)) :: facts) t T1 ->
@@ -311,7 +340,7 @@ Proof.
   - destruct (Hc _ _ Hevalc) as [? [Habs _]]; discriminate.
 Qed.
 
-(** Loop. The conditions [HclA] and [HclB] require that [A] and [B] have no free
+(** T-Loop. The conditions [HclA] and [HclB] require that [A] and [B] have no free
     term variables, so that [interp] is invariant under environment extension. *)
 Lemma sem_typed_loop: forall tbounds tenv facts a A body B,
   ren_ty id S A = A ->
@@ -350,8 +379,10 @@ Proof.
   - (* vinr u - break *) subst w. rewrite Hinterp_eq_B in HB. exact HB.
 Qed.
 
-(** Selfification: if e has first-order type T, then e also has the
-    singleton type {x: T | x = e}. *)
+(** ** Selfification and subsumption *)
+
+(** T-Self (selfification): if e has first-order type T, then e also has
+    the singleton type {x: T | x == e}. *)
 Lemma sem_typed_selfify: forall tbounds tenv facts e T,
   sem_typed tbounds tenv facts e T ->
   fo T = true ->
@@ -401,6 +432,7 @@ Proof.
     exists (vbool true). auto.
 Qed.
 
+(** T-Sub *)
 Lemma sem_typed_sub: forall tbounds tenv facts t A B,
   sem_typed tbounds tenv facts t A ->
   sem_subtype tbounds tenv facts A B ->
@@ -415,7 +447,10 @@ Proof.
   apply (Hsub tvars venv Henv Hbenv Hfacts). exact Hinterp.
 Qed.
 
-(** Pair construction (ANF: first argument must be a variable). *)
+(** ** Pairs and sums *)
+
+(** T-Pair (ANF: the first component must be a variable, which is
+    abstracted out of the second component's type). *)
 Lemma sem_typed_pair_anf: forall tbounds tenv facts i e2 A B,
   sem_typed tbounds tenv facts (tvar i) A ->
   sem_typed tbounds tenv facts e2 B ->
@@ -446,7 +481,7 @@ Proof.
   - destruct (Ha _ _ Hevala) as [? [Habs _]]; discriminate.
 Qed.
 
-(** Pair elimination. *)
+(** T-MatchPair *)
 Lemma sem_typed_match_pair: forall tbounds tenv facts e A B body C z1 z2,
   sem_typed tbounds tenv facts e (TSigma A B) ->
   sem_typed (tbounds_shift_term (tbounds_shift_term tbounds)) (B :: A :: tenv) facts body C ->
@@ -509,7 +544,7 @@ Proof.
   exact H1.
 Qed.
 
-(** Left injection. *)
+(** T-Inl *)
 Lemma sem_typed_inl: forall tbounds tenv facts e A B,
   sem_typed tbounds tenv facts e A ->
   sem_typed tbounds tenv facts (tinl B e) (TSum A B).
@@ -527,7 +562,7 @@ Proof.
   - destruct (He _ _ Hevale) as [? [Habs _]]; discriminate.
 Qed.
 
-(** Right injection. *)
+(** T-Inr *)
 Lemma sem_typed_inr: forall tbounds tenv facts e A B,
   sem_typed tbounds tenv facts e B ->
   sem_typed tbounds tenv facts (tinr A e) (TSum A B).
@@ -545,7 +580,8 @@ Proof.
   - destruct (He _ _ Hevale) as [? [Habs _]]; discriminate.
 Qed.
 
-(** Sum elimination. *)
+(** T-MatchSum: each branch is typed with an equality fact recording the
+    scrutinee's shape. *)
 Lemma sem_typed_match_sum: forall tbounds tenv facts e A B body_l body_r C1 C2 zl zr,
   sem_typed tbounds tenv facts e (TSum A B) ->
   sem_typed (tbounds_shift_term tbounds) (A :: tenv)

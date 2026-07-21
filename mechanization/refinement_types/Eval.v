@@ -1,13 +1,23 @@
+(** * Evaluation (Figures 6 and 7)
+
+    Fuel-bounded definitional interpreter for the operational semantics,
+    following Amin and Rompf (2017). The interpreter [eval] is shown in
+    Figure 7 of the paper; the big-step rules of Figure 6 are its
+    successful-evaluation fragment. *)
+
 From Stdlib Require Import Lists.List.
 Import ListNotations.
 From Stdlib Require Import ZArith.BinInt.
 Require Import RefinementTypes.Syntax.
 
-(** Signed 32-bit wrapping: maps any Z to the range [-2^31, 2^31). *)
+(** ** Binary operations *)
+
+(** Signed 32-bit wrapping: maps any Z to the range -2^31 <= z < 2^31. *)
 Definition int32_wrap (z : Z) : Z :=
   ((z + 2^31) mod 2^32 - 2^31)%Z.
 
-(** Evaluate a binary operation on two values.
+(** Evaluate a binary operation on two values; written evalop(op, v_a, v_b)
+    in the paper (rule E-BinOp).
     Returns [Some v] if the operation is defined, [None] otherwise.
     For equality/inequality, heterogeneous comparisons on first-order values
     return [Some (vbool false)]/[Some (vbool true)]; closures return [None]. *)
@@ -67,6 +77,8 @@ Definition bin_op_val_pair_compat (op: BinOp) (va vb: Value) : Prop :=
       exists b1 b2, va = vbool b1 /\ vb = vbool b2
   end.
 
+(** ** Loops *)
+
 (** Loop runner: iterate [step] up to [fuel] times.
     Returns the first [vinr v] result unwrapped (break), recurs on [vinl v] (continue),
     or gets stuck on any other value. *)
@@ -84,16 +96,19 @@ Fixpoint run_loop (step : Value -> option (option Value)) (fuel : nat) (va : Val
     end
   end.
 
-(**
-Fuel-based big-step evaluator for terms.
+(** ** The interpreter (Figure 7) *)
 
-The result is a layered option type:
-- [None]             means timeout (ran out of fuel)
-- [Some None]        means stuck (runtime error)
-- [Some (Some v)]    means successful evaluation to value [v]
+(** Fuel-bounded big-step evaluator for terms. Fuel bounds the _depth_ of
+    evaluation, not the number of steps: all sub-evaluations receive the
+    same, decremented fuel.
 
-The layered approach simplifies proofs compared to using a single sum type
-*)
+    The result is a layered option type:
+    - [None]             means timeout (ran out of fuel)
+    - [Some None]        means stuck (runtime error)
+    - [Some (Some v)]    means successful evaluation to value [v]
+
+    The layered approach simplifies proofs compared to using a single sum
+    type. *)
 Fixpoint eval (fuel: nat) (env: list Value) (t: Term) : option (option Value) :=
   match fuel with
   | 0 => None

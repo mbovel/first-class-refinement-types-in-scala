@@ -1,14 +1,15 @@
-(** * Avoidance Lemmas
+(** * Avoidance Soundness (Lemma 3.8)
 
-    This file proves that avoidance preserves semantic subtyping:
-    - For positive polarity: interp T v -> interp (avoid Pos i T) v
-    - For negative polarity: interp (avoid Neg i T) v -> interp T v
+    This file proves that avoidance approximates in the right direction:
+    - Positive polarity yields a supertype:
+      [interp T v -> interp (avoid Pos i T) v]
+    - Negative polarity yields a subtype:
+      [interp (avoid Neg i T) v -> interp T v]
 
     The key insight is that when we replace a refinement predicate with
     [true], we get a supertype (any value satisfying the refinement also
     satisfies "true"). When we replace with [false], we get a subtype
-    (no value satisfies "false", so it's vacuously true).
-*)
+    (no value satisfies "false", so it's vacuously true). *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.
@@ -32,6 +33,8 @@ Lemma eval_false_not_true: forall fuel venv,
 Proof.
   intros fuel venv. destruct fuel; simpl; discriminate.
 Qed.
+
+(** ** Avoidance preserves positivity *)
 
 (** If spos/ty_var_absent is true for T, it remains true for avoid pol j T.
     Must be proved simultaneously since spos uses ty_var_absent. *)
@@ -112,6 +115,8 @@ Proof.
 Qed.
 
 Definition spos_avoid T pol j k := proj1 (spos_ty_var_absent_avoid T pol j k).
+
+(** ** Avoidance soundness (Lemma 3.8) *)
 
 (** Combined avoidance lemma: both directions proven simultaneously.
 
@@ -274,6 +279,8 @@ Lemma interp_avoid_var0: forall T tvars venv v,
 Proof.
   intros. eapply interp_avoid_pos; exact H.
 Qed.
+
+(** ** Avoided types are closed under the avoided variable *)
 
 (** Helper: substitution is identity on types/terms that don't mention a variable *)
 Lemma subst_not_mentions_ty T : forall sigma i,

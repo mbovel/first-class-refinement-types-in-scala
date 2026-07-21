@@ -1,5 +1,8 @@
-(** Examples: encoding maximum from the introduction using a loop,
-    with typing and subtyping derivations. *)
+(** * Example: maximum
+
+    Encoding of a polymorphic [maximum] function using a loop over an
+    equi-recursive list, with evaluation tests and (partial) typing and
+    subtyping derivations. Not presented in the paper. *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.
@@ -18,7 +21,7 @@ Require Import RefinementTypes.SyntacticTyping.
 Require Import RefinementTypes.SemanticSubtyping.
 Require Import RefinementTypes.SemanticImplies.
 
-(** * Type abbreviations *)
+(** ** Type abbreviations *)
 
 Definition ListTy (tv : nat) : Ty :=
   TMuAll (TSum TUnit (TSigma (TVar (S tv)) (TVar 0))).
@@ -33,7 +36,7 @@ Definition AccTy : Ty := TSigma (ListTy 0) (OptionTy 0).
 Definition ResTy : Ty := OptionTy 0.
 Definition ListTy_unfolded : Ty := TSum TUnit (TSigma (TVar 0) (ListTy 0)).
 
-(** * Types and terms *)
+(** ** Types and terms *)
 
 Definition maximum_ty : Ty :=
   TForall TBot TTop
@@ -64,7 +67,7 @@ Definition maximum_tm : Term :=
                   ))
               )))))).
 
-(** * Evaluation tests *)
+(** ** Evaluation tests *)
 
 Fixpoint list_term (elems : list Term) : Term :=
   match elems with
@@ -99,7 +102,7 @@ Definition test_maximum_singleton : Term :=
 Compute (eval 1000 [] test_maximum_singleton).
 (* = Some (Some (vinr (vint32 42))) *)
 
-(** * Subtyping derivations *)
+(** ** Subtyping derivations *)
 
 (** U <: T via upper bound *)
 Lemma U_sub_T : forall tbounds tenv facts,
@@ -148,7 +151,7 @@ Lemma or_same_sub : forall tbounds tenv facts T,
   syn_subtype tbounds tenv facts (TOr T T) T.
 Proof. intros. apply SSub_Or; apply SSub_Refl. Qed.
 
-(** * Typing derivation *)
+(** ** Typing derivation *)
 
 (** Tell [simpl] to always unfold [id]. Without this, [ren_ty id S] leaves
     stray [id] applications in type variable indices. *)

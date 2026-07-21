@@ -10,13 +10,6 @@ ListLemmas.v
 EvalLemmas.v
 EvalShiftLemmas.v
 EvalSubstLemmas.v
-#draft/Barendregt.v
-#draft/EvalShiftLemmasSubstFun.v
-#draft/EvalShiftLemmasSubstRel.v
-#draft/EvalShiftLemmasCanonicalClosure.v
-#draft/EvalShiftLemmasLogrel.v
-#draft/EvalShiftLemmasSimpleTypes.v
-#draft/EvalSubstLemmasGen.v
 EvalTypeErasure.v
 Interp.v
 InterpShiftLemmas.v

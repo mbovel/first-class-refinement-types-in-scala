@@ -1,6 +1,11 @@
-(** * Syntactic Subtyping
+(** * Syntactic Subtyping (Figure 10)
 
-    Inductive subtyping judgment mirroring the semantic subtyping rules. *)
+    Inductive subtyping judgment Γ ⊢ A <: B mirroring the semantic
+    subtyping rules; each constructor corresponds to a rule of Figure 10
+    and to the lemma of the same name in [SemanticSubtyping]. Adequacy is
+    Theorem 3.2, proved in [Adequacy]. Note that the S-Refine premise uses
+    the _semantic_ implication judgment [sem_implies], which has no
+    syntactic counterpart. *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.

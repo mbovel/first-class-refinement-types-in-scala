@@ -1,8 +1,9 @@
-(** * Avoidance
+(** * Avoidance (§3.4)
 
     This file defines the avoidance function that removes references to a
     specific term variable from a type. This is used for typing let bindings
-    where the result type may reference the bound variable.
+    and match expressions, where the result type may reference the bound
+    variable. Its soundness (Lemma 3.8) is proved in [AvoidLemmas].
 
     The key insight is that refinement predicates can be approximated:
     - In positive position: replace the predicate with [true] (weaker)
@@ -28,6 +29,8 @@ Definition flip_polarity (p: Polarity) : Polarity :=
   | Pos => Neg
   | Neg => Pos
   end.
+
+(** ** Occurrence check *)
 
 (** Check if a term variable [i] occurs free in a term [t] *)
 Fixpoint term_mentions (i: nat) (t: Term) : bool :=
@@ -69,6 +72,8 @@ with term_mentions_ty (i: nat) (T: Ty) : bool :=
   | TMuAll B => term_mentions_ty i B
   end.
 
+(** ** The avoidance function *)
+
 (** Avoidance: remove references to variable [i] from type [T].
 
     When a refinement predicate mentions variable [i], we replace it with
@@ -76,9 +81,11 @@ with term_mentions_ty (i: nat) (T: Ty) : bool :=
     - Positive polarity: use [true] (weakens the type, making it a supertype)
     - Negative polarity: use [false] (strengthens the type, making it a subtype)
 
-    The [depth] parameter tracks how many term binders we've gone under,
-    so we can correctly identify references to variable [i].
-*)
+    The polarity flips at contravariant positions (the domain of [TFun] and
+    the upper bound of [TForall]). The index [i] is shifted when going under
+    a term binder, so it keeps referring to the same variable. For recursive
+    types, avoidance recurses into the body only when [spos] holds;
+    otherwise it falls back to [TTop] or [TBot]. *)
 Fixpoint avoid (pol: Polarity) (i: nat) (T: Ty) : Ty :=
   match T with
   | TVar X => TVar X

@@ -1,10 +1,11 @@
-(** * Positivity Lemmas
+(** * Positivity Lemmas (Lemmas 3.9 and 3.10)
 
-    Key results enabling fold/unfold for recursive types:
+    Key results enabling fold/unfold for recursive types, adapted from
+    Hamza et al. (2019):
     - [term_has_semtype_mono]: term_has_semtype is monotone in the predicate
     - [interp_ty_var_absent]: interp is independent of absent type variables
-    - [interp_spos_mono]: positive types are covariant (monotone)
-    - [interp_spos_distribute]: universal quantifier commutes with positive contexts *)
+    - [interp_spos_mono]: monotonicity (Lemma 3.9)
+    - [interp_spos_distribute]: distribution (Lemma 3.10) *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.
@@ -96,10 +97,10 @@ Proof.
     + exact (proj2 (interp_mu_eq_ext n _ _ Hext v) H).
 Qed.
 
-(** ** Monotonicity: positive types are covariant
+(** ** Monotonicity (Lemma 3.9)
 
-    If type variable [i] is strictly positive in [A], and [S1 ⊆ S2],
-    then [interp ... S1 ... A v → interp ... S2 ... A v]. *)
+    Positive types are covariant: if type variable [i] is strictly positive
+    in [A], and [S1 ⊆ S2], then [interp ... S1 ... A v → interp ... S2 ... A v]. *)
 
 Lemma interp_spos_mono: forall A tvars1 tvars2 venv S1 S2 v,
   spos (length tvars1) A = true ->
@@ -184,9 +185,11 @@ Proof.
     exact (Hinterp m).
 Qed.
 
-(** ** Distributing lemma: universal quantifier commutes with positive contexts
+(** ** Distribution (Lemma 3.10)
 
-    If type variable [i] is strictly positive in [A], then:
+    The universal quantifier commutes with positive contexts: an
+    intersection over a family of denotations can be pushed inside the
+    interpretation. If type variable [i] is strictly positive in [A], then:
     [(∀n. interp (Sn n :: ...) A v) → interp ((λw. ∀n. Sn n w) :: ...) A v]
 
     Key proof technique: structural induction on [A].

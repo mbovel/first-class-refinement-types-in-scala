@@ -1,3 +1,9 @@
+(** * Interpretation (Figure 8)
+
+    Semantic framework: the value interpretation V⟦.⟧ ([interp]) maps
+    syntactic types to predicates on values ([SemTy]), and the term
+    interpretation E⟦.⟧ ([term_has_semtype]) lifts it to a partial
+    correctness assertion on terms. *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.
@@ -11,20 +17,22 @@ Require Import RefinementTypes.Subst.
 Require Import RefinementTypes.Eval.
 Require Import RefinementTypes.EvalLemmas.
 
-(** ** Semantic type definition *)
+(** ** Semantic types *)
 
+(** A semantic type is a predicate on values. *)
 Definition SemTy := Value -> Prop.
 
-(** ** Term has semantic type
+(** ** Term interpretation E⟦.⟧
 
-    A term has a semantic type if it can evaluate (given enough fuel) to a value
-    that satisfies the semantic type. *)
+    Partial correctness: whenever evaluation of the term terminates (at any
+    fuel), it is not stuck and the resulting value satisfies the semantic
+    type. Timeouts are accepted, so diverging terms satisfy every type. *)
 
 Definition term_has_semtype (env: list Value) (t: Term) (ty: SemTy) : Prop :=
   forall fuel r, eval fuel env t = Some r ->
     exists v, r = Some v /\ ty v.
 
-(** ** Type interpretation components *)
+(** ** Value interpretation components *)
 
 (** Type variable interpretation: looks up in the semantic type environment *)
 Definition interp_var (tenv: list SemTy) (i: nat) (v: Value) : Prop :=
@@ -102,7 +110,12 @@ Fixpoint interp_mu (j: nat) (F: SemTy -> SemTy) (v: Value) : Prop :=
   | S j' => F (interp_mu j' F) v
   end.
 
-(** ** Main interpretation function *)
+(** ** Value interpretation V⟦.⟧
+
+    [interp tvars venv T] is written V⟦T⟧ with type variable assignment
+    [tvars] (δ in the paper) and value environment [venv] (ρ). Step indexing
+    appears only in [interp_mu] for recursive types; [TMuAll B] is
+    interpreted as the intersection of all approximations. *)
 
 Fixpoint interp (tvars: list SemTy) (venv: list Value) (T: Ty) : SemTy :=
   match T with
@@ -122,7 +135,9 @@ Fixpoint interp (tvars: list SemTy) (venv: list Value) (T: Ty) : SemTy :=
   | TBot => interp_bot
   end.
 
-(** interp_mu is extensional in F *)
+(** ** Extensionality *)
+
+(** [interp_mu] is extensional in [F]. *)
 Lemma interp_mu_eq_ext: forall n (F1 F2 : SemTy -> SemTy),
   (forall X v, F1 X v <-> F2 X v) ->
   forall v, interp_mu n F1 v <-> interp_mu n F2 v.

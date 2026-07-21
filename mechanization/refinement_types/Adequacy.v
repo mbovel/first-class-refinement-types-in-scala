@@ -1,6 +1,8 @@
-(** * Adequacy
+(** * Adequacy (Theorems 3.1 and 3.2)
 
-    Syntactic subtyping and typing imply their semantic counterparts. *)
+    Syntactic subtyping and typing imply their semantic counterparts. The
+    proofs proceed by induction on the derivation, applying the
+    corresponding semantic lemma at each constructor. *)
 
 Require Import RefinementTypes.Syntax.
 Require Import RefinementTypes.SemanticSubtyping.
@@ -8,6 +10,7 @@ Require Import RefinementTypes.SemanticTyping.
 Require Import RefinementTypes.SyntacticSubtyping.
 Require Import RefinementTypes.SyntacticTyping.
 
+(** Adequacy of subtyping (Theorem 3.2). *)
 Theorem syn_subtype_adequate : forall tbounds tenv facts A B,
   syn_subtype tbounds tenv facts A B ->
   sem_subtype tbounds tenv facts A B.
@@ -34,6 +37,7 @@ Proof.
   - apply sem_subtype_mu_fold; assumption.
 Qed.
 
+(** Adequacy of typing (Theorem 3.1). *)
 Theorem syn_typed_adequate : forall tbounds tenv facts t T,
   syn_typed tbounds tenv facts t T ->
   sem_typed tbounds tenv facts t T.

@@ -1,7 +1,6 @@
 (** * Tactics
 
-    Common tactics lemmas used throughout the development.
-*)
+    Common tactics used throughout the development. *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.

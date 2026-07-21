@@ -1,3 +1,10 @@
+(** * Evaluation Lemmas
+
+    Basic properties of the interpreter: fuel monotonicity (more fuel
+    preserves any terminating result, which also gives determinism up to
+    fuel), a typed invariant for [run_loop], and definedness of
+    [eval_bin_op] on compatible operands. *)
+
 From Stdlib Require Import Lists.List.
 Import ListNotations.
 From Stdlib Require Import Arith.PeanoNat.

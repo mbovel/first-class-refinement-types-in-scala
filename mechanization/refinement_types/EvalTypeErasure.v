@@ -5,11 +5,12 @@ Require Import RefinementTypes.Subst.
 Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Eval.
 
-(** * Type erasure for terms and values
+(** * Type Erasure
 
-    Evaluation is insensitive to type annotations. We formalize this by
-    defining erasure functions that replace all type annotations with [TUnit],
-    and proving that evaluation commutes with erasure. *)
+    Evaluation is insensitive to type annotations (types are erased at run
+    time, §3.2). We formalize this by defining erasure functions that
+    replace all type annotations with [TUnit], and proving that evaluation
+    commutes with erasure. *)
 
 Fixpoint erase_ty_in_tm (t : Term) : Term :=
   match t with

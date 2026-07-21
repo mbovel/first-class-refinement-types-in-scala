@@ -1,7 +1,13 @@
+(** * De Bruijn Renaming and Substitution
+
+    Custom two-sorted de Bruijn machinery: renamings and substitutions act
+    on type variables and term variables simultaneously, since types embed
+    terms (refinement predicates) and terms embed types (annotations). *)
+
 From Stdlib Require Import Arith.PeanoNat.
 Require Import RefinementTypes.Syntax.
 
-(** * Infrastructure *)
+(** ** Infrastructure *)
 
 Definition funcomp {A B C : Type} (g : B -> C) (f : A -> B) : A -> C :=
   fun x => g (f x).
@@ -15,7 +21,7 @@ Definition scons {A : Type} (a : A) (f : nat -> A) : nat -> A :=
 Notation "f >> g" := (funcomp g f) (at level 50, left associativity).
 Notation "a .: f" := (scons a f) (at level 55, right associativity).
 
-(** * Renaming *)
+(** ** Renaming *)
 
 Definition upren (xi : var -> var) : var -> var :=
   0 .: (xi >> S).
@@ -59,7 +65,7 @@ with ren_tm (xi_ty : var -> var) (xi_tm : var -> var) (t : Term) {struct t} : Te
   | tloop a body => tloop (ren_tm xi_ty xi_tm a) (ren_tm xi_ty (upren xi_tm) body)
   end.
 
-(** * Substitution helpers
+(** ** Substitution helpers
 
     When crossing a binder, we must lift BOTH substitutions:
     - The substitution for the bound sort gets a new binding (scons) + shift
@@ -83,7 +89,7 @@ Definition up_tm_ty (sigma_ty : var -> Ty) : var -> Ty :=
 Definition up_tm_tm (sigma_tm : var -> Term) : var -> Term :=
   tvar 0 .: (sigma_tm >> ren_tm id S).
 
-(** * Substitution *)
+(** ** Substitution *)
 
 Fixpoint subst_ty (sigma_ty : var -> Ty) (sigma_tm : var -> Term) (T : Ty) {struct T} : Ty :=
   match T with
@@ -135,7 +141,7 @@ with subst_tm (sigma_ty : var -> Ty) (sigma_tm : var -> Term) (t : Term) {struct
                           (subst_tm (up_tm_ty sigma_ty) (up_tm_tm sigma_tm) body)
   end.
 
-(** * Iterated up *)
+(** ** Iterated up *)
 
 Fixpoint upn_tm (n : nat) (sigma : var -> Term) : var -> Term :=
   match n with
@@ -143,7 +149,7 @@ Fixpoint upn_tm (n : nat) (sigma : var -> Term) : var -> Term :=
   | S n => up_tm_tm (upn_tm n sigma)
   end.
 
-(** * Derived operations *)
+(** ** Derived operations *)
 
 (** Substitute type var 0 with U in T. *)
 Definition ty_subst (T : Ty) (U : Ty) : Ty :=
