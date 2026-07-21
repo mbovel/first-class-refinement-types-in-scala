@@ -25,9 +25,9 @@ Main changes to the paper since the OOPSLA 2026 submission:
 - **Renamed and introduced the E-BinOp operation function (§3.2).** The
   former δ (which clashed with the type-variable assignment δ of §3.5) is
   now `evalop`, mirroring `eval_bin_op` in the mechanization, and the
-  operational-semantics prose introduces it: comparisons, boolean
-  connectives, first-order equality, 32-bit wrapping arithmetic, undefined
-  (stuck) on ill-typed operands.
+  operational-semantics prose introduces it as the partial function
+  interpreting primitive operations, undefined (stuck) on ill-typed
+  operands.
 - **Named variables in the metatheory lemmas (§3.6).** The weakening,
   substitution, and avoidance lemmas were previously stated in de Bruijn style
   to match the mechanization, an unannounced notation shift the reviewers found
