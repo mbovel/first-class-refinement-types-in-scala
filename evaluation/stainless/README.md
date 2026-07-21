@@ -1,69 +1,33 @@
-# Stainless Evaluation
+# Stainless Suite
 
-Compilation-time benchmarks for Stainless, run as a Dotty compiler plugin:
+JMH compilation-time benchmarks for Stainless run as a Dotty compiler
+plugin. `StainlessVerifyBenchmarks` compiles the `*-stainless.scala`
+sources from [../sources/](../sources/) with extraction and verification
+enabled (`-P:stainless:verify:yes`, native Z3; per-VC timeout and other
+verification options in [stainless.conf](stainless.conf));
+`StainlessBaseBenchmarks` compiles the contract-free
+`*-stainless-base.scala` baselines with the same Dotty and classpath but
+without the plugin.
 
-- **Stainless verify** (`StainlessVerifyBenchmarks`): Stainless extraction and verification via compiler plugin (`-P:stainless:verify:yes`), using native Z3. Verification-related options (per-VC timeout, no VC cache, no termination or overflow checking) are set in `stainless.conf`.
-- **Base** (`StainlessBaseBenchmarks`): contract-free sources compiled with the same Dotty and classpath but without the Stainless plugin, mirroring the feature-off baselines of the other platforms.
-
-## Prerequisites
-
-- JDK 25
-- Z3 (`brew install z3` or equivalent)
-- sbt
-
-## Setup
-
-From the `evaluation/stainless/` directory:
+Requires JDK 25, sbt, and Z3. First build the Stainless plugin from the
+vendored fork submodule (jars are copied to `lib/`):
 
 ```sh
 ./setup.sh
 ```
 
-This initializes the `stainless` submodule (a fork with benchmark-specific changes), builds the Stainless assembly and library jars, and copies them to `lib/`.
-
-## Running benchmarks
-
-All commands are run from the `evaluation/stainless/` directory.
-
-### Quick test (single iteration, no warmup)
+Then, from this directory:
 
 ```sh
-# Stainless with verification
-sbt 'bench / Jmh / run -wi 0 -i 1 StainlessVerifyBenchmarks'
-
-# Base (no plugin, contract-free sources)
-sbt 'bench / Jmh / run -wi 0 -i 1 StainlessBaseBenchmarks'
+sbt 'bench / Jmh / run -wi 0 -i 1 StainlessVerifyBenchmarks'             # quick test (no warmup)
+sbt 'bench / Jmh / run -wi 0 -i 1 StainlessVerifyBenchmarks.matrixDims'  # single benchmark
+sbt 'bench / Jmh / run StainlessVerifyBenchmarks'                        # full run (150 warmup + 20 measurement iterations)
 ```
 
-### Single benchmark
+The fork (`mbovel/stainless@refinement-types-eval-v0.9.9.3`) is the
+released `v0.9.9.3` plus benchmark-specific changes: ScalaZ3 natives
+bundled in the assembly jar, verification failures reported as Dotty
+compilation errors, and non-error reporter output suppressed.
 
-```sh
-sbt 'bench / Jmh / run -wi 0 -i 1 StainlessVerifyBenchmarks.matrixDims'
-```
-
-### Full run (150 warmup, 20 measurement iterations)
-
-```sh
-sbt 'bench / Jmh / run StainlessVerifyBenchmarks'
-sbt 'bench / Jmh / run StainlessBaseBenchmarks'
-```
-
-## Benchmark sources
-
-Source files are in the shared `../sources/` directory, distinguished by suffix:
-
-| Suffix | Description |
-|--------|-------------|
-| `*-stainless.scala` | Stainless style (`require`/`ensuring`) |
-| `*-stainless-base.scala` | Same programs without contracts |
-
-## Stainless plugin modifications
-
-The Stainless fork branch (`mbovel/stainless@refinement-types-eval-v0.9.9.3`)
-is the released `v0.9.9.3` (Scala 3.7.2) plus:
-
-1. **ScalaZ3 bundled in assembly jar**: removed the `assemblyExcludedJars` filter for ScalaZ3 and added `.dylib` to native lib detection, so Z3 native libraries are included directly in the assembly jar.
-2. **Verification failures as compilation errors**: when `report.isSuccess` is false, emits a Dotty `Diagnostic.Error("Stainless verification failed")` so benchmark harness detects failures.
-3. **Suppressed non-error output**: INFO, DEBUG, WARNING, and progress messages from the Stainless reporter adapter are suppressed; only ERROR/FATAL/INTERNAL messages are forwarded to Dotty.
-4. **`GhostAccessRewriter` compatibility**: added explicit `run` override for compatibility with newer Dotty versions.
-5. **Inox submodule**: pointed to `mbovel/inox@refinement-types-eval-v0.9.9.3`, which pins the exact upstream inox commit released with `v0.9.9.3` (no modifications).
+See [../README.md](../README.md) for running all suites together and
+generating the results table.

@@ -10,17 +10,27 @@
 #
 # The entry point is run.sh:
 #
-#   docker run refinement-artifact                  # everything: mechanization + all suites (dry run)
+#   docker run refinement-artifact                  # getting-started run: proofs + example + all suites (dry run)
 #   docker run refinement-artifact mechanization    # compile the mechanization only
-#   docker run refinement-artifact evaluation --suite stainless --dry-run
-#   docker run refinement-artifact evaluation --suite all --runs 10
+#   docker run refinement-artifact evaluation bench --suite stainless --dry-run
+#   docker run refinement-artifact evaluation bench --suite all --runs 10
 #   docker run refinement-artifact implementation \
 #     "scala3-bootstrapped / scalac -language:experimental.qualifiedTypes tests/pos-custom-args/qualified-types/list_collect.scala"
 #
-# JMH results are written to /work/evaluation/results/<run>/<suite>.json;
+# JMH results are written to /work/evaluation/results/<suite>/<run>.json;
 # mount a host directory there to collect them:
 #
 #   docker run -v "$PWD/results:/work/evaluation/results" refinement-artifact
+#
+# `evaluation make-table` regenerates the results table (LaTeX + console). By
+# default it reads the paper's results (evaluation/results-laraserver4,
+# shipped in the image) and writes /work/paper/bench_table.tex — mount the
+# paper directory to collect it; pass --results-dir for freshly collected
+# results:
+#
+#   docker run -v "$PWD/paper:/work/paper" refinement-artifact evaluation make-table
+#   docker run -v "$PWD/paper:/work/paper" -v "$PWD/results:/work/evaluation/results" \
+#     refinement-artifact evaluation make-table --results-dir evaluation/results
 #
 # For an interactive shell instead:
 #
@@ -105,6 +115,19 @@ RUN cd evaluation/first-class && sbt "bench / Jmh / compile"
 RUN cd evaluation/stainless && sbt "bench / Jmh / compile"
 RUN cd evaluation/schmid && sbt "bench / Jmh / compile"
 
+# Python for the results-table generator (`evaluation make-table`). The base
+# image ships python3 but no pip; installed this late so the slow compiler and
+# benchmark layers above stay cached. Bookworm's Python is "externally
+# managed" (PEP 668), hence --break-system-packages to install system-wide.
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+COPY --chown=rocq:rocq evaluation/requirements.txt evaluation/requirements.txt
+RUN pip3 install --no-cache-dir --break-system-packages -r evaluation/requirements.txt
+USER rocq
+
+COPY --chown=rocq:rocq evaluation/make_table.py evaluation/make_table.py
+COPY --chown=rocq:rocq evaluation/results-laraserver4 evaluation/results-laraserver4
 COPY --chown=rocq:rocq evaluation/stainless/stainless.conf evaluation/stainless/stainless.conf
 COPY --chown=rocq:rocq evaluation/run.sh evaluation/run.sh
 

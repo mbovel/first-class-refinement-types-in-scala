@@ -1,47 +1,18 @@
-# First-Class Refinement Types Evaluation
+# First-Class Refinement Types Suite
 
-Compilation-time benchmarks for our qualified types extension to Scala 3, using the `ch.epfl.lara` Dotty fork:
+JMH compilation-time benchmarks for our qualified-types Scala 3 fork.
+`FirstClassBenchmarks` compiles the `*-first-class.scala` sources from
+[../sources/](../sources/) with `-language:experimental.qualifiedTypes`;
+`FirstClassBaseBenchmarks` compiles the `*-first-class-base.scala`
+baselines (same programs without refinements).
 
-- **First-class** (`FirstClassBenchmarks`): with `-language:experimental.qualifiedTypes`.
-- **Base** (`FirstClassBaseBenchmarks`): same programs without refinement type annotations, as a baseline.
-
-## Prerequisites
-
-- JDK 25
-- sbt
-
-## Running benchmarks
-
-All commands are run from the `evaluation/first-class/` directory.
-
-### Quick test (single iteration, no warmup)
+Requires JDK 25 and sbt. From this directory:
 
 ```sh
-# First-class refinement types
-sbt 'bench / Jmh / run -wi 0 -i 1 FirstClassBenchmarks'
-
-# Base (no refinements)
-sbt 'bench / Jmh / run -wi 0 -i 1 FirstClassBaseBenchmarks'
+sbt 'bench / Jmh / run -wi 0 -i 1 FirstClassBenchmarks'           # quick test (no warmup)
+sbt 'bench / Jmh / run -wi 0 -i 1 FirstClassBenchmarks.postuple'  # single benchmark
+sbt 'bench / Jmh / run FirstClassBenchmarks'                      # full run (150 warmup + 20 measurement iterations)
 ```
 
-### Single benchmark
-
-```sh
-sbt 'bench / Jmh / run -wi 0 -i 1 FirstClassBenchmarks.postuple'
-```
-
-### Full run (150 warmup, 20 measurement iterations)
-
-```sh
-sbt 'bench / Jmh / run FirstClassBenchmarks'
-sbt 'bench / Jmh / run FirstClassBaseBenchmarks'
-```
-
-## Benchmark sources
-
-Source files are in the shared `../sources/` directory, distinguished by suffix:
-
-| Suffix | Description |
-|--------|-------------|
-| `*-first-class.scala` | First-class qualified types (`{v: T with p}`) |
-| `*-first-class-base.scala` | Same programs, no refinements |
+See [../README.md](../README.md) for running all suites together and
+generating the results table.

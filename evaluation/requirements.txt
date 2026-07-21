@@ -1,0 +1,3 @@
+# Python dependencies of make_table.py, installed into the artifact image by
+# the Dockerfile. The script currently needs only the standard library, so
+# this file is empty; add pinned packages here as they become needed.

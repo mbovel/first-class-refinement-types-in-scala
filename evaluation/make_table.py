@@ -26,7 +26,7 @@ from pathlib import Path
 # Config
 # ---------------------------------------------------------------------------
 
-DEFAULT_RESULTS_DIR = Path(__file__).parent / "results"
+DEFAULT_RESULTS_DIR = Path(__file__).parent / "results-laraserver4"
 SOURCES_DIR = Path(__file__).parent / "sources"
 DEFAULT_OUTPUT = Path(__file__).parent / ".." / "paper" / "bench_table.tex"
 
@@ -287,7 +287,7 @@ def print_stdout_table(table):
 def main():
     parser = argparse.ArgumentParser(description="Generate the benchmark results LaTeX table from JMH JSON results.")
     parser.add_argument("--results-dir", type=Path, default=DEFAULT_RESULTS_DIR,
-                        help="directory containing <suite>/<run>.json files (default: results/)")
+                        help="directory containing <suite>/<run>.json files (default: results-laraserver4/, the paper's results)")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT,
                         help="output .tex path (default: ../paper/bench_table.tex)")
     args = parser.parse_args()

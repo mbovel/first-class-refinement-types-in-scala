@@ -37,3 +37,4 @@ evaluation/results
 mechanization/refinement_types/Makefile
 mechanization/refinement_types/Makefile.conf
 mechanization/refinement_types/CoqMakefile*
+mechanization/refinement_types/.Makefile.d
