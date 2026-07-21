@@ -67,13 +67,38 @@ git -C "$repo_root" archive "$rev" paper | tar -x -C "$tmp"
 perl "$tmp/flatten.pl" "$tmp/paper/paper.tex" > "$tmp/old-flat.tex"
 perl "$tmp/flatten.pl" "$paper_dir/paper.tex" > "$tmp/new-flat.tex"
 
+# The submitted revision wraps math in \mbox{$...$} inside surrounding math
+# (evaluation weakening lemma); latexdiff cannot parse the nested dollars
+# and emits unbalanced markup. Unwrap the boxes before diffing.
+perl -i -pe 's/\\mbox\{\$(.*?)\$\}/$1/g' "$tmp/old-flat.tex"
+
+# Resolve \iflatexml conditionals to their PDF branch before diffing: the
+# diff is only compiled as PDF, and latexdiff wraps the conditional tokens
+# in \DIF commands, which breaks TeX's conditional skipping. All usages put
+# \iflatexml, \else, and \fi on their own lines, so drop and filter whole
+# lines; anything else (e.g. the \newif\iflatexml definition) is untouched,
+# and no whitespace-only residue is left inside math environments.
+perl -i -ne '
+  if (/^\s*\\iflatexml\s*$/) { $mode = 1; next }        # drop LaTeXML branch
+  if ($mode == 1 && /^\s*\\else\s*$/) { $mode = 2; next } # keep PDF branch
+  if ($mode && /^\s*\\fi\s*$/) { $mode = 0; next }
+  next if $mode == 1;
+  print' \
+  "$tmp/old-flat.tex" "$tmp/new-flat.tex"
+
 # lstlisting is registered as a verbatim environment so that changed
 # listings are marked up as a whole instead of latexdiff injecting \DIF
 # commands into the code. acks is registered too: it is a comment-package
 # environment whose \end{acks} must start a line, which latexdiff markup
 # would otherwise break.
+#
+# --math-markup=whole marks changed formulas as a whole: the default
+# fine-grained math markup splits inline math across \DIFdel/\DIFadd,
+# leaving unbalanced $ (e.g. "\DIFdel{$} \Downarrow^? r'$}" in the
+# reworked metatheory lemmas), which does not compile.
 "${latexdiff[@]}" \
   --config 'VERBATIMENV=(?:verbatim[*]?|lstlisting|acks)' \
+  --math-markup=whole \
   "$tmp/old-flat.tex" "$tmp/new-flat.tex" > "$paper_dir/$out"
 
 echo "Wrote $paper_dir/$out (diff against $rev)"
