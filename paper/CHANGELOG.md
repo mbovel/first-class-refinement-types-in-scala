@@ -1,11 +1,33 @@
 # Changelog
 
-Main changes to the paper since the OOPSLA 2026 submission:
+This document summarizes the changes to the paper since the OOPSLA 2026
+submission. The revision addresses the two central concerns of the
+metareview. First, the treatment of non-terminating predicates is now
+highlighted as a key contribution (§1), and the claims made in our
+response are incorporated into the paper as formal lemmas, proved in the
+Rocq mechanization (§2.3). Second, the paper now states explicitly that
+the formalized calculus is pure (abstract, §1), and discusses the
+integration with Stateful Capabilities and related capture-checking
+extensions as future work (§2.2, §5). Beyond these, we strengthened the
+compilation-overhead evaluation (a more rigorous protocol, confidence
+intervals, a corrected description of Schmid's system) and addressed the
+remaining individual reviewer comments. The full list of changes
+follows, ordered by paper section:
 
 - **Non-terminating predicates highlighted as a key contribution (§1).**
   As requested by the metareview: the design bullet of the Contributions
   list now names the partial-correctness semantics with no termination
   checking as a distinctive design choice.
+- **Pure-calculus limitation stated explicitly; path to purity checking
+  expanded (§1, §2.2).** As requested by the metareview: the abstract and
+  the soundness contribution now call the formalized calculus "core,
+  *pure*"; §2.2 defines predicate purity precisely (deterministic and
+  side-effect-free) and flags the unenforced purity of called functions
+  as an unsafe default. A new paragraph presents capture checking and its
+  extensions — Stateful Capabilities, separation checking, and safe
+  mode — as a concrete path to enforcing purity, and sketches how
+  separation checking could soundly invalidate refinement facts under
+  mutation; these integrations are left as future work.
 - **Non-terminating predicates: properties established formally (§2.3).**
   (8b60bad) Promoted the non-termination discussion to its own
   subsection and stated the metatheoretic properties of the design as lemmas,
