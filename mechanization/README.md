@@ -1,6 +1,8 @@
 # Semantic Types Mechanization
 
-- [`refinement_types/`](refinement_types/): mechanization of System F with refinement and dependent function types in Rocq, using a definitional interpreter and semantic types.
+- [`refinement_types/`](refinement_types/): mechanization of System F with
+  refinement and dependent function types in Rocq, using a definitional
+  interpreter and semantic types.
 
 ## File overview
 
@@ -39,18 +41,21 @@ the paper, the coqdoc heading in the `.v` file cites it (e.g. `Interpretation
 Note: the paper presents singleton base types `True`/`False` (with `Bool`
 recovered as `True ∨ False`); the mechanization uses a single `Bool` type.
 
-
 ## Build
+
+Requires [Rocq](https://rocq-prover.org/) (tested with 9.0 and 9.2):
 
 ```bash
 make
 ```
+
+A successful build (exit code 0) means all proofs are machine-checked.
 
 ## Docker
 
 The top-level artifact image includes Rocq 9.2. From the repository root:
 
 ```bash
-docker build -t refinement-artifact .
-docker run --rm refinement-artifact mechanization
+docker build --platform linux/amd64 -t refinement-artifact .
+docker run --rm --platform linux/amd64 refinement-artifact mechanization
 ```
