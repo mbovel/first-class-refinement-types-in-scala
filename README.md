@@ -1,29 +1,30 @@
 # First-Class Refinement Types in Scala — Artifact
 
 This repository is the artifact for the paper *First-Class Refinement Types
-in Scala*. It contains all four components the paper builds on:
+in Scala*. It contains:
 
 - [implementation/](implementation/): our fork of the Scala 3 compiler
   implementing first-class refinement types (called *qualified types* in the
   implementation, enabled by `-language:experimental.qualifiedTypes`). The
   implementation is self-contained in the
-  [qualified_types](implementation/compiler/src/dotty/tools/dotc/qualified_types/)
-  package; see [its README](implementation/compiler/src/dotty/tools/dotc/qualified_types/README.md)
+  [qualified_types](https://github.com/mbovel/dotty/tree/7ffb8c7a3b292d109a6cad868bbdb1455c99f727/compiler/src/dotty/tools/dotc/qualified_types)
+  package; see [its README](https://github.com/mbovel/dotty/blob/7ffb8c7a3b292d109a6cad868bbdb1455c99f727/compiler/src/dotty/tools/dotc/qualified_types/README.md)
   for an overview and how to run the compiler and its test suites.
-- [mechanization/](mechanization/): the Rocq (Coq) mechanization: System F
+- [mechanization/](mechanization/): the Rocq mechanization: System F
   with refinement and dependent function types, formalized with a
   definitional interpreter and semantic types
   (see [mechanization/README.md](mechanization/README.md)).
 - [evaluation/](evaluation/): compilation-time benchmarks comparing our
-  implementation with Stainless and with Georg Schmid's 2016 LiquidTyper,
-  plus the script that generates the paper's results table
-  (see [evaluation/README.md](evaluation/README.md)).
+  implementation with Stainless and with [Georg Schmid's 2016
+  LiquidTyper](https://dl.acm.org/doi/10.1145/2998392.2998398), plus the script
+  that generates the paper's results table (see
+  [evaluation/README.md](evaluation/README.md)).
 - [paper/](paper/): the paper's LaTeX sources, including the generated
   benchmark table (`bench_table.tex`).
 
-**We recommend using the prebuilt Docker image (`artifact-image.tar`,
-included in the artifact archive) — no build step is required.** The image
-contains all toolchains (Rocq 9.2, JDK 25, JDK 8, sbt, Z3), the prebuilt
+**We recommend using the prebuilt Docker image (`artifact-image.tar`, included
+in the artifact archive).** Using the image, no build step is required. The
+image contains all toolchains (Rocq 9.2, JDK 25, JDK 8, sbt, Z3), the prebuilt
 compilers, and cached dependencies, so it runs without network access.
 
 ## Requirements
@@ -42,9 +43,14 @@ Load the image (~2 min):
 docker load -i artifact-image.tar
 ```
 
-Then run the image with no arguments (~15 min, measured on an Apple Silicon
-laptop under emulation). This exercises all three executable components
-once, announcing each stage with a banner:
+Then run the image with no arguments:
+
+```sh
+docker run --platform linux/amd64 refinement-artifact
+```
+
+This exercises all three executable components once, announcing each stage with
+a banner:
 
 - 📜 **[1/3] Mechanization** — compiles all Rocq proofs (success means every
   theorem is machine-checked)
@@ -54,42 +60,23 @@ once, announcing each stage with a banner:
 - ⏱️ **[3/3] Evaluation** — runs all three benchmark suites once, without
   warmup (a "dry run"), to check that they work end to end
 
-```sh
-mkdir -p results
-docker run --platform linux/amd64 -v "$PWD/results:/work/evaluation/results" \
-  refinement-artifact
-```
+A final `✅ Done` banner confirms all three stages succeeded.
 
-A final `✅ Done` banner confirms all three stages succeeded. The dry run
-writes one JMH result file per suite to
-`results/<suite>/<date-time>-dry.json` (`first-class`, `stainless`,
-`schmid`); dry-run timings are meaningless (no warmup) — they only validate
-the pipeline.
+## Full benchmark runs (⚠️ several hours to days)
 
-## Full benchmark runs (⚠️ several hours to days — you probably don't want this)
-
-Full runs use the paper's JMH configuration: 150 warmup + 20 measurement
+Full runs use the paper's JMH configuration: 180 warmup + 40 measurement
 iterations per benchmark, one fork per benchmark per run. One full pass over
 all three suites takes **~3 hours on a fast x86-64 server**, and the paper's
-numbers aggregate `--runs 10` such passes (30+ hours total). On a laptop, or
-under emulation on Apple Silicon, expect several days — and thermal
-throttling and background load will make the numbers noisy and hard to
-compare, so we discourage reproducing the full campaign unless you have a
-quiet x86-64 Linux machine.
+numbers aggregate `--runs 10` such passes (30+ hours total).
 
 If you do want to run them, results accumulate under the mounted `results/`
 directory, one timestamped file per suite per run:
 
 ```sh
+mkdir results
+chmod +777 results
 docker run --platform linux/amd64 -v "$PWD/results:/work/evaluation/results" \
   refinement-artifact evaluation bench --suite all --runs 10
-```
-
-or a single full pass of one suite (`first-class` | `stainless` | `schmid`):
-
-```sh
-docker run --platform linux/amd64 -v "$PWD/results:/work/evaluation/results" \
-  refinement-artifact evaluation bench --suite first-class
 ```
 
 ## Regenerating the results table
@@ -119,25 +106,7 @@ docker run --platform linux/amd64 \
 How the scores, confidence intervals, and overhead columns are computed is
 documented in [evaluation/README.md](evaluation/README.md).
 
-## Exploring interactively
-
-For an interactive shell inside the image (e.g. to run a single benchmark —
-see the per-suite READMEs under [evaluation/](evaluation/) — or to compile
-your own qualified-types examples):
-
-```sh
-docker run --platform linux/amd64 --entrypoint bash -it refinement-artifact
-```
-
-Any sbt command can also be run in the compiler checkout directly, e.g. to
-compile a single file with qualified types enabled:
-
-```sh
-docker run --platform linux/amd64 refinement-artifact implementation \
-  "scala3-bootstrapped / scalac -language:experimental.qualifiedTypes tests/pos-custom-args/qualified-types/list_collect.scala"
-```
-
-## Building from source (optional — not needed for evaluation)
+## Building from source (optional, not needed for evaluation)
 
 The image can be rebuilt from this repository. First initialize the
 compiler submodules (`implementation` deliberately without `--recursive`:
