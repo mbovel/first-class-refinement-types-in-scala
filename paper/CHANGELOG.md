@@ -40,12 +40,31 @@ Main changes to the paper since the OOPSLA 2026 submission:
   paper: the implementation no longer reuses Scala's built-in skolem types; it
   now uses its own custom skolem terms in predicates. The "Hoisting and
   skolems" section was reworded accordingly.
+- **Reworked the compilation-overhead evaluation (§4.4).** The benchmarks
+  were re-run with a more rigorous protocol, as promised in the
+  submission's note to reviewers: 150 warm-up and 20 measurement
+  iterations per JVM (previously 30 and 10), and the whole experiment
+  repeated in 10 independent runs. The table now reports means with 95%
+  confidence intervals (Student's t) and the absolute overhead Δ of
+  checking over each system's own baseline. The methodology paragraph was
+  rewritten to match, and the results paragraph now quantifies the
+  conclusion: 0–12% overhead for our system, consistently less than
+  Schmid's system (20–38%) and Stainless (at least 56%).
 - **Impact on code that does not use the feature (§4.4).** Added a paragraph
   reporting that the full Dotty CI passes with the feature enabled — the Scala
   compiler itself (~200K LOC), its ~10K compilation tests (~300K LOC), and a
   community build of 50 open-source projects (~700K LOC) — and that the
-  official Scala compiler benchmark suite shows no noticeable regression,
+  official Scala compiler benchmark suite stays within a 4% slowdown,
   addressing reviewer A's backward-compatibility and performance question.
+- **Corrected the description of Schmid's system (§1, §4.4).** The previous
+  text understated its capabilities, claiming refinements were limited to
+  `Int` and could not apply to class-typed values. Schmid's system in fact
+  supports qualifiers on base types and on classes, including invariants
+  over stable constructor fields — our `matrixDims` and `postuple` ports
+  exercise exactly this. The comparison now focuses on the real
+  difference: qualifier inference runs in a separate phase, so qualified
+  type arguments must be written explicitly and refinements do not
+  participate in type-argument inference.
 - **Fixed a miscitation in related work (§5).** Paraskevopoulou et al.
   use an interpreter-based approach with step-indexed logical relations for
   multi-pass compiler verification; the previous text misattributed the

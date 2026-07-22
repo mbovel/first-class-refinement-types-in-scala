@@ -193,7 +193,7 @@ let x = 42 :: Int in ...
 As a result, refinement types are not ``just types'': programmers must maintain two mental models, one for the host type system and one for the refinement layer, with separate error messages, separate IDE support, and limited ability to debug failures across the boundary. A recent usability study by Gamboa et al.~\cite{gamboa2025} confirms this: one participant observed that ``comments are usually seen as just optional information in the code and not something that is directly used by the compiler,'' and another remarked, ``It's sort of like you're doing two things at once because you're implementing in Haskell. But you're also talking to GHC, but you're also talking to LiquidHaskell.''
 
 % Gap: Separate-phase problem: separate inference
-The consequences of this separation run deeper than usability. Because the refinement checker operates after or alongside the host type checker, it must duplicate much of the host's type inference machinery, a significant engineering burden that also limits expressiveness. Schmid and Kun\v{c}ak~\cite{schmid2016} implemented qualified types for an earlier version of the Scala compiler (Dotty) with a refinement checker ``largely independent of Scala's own type checker.'' This architecture meant that refinement types could not flow through generic code, could not interact with Scala's type inference, and required a separate qualifier inference algorithm that proved difficult to scale.
+The consequences of this separation run deeper than usability. Because the refinement checker operates after or alongside the host type checker, it must duplicate much of the host's type inference machinery, a significant engineering burden that also limits expressiveness. Schmid and Kun\v{c}ak~\cite{schmid2016} implemented qualified types for an earlier version of the Scala compiler (Dotty) with a refinement checker ``largely independent of Scala's own type checker.'' This architecture meant that refinement types could not interact with Scala's type inference (for instance, they could not be inferred as type arguments in generic code) and required a separate qualifier inference algorithm that proved difficult to scale.
 
 Userland libraries in the Scala ecosystem such as Iron~\cite{iron} and Refined~\cite{refined} take a different trade-off: they encode refinement-like checks using opaque types and implicit evidence, benefiting from Scala's own type inference and tooling, but at the cost of expressiveness; refinement proofs are limited to what Scala's implicit resolution can discharge, ruling out dedicated efficient decision procedures for equality, arithmetic, ordering, or other domain-specific theories.
 
@@ -213,7 +213,6 @@ Integrating refinement types into the host language's type system is not entirel
 As a concrete example of the expressiveness this integration enables, consider Scala's bounded type polymorphism. In the following snippet, type inference must instantiate \lstinline!U! to \lstinline!Even!, which succeeds because a refinement type is a subtype of its base type, and therefore \lstinline!Even <: Int! satisfies the bound \lstinline!U <: T!. The result type is then inferred as \lstinline!Even!. This is one of the examples that was used to motivate \emph{abstract refinements}~\cite{vazou2013}. In our system it requires no additional type system mechanism; it follows directly from subtyping:
 
 \begin{figure}[H]
-\label{fig:example1}
 \begin{lstlisting}[language=Scala]
 def maximum[T: Ordering, U <: T](xs: List[U]): U = xs.reduce(max)
 type Even = {v: Int with v % 2 == 0}
@@ -221,12 +220,12 @@ def example1: Even = maximum(List(2, 4, 6))
 \end{lstlisting}
 \vspace{-1em}
 \caption{Instantiation of a bounded type parameter with a refinement type.}
+\label{fig:example1}
 \end{figure}
 
 As another example, consider overload resolution, a feature characteristic of object-oriented languages. Below, we define two overloads of \lstinline!min!: one for sorted lists, which returns the head in constant time, and one for arbitrary lists, which traverses the list in linear time. Because refinement types participate in overload resolution, the compiler dispatches \lstinline!min(l)! to the more specific overload when \lstinline!l! is known to be sorted:
 
 \begin{figure}[H]
-\label{fig:example2}
 \begin{lstlisting}[language=Scala]
 def min(l: List[Int] with l.isSorted): Int = l.head // O(1)
 def min(l: List[Int]): Int = l.min // O(n)
@@ -234,6 +233,7 @@ def example2(l: List[Int] with l.isSorted): Int = min(l) // calls the first over
 \end{lstlisting}
 \vspace{-1em}
 \caption{Overload resolution with refinement types.}
+\label{fig:example2}
 \end{figure}
 
 \subsection{Contributions}
@@ -675,12 +675,12 @@ This design is strictly more powerful than substitution alone: congruence closur
 
 \subsection{Evaluation}\label{sec:evaluation}
 
-We evaluate our implementation along two axes: compilation time overhead and expressiveness compared to two existing systems for Scala---Schmid and Kun\v{c}ak's previous prototype~\cite{schmid2016} and the Stainless verifier~\cite{hamza2019}.
+We evaluate our implementation along two axes: compilation time overhead and expressiveness compared to two existing systems for Scala---Schmid and Kun\v{c}ak's previous prototype~\cite{schmid2016} and the Stainless verifier~\cite{hamza2019}. Stainless is not a refinement type system; it checks pre- and postconditions. It is, however, the de facto tool for verifying Scala programs, even for lightweight properties that refinement types could cover. This makes it a natural point of comparison for our system, on the programs that both systems can verify.
 
 \paragraph{Compilation overhead.}
-We measure single-shot compilation time on a suite of small benchmark programs, comparing a baseline (compilation without refinement checking) against the full system. Each benchmark is compiled in isolation, and we report the median over 10 iterations after 30 warm-up iterations (Note to reviewers: will be increased for the final version). Where possible, we port the same program to Schmid's system and to Stainless to compare overhead across implementations. Figure~\ref{fig:bench-table} summarizes the results.
+We measure single-shot compilation time on a suite of small benchmark programs, comparing each system against its own baseline: the same programs without refinement annotations, compiled with checking disabled. Where possible, we port the same program to Schmid's system and to Stainless. Baselines are per-system because the systems build on different compiler versions and the ported programs differ slightly in code shape. Benchmarks run under JMH; each benchmark is compiled with 150 single-shot warm-up iterations followed by 20 measurement iterations, and the whole experiment is repeated in 10 independent runs. Each run is reduced to the mean of its measurement iterations; Figure~\ref{fig:bench-table} reports the mean of the per-run means with 95\% confidence intervals (Student's $t$), and the overhead~$\Delta$ as the difference between checked and baseline times.
 
-On our benchmarks, our system (labelled ``First-class'' in the figure) adds modest overhead for typical programs. The outlier is \texttt{maximumBig}, an artificial stress test that creates 100 singleton-type elements and checks that each is even; as expected, the cost grows with the number of refinement checks. Schmid's system and Stainless both show higher overhead on the benchmarks they support, which we attribute to their use of external SMT solvers.
+On our benchmarks, our system (labelled ``First-class'' in the figure) adds modest overhead: 0--12\% of the baseline compilation time. This is consistently less than the two other systems: on the benchmarks they support, Schmid's system adds 20--38\% and Stainless at least 56\%.
 
 To gauge overhead on a realistic codebase, we applied our system to \emph{Fansi}~\cite{fansi}, a 1\,000-line terminal-color library. The only change was replacing three run-time \lstinline!require! checks in a color-index function with a refinement type alias:
 %
@@ -691,17 +691,13 @@ def trueIndex(r: ChannelValue, g: ChannelValue,  b: ChannelValue)
 %
 All call sites already guard the arguments with the same bounds, so the refinement is verified statically with no other code changes. The compilation time difference is within measurement noise, confirming that the overhead is proportional to the number of refinement checks, not to the size of the program. This experiment also illustrates a key advantage of first-class integration: our system compiles unmodified Scala code without restriction, so refinement types can be introduced incrementally into an existing codebase. By contrast, Stainless is limited to a specific fragment of Scala and fails on code that falls outside its supported subset.
 
-The current overhead is acceptable for a prototype but leaves room for improvement. The solver is invoked hundreds of times per file, often with repeated queries, because Scala's subtype checker may re-check the same pair of types multiple times during inference. Caching solver results would eliminate most of this redundancy. The solver itself is also unoptimized: it is a textbook e-graph implementation with no indexing or incremental updates.
-
 \paragraph{Impact on code that does not use the feature.}
-Because refinement checking is integrated into the compiler rather than layered on top, a natural concern is whether it affects existing code. To assess this, we run the full Dotty continuous-integration suite with the feature enabled. It passes unchanged: this includes compiling the Scala compiler itself (${\sim}200\,000$ lines of code), its ${\sim}10\,000$ compilation tests (${\sim}300\,000$ lines), and a community build of 50 open-source projects (${\sim}700\,000$ lines), indicating that the extension introduces no backward incompatibility. On the official Scala compiler benchmark suite,\footnote{\url{https://lampepfl.github.io/scala3-benchmarks/}} enabling the feature shows no noticeable regression on either the 11 ``Big'' benchmarks, which compile real-world libraries totalling ${\sim}70\,000$ lines, or the 20 ``Small'' benchmarks. In short, when the feature is unused, it adds no measurable compilation cost and changes no behavior.
+Because refinement checking is integrated into the compiler rather than layered on top, a natural concern is whether it affects existing code. To assess this, we run the full Dotty continuous-integration suite with the feature enabled. It passes unchanged: this includes compiling the Scala compiler itself (${\sim}200\,000$ lines of code), its ${\sim}10\,000$ compilation tests (${\sim}300\,000$ lines), and a community build of 50 open-source projects (${\sim}700\,000$ lines), indicating that the extension introduces no backward incompatibility. On the official Scala compiler benchmark suite,\footnote{\url{https://lampepfl.github.io/scala3-benchmarks/}} enabling the feature slows compilation by at most 4\% with the current prototype, on both the 11 ``Big'' benchmarks, which compile real-world libraries totalling ${\sim}70\,000$ lines, and the 20 ``Small'' benchmarks. In short, when the feature is unused, it changes no behavior and adds only a small compilation-time overhead.
 
 \input{bench_table}
 
-%\input{bench_overhead_pct}
-
 \paragraph{Expressiveness.}
-The three systems differ in which programs they can express. First-class refinement types support refinements on class types (not just base types) and can capture arbitrary values from the enclosing scope in predicates. Schmid's implementation is limited to refinements on \lstinline!Int! types; it cannot express refinements over class-typed values (e.g., \lstinline!{v: Matrix if v.width > 0}!) because its SMT encoding treats class types as opaque. It also cannot propagate refinements through generic code, since its qualifier inference operates in a separate phase from Scala's type checker. Stainless supports richer specifications through \lstinline!require! and \lstinline!ensuring! clauses with a full SMT backend, but refinements are not types: they do not compose with bounded polymorphism, type inference, or pattern matching. Our system integrates with all of these by construction, since refinement types are ordinary Scala types.
+The three systems differ in which programs they can express. Schmid's qualifier inference operates in a separate phase from Scala's type checker, so refinements do not participate in type-argument inference: generic data structures can be instantiated with qualified types only by writing the type arguments explicitly, and inferred instantiations such as the one in Figure~\ref{fig:example1} are out of reach. Stainless supports richer specifications through \lstinline!require! and \lstinline!ensuring! clauses with a full SMT backend, but refinements are not types: they do not compose with bounded polymorphism, type inference, or pattern matching. Our system integrates with all of these by construction, since refinement types are ordinary Scala types.
 
 On the other hand, both Schmid's system and Stainless have substantially more powerful solvers. Both use SMT-backed solvers that are complete for linear integer arithmetic, algebraic data types, equality, and first-order logic---theories for which our lightweight e-graph solver offers no decision procedure. As a consequence, several of Schmid's benchmarks that require linear arithmetic reasoning (e.g., \texttt{sumnat}, \texttt{arrfold}) cannot be verified by our solver, and Stainless can verify functional correctness properties well beyond what refinement types alone can express.
 
