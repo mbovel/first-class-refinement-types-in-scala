@@ -740,17 +740,17 @@ On the theoretical side, we provide the first mechanized soundness proof that co
 
 \section*{Data-Availability Statement}
 
-Three artifacts will be made available upon publication.
+The accompanying artifact contains:
 
 \begin{itemize}
-  \item \textbf{Mechanization.} The full mechanization in Rocq, including the formalization of the language, type system, semantics, and soundness proof. A preliminary version has been attached as supplementary material. The final version will be published in a public GitHub repository.
-  \item \textbf{Compiler implementation.} A fork is published on Maven and can be used from any SBT project. We will provide instructions for using the fork. In the meantime, we have attached a patch file with the implementation as supplementary material, applying on top of Dotty commit \texttt{d5b79ba5de41b2a93bf5656f03df306213a48cef}.
-  \item \textbf{Benchmarks.} The benchmark programs used to evaluate compilation overhead and expressiveness, along with scripts for running the benchmarks and collecting results. The benchmarks are JMH suites that programmatically call our Dotty fork, Stainless, and Schmid's prototype on similar programs. This will also be public on GitHub and include our results and instructions for running the benchmarks and reproducing them, including pre-built JAR files for the Schmid and Stainless implementations to minimize setup overhead. We will also add more benchmarks targeting the Schmid and Stainless implementations to expand the comparison. For now, we have attached the JMH benchmark code and tested programs as supplementary material (without the pre-built JARs).
+  \item \textbf{Mechanization.} The Rocq formalization of the language, type system, semantics, and soundness proof.
+  \item \textbf{Implementation.} The source of our Dotty extension, also published on Maven and usable from any SBT project with `scalaOrganization := "<redacted for anonymity>"' and `scalaVersion := "3.10.0-RC1-bin-20260720-5f1bae1-NIGHTLY"'.
+  \item \textbf{Benchmarks.} The JMH benchmark suites used for the evaluation, compiling similar programs with our Dotty fork, Schmid's prototype, and Stainless, together with scripts to run them and collect results.
 \end{itemize}
 
 \subsection*{AI-Usage Statement}
 
-AI tools were used in the preparation of this paper and its artifacts, primarily Claude Code (Opus 4.5 and 4.6, Fable 5). Theorem and lemma statements were written by the authors, while many proof bodies were generated with AI assistance The core implementation predates widespread agentic AI tools, but recent bug fixes and refactorings were AI-assisted (AI-assisted commits are explicitly marked in the git history with \texttt{Co-authored-by: Claude *}). GitHub Copilot was also used for code autocompletion, and Google and ChatGPT for general research questions.
+AI tools were used in the preparation of this paper and its artifacts, primarily Claude Code (Opus 4.5 and 4.6, Fable 5). Theorem and lemma statements were written by the authors, while many proof bodies were generated with AI assistance. The core implementation predates widespread agentic AI tools, but recent bug fixes and refactorings were AI-assisted (AI-assisted commits are explicitly marked in the git history with \texttt{Co-authored-by: Claude *}). GitHub Copilot was also used for code autocompletion, and Google and ChatGPT for general research questions.
 
 %%
 %% The acknowledgments section is defined using the "acks" environment
