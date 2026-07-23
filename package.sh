@@ -56,10 +56,16 @@ rsync -a \
 # evaluation/schmid/lib is deliberately included: the jars are small, pure
 # JVM (platform-independent), and their from-source build depends on the old
 # Typesafe resolver, so shipping them is insurance against repository rot.
-# The Stainless jars are NOT included: they embed per-platform Z3 natives and
-# are already in the Docker image.
+# The Stainless jars (evaluation/stainless/lib) are also included: although
+# they are already baked into the Docker image, shipping them keeps the
+# source tree usable on its own.
 if [[ ! -e "$STAGING/evaluation/schmid/lib/dotty_2.11-0.1-SNAPSHOT.jar" ]]; then
-  echo "warn: evaluation/schmid/lib is not populated; run evaluation/schmid/setup.sh first to include the refined-dotty jars" >&2
+  echo "error: evaluation/schmid/lib is not populated; run evaluation/schmid/setup.sh first to include the refined-dotty jars" >&2
+  exit 1
+fi
+if [[ ! -e "$STAGING/evaluation/stainless/lib/stainless-assembly.jar" ]]; then
+  echo "error: evaluation/stainless/lib is not populated; run evaluation/stainless/setup.sh first to include the Stainless jars" >&2
+  exit 1
 fi
 
 echo "==> Recording version..."
@@ -72,7 +78,6 @@ echo "==> Creating zip..."
 cd "$OUT_DIR"
 rm -f "$NAME.zip"
 zip -r -q "$NAME.zip" "$NAME"
-rm -rf "$STAGING"
 
 echo "==> Done:"
 ls -lh "$OUT_DIR/$NAME.zip"
