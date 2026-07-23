@@ -14,20 +14,18 @@ how to run individual benchmarks.
 
 ## Layout
 
-- `sources/` — the benchmark programs, shared by all suites. One file per
+- [`sources/`](./sources/): the benchmark programs, shared by all suites. One file per
   benchmark and platform variant: `<bench>-<platform>.scala` (checked) and
   `<bench>-<platform>-base.scala` (baseline), e.g. `intarray-first-class.scala`,
   `intarray-stainless-base.scala`. Not every benchmark exists on every
   platform (LiquidTyper and Stainless support a subset of the programs).
-- `first-class/`, `stainless/`, `schmid/` — one sbt project per suite, each
+- [`first-class/`](./first-class/), [`stainless/`](./stainless/), [`schmid/`](./schmid/): one sbt project per suite, each
   with a JMH harness (`bench/`) that invokes the corresponding compiler
   programmatically on the sources.
-- `run.sh` — the benchmark runner (see below).
-- `make_table.py` — generates the paper's results table (see below).
-- `results-laraserver4/` — the paper's results, collected on a dedicated
+- [`run.sh`](./run.sh): the benchmark runner (see below).
+- [`make_table.py`](./make_table.py): generates the paper's results table (see below).
+- [`results-laraserver4/`](./results-laraserver4/): the paper's results, collected on a dedicated
   x86-64 Linux server.
-- `results-macbook/` — earlier exploratory results from a laptop; not used
-  in the paper.
 
 ## Running benchmarks (`run.sh`)
 
@@ -64,9 +62,9 @@ python3 make_table.py [--results-dir DIR] [--output FILE]
 
 Reads every `<results-dir>/<suite>/<run>.json` file (default:
 `results-laraserver4/`, the paper's results — so running it with no
-arguments reproduces the paper's table), writes the LaTeX table to
-`--output` (default: `../paper/bench_table.tex`), and prints a console
-version with additional relative-overhead columns. Files that do not parse
+arguments reproduces the paper's table), writes the LaTeX table to stdout
+(or to `--output FILE`), and prints a human-readable version with
+additional relative-overhead columns to stderr. Files that do not parse
 (e.g. a run still in progress) are skipped with a warning.
 
 ### How the values are computed

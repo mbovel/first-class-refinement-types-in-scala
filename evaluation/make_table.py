@@ -10,9 +10,9 @@ Reads JMH JSON results from <results-dir>/<suite>/<run>.json as written by
 run.sh. Each JMH fork (one JVM invocation) is reduced to its mean, and the
 reported score and 95% confidence interval are computed across these per-fork
 means: iterations within a fork share JIT/GC state and are autocorrelated, so
-the fork is the independent unit. Produces a LaTeX table with absolute times
-and deltas (written to the paper directory) plus the same table on stdout for
-quick inspection.
+the fork is the independent unit. Writes a LaTeX table with absolute times
+and deltas to stdout (or to --output), and prints the same table in
+human-readable form to stderr for quick inspection.
 """
 
 import argparse
@@ -28,7 +28,6 @@ from pathlib import Path
 
 DEFAULT_RESULTS_DIR = Path(__file__).parent / "results-laraserver4"
 SOURCES_DIR = Path(__file__).parent / "sources"
-DEFAULT_OUTPUT = Path(__file__).parent / ".." / "paper" / "bench_table.tex"
 
 # Suite class name -> column mapping
 SUITES = {
@@ -257,13 +256,13 @@ def generate_latex_table(table):
 # Main
 # ---------------------------------------------------------------------------
 
-def print_stdout_table(table):
-    print("=" * 120)
+def print_console_table(table):
+    print("=" * 120, file=sys.stderr)
     header = f"{'Benchmark':<18}"
     for col in COLUMNS:
         header += f"  {COLUMN_LABELS[col]:>21}"
-    print(header)
-    print("-" * 120)
+    print(header, file=sys.stderr)
+    print("-" * 120, file=sys.stderr)
     for bench in sorted(table.keys()):
         row = f"{bench:<18}"
         for col in COLUMNS:
@@ -280,16 +279,16 @@ def print_stdout_table(table):
             else:
                 cell = "---"
             row += f"  {cell:>21}"
-        print(row)
-    print("=" * 120)
+        print(row, file=sys.stderr)
+    print("=" * 120, file=sys.stderr)
 
 
 def main():
     parser = argparse.ArgumentParser(description="Generate the benchmark results LaTeX table from JMH JSON results.")
     parser.add_argument("--results-dir", type=Path, default=DEFAULT_RESULTS_DIR,
                         help="directory containing <suite>/<run>.json files (default: results-laraserver4/, the paper's results)")
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT,
-                        help="output .tex path (default: ../paper/bench_table.tex)")
+    parser.add_argument("--output", type=Path, default=None,
+                        help="write the LaTeX table to this .tex path instead of stdout")
     args = parser.parse_args()
 
     results = load_all(args.results_dir)
@@ -297,16 +296,20 @@ def main():
         parser.error(f"no results found in {args.results_dir}")
     table = build_table(results)
 
-    print(f"Benchmarks included: {sorted(table.keys())}")
-    print()
+    print(f"Benchmarks included: {sorted(table.keys())}", file=sys.stderr)
+    print(file=sys.stderr)
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    with open(args.output, "w") as f:
-        f.write(generate_latex_table(table))
-    print(f"Written {args.output}")
+    latex = generate_latex_table(table)
+    if args.output is None:
+        sys.stdout.write(latex)
+    else:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        with open(args.output, "w") as f:
+            f.write(latex)
+        print(f"Written {args.output}", file=sys.stderr)
 
-    print()
-    print_stdout_table(table)
+    print(file=sys.stderr)
+    print_console_table(table)
 
 
 if __name__ == "__main__":
