@@ -22,7 +22,8 @@ in Scala*. It contains:
   package; see [its README](https://github.com/mbovel/dotty/blob/7ffb8c7a3b292d109a6cad868bbdb1455c99f727/compiler/src/dotty/tools/dotc/qualified_types/README.md)
   for an overview and how to run the compiler and its test suites. PR: [scala/scala3#21586](https://github.com/scala/scala3/pull/21586).
 - [mechanization/](mechanization/): the Rocq mechanization (see
-  [mechanization/README.md](mechanization/README.md)).
+  [mechanization/README.md](mechanization/README.md), or browse the proofs in
+  the [rendered Rocq doc](https://mbovel.github.io/first-class-refinement-types-in-scala/mechanization/toc.html)).
 - [evaluation/](evaluation/): compilation-time benchmarks comparing our
   implementation with Stainless and with [Georg Schmid's 2016
   LiquidTyper](https://dl.acm.org/doi/10.1145/2998392.2998398), plus the script
@@ -74,27 +75,17 @@ A final `✅ Done` banner confirms all three stages succeeded.
 
 ## Regenerating the results table
 
-`evaluation make-table` renders the paper's benchmark table (LaTeX, plus a
-console version on stdout) from JMH result files. By default it reads the
-paper's own results, recorded in
+`evaluation make-table` renders the paper's benchmark table from JMH result
+files: the LaTeX table goes to stdout (redirect it to a file), and a
+human-readable version with relative-overhead columns is printed to stderr.
+By default it reads the paper's own results, recorded in
 [evaluation/results-laraserver4/](evaluation/results-laraserver4/) and
-shipped in the image — so this reproduces the paper's table exactly. Mount a
-`paper/` directory so the generated `bench_table.tex` is written to the
-host:
+shipped in the image — so this reproduces the paper's table exactly, with
+no volume mounts needed:
 
 ```sh
-docker run --rm --platform linux/amd64 -v "$PWD/paper:/work/paper" \
-  refinement-artifact evaluation make-table
-```
-
-To build the table from results you collected yourself instead (see "Full
-benchmark runs" below for how to collect them), mount them too and point
-`--results-dir` at them:
-
-```sh
-docker run --rm --platform linux/amd64 \
-  -v "$PWD/paper:/work/paper" -v "$PWD/results:/work/evaluation/results" \
-  refinement-artifact evaluation make-table --results-dir evaluation/results
+docker run --rm --platform linux/amd64 refinement-artifact \
+  evaluation make-table > paper/bench_table.tex
 ```
 
 How the scores, confidence intervals, and overhead columns are computed is
@@ -130,6 +121,15 @@ mkdir results
 chmod +777 results
 docker run --rm --platform linux/amd64 -v "$PWD/results:/work/evaluation/results" \
   refinement-artifact evaluation bench --suite all --runs 10
+```
+
+Once runs have completed, render the table from your own results instead of
+the shipped ones by mounting them read-only and pointing `--results-dir` at
+them:
+
+```sh
+docker run --rm --platform linux/amd64 -v "$PWD/results:/work/evaluation/results:ro" \
+  refinement-artifact evaluation make-table --results-dir evaluation/results > paper/bench_table.tex
 ```
 
 ## Re-building the Docker image (optional)
