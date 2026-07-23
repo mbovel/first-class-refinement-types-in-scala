@@ -8,6 +8,11 @@ From Stdlib Require Import Arith.PeanoNat.
 From Stdlib Require Import Arith.Compare_dec.
 From Stdlib Require Import Psatz.
 
+(** Register the [Forall2] induction schemes, so that inductives nesting
+    [Forall2] (such as [val_weaken_compat]) get nested induction principles
+    instead of a [register-all] warning. *)
+Scheme All for Forall2.
+
 Lemma Forall2_exists2: forall {A B: Type} (R: A -> B -> Prop) (l1: list A) (l2: list B) (n: nat) (x: A),
   Forall2 R l1 l2 ->
   nth_error l1 n = Some x ->

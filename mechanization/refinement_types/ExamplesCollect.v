@@ -152,7 +152,7 @@ Definition test_collect : Term :=
 Example test_collect_ok :
   eval 1000 [] test_collect =
     Some (Some (list_value (map vint32 [5%Z; 4%Z; 3%Z]))).
-Proof. native_compute. reflexivity. Qed.
+Proof. vm_compute. reflexivity. Qed.
 
 (** Test: collect from empty list.
     Expected: empty list *)
@@ -168,7 +168,7 @@ Definition test_collect_empty : Term :=
 Example test_collect_empty_ok :
   eval 1000 [] test_collect_empty =
     Some (Some (vinl vunit)).
-Proof. native_compute. reflexivity. Qed.
+Proof. vm_compute. reflexivity. Qed.
 
 (** Test: collect from [-1, -2] (no positives).
     Expected: empty list *)
@@ -184,4 +184,4 @@ Definition test_collect_none : Term :=
 Example test_collect_none_ok :
   eval 1000 [] test_collect_none =
     Some (Some (vinl vunit)).
-Proof. native_compute. reflexivity. Qed.
+Proof. vm_compute. reflexivity. Qed.

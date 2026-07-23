@@ -85,6 +85,12 @@ with Term : Type :=
     Values are the results of evaluation, distinct from terms: while term
     lambdas may have free variables, closures capture their environment as a
     list of values. *)
+
+(** Register the [list] induction schemes, so that [Value] (which nests
+    [list] in its closure constructors) gets a nested induction principle
+    instead of a [register-all] warning. *)
+Scheme All for list.
+
 Inductive Value : Type :=
   | vunit : Value
   | vbool : bool -> Value
