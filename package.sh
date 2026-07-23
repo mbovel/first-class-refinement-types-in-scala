@@ -47,7 +47,6 @@ rsync -a \
   --exclude '/paper/*.synctex.gz' \
   --exclude '/paper/paper-diff.*' \
   --exclude '/implementation/out' \
-  --exclude '/evaluation/stainless/lib' \
   --exclude '/evaluation/results' \
   --exclude '/evaluation/first-class/bench/out' \
   --exclude '/evaluation/stainless/bench/out' \
