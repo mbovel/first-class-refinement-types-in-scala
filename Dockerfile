@@ -15,7 +15,7 @@
 #   docker run refinement-artifact evaluation bench --suite stainless --dry-run
 #   docker run refinement-artifact evaluation bench --suite all --runs 10
 #   docker run refinement-artifact implementation \
-#     "scala3-bootstrapped / scalac -language:experimental.qualifiedTypes tests/pos-custom-args/qualified-types/list_collect.scala"
+#     "scala3-nonbootstrapped / scalac -language:experimental.qualifiedTypes tests/pos-custom-args/qualified-types/list_collect.scala"
 #
 # JMH results are written to /work/evaluation/results/<suite>/<run>.json;
 # mount a host directory there to collect them:
