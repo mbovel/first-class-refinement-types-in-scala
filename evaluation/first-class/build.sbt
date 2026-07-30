@@ -2,7 +2,7 @@ val sharedScalacOptions = Seq("-feature", "-Werror", "-deprecation")
 
 // Override with e.g. -Ddotty.version=3.10.0-RC1-bin-SNAPSHOT -Ddotty.organization=org.scala-lang
 // to benchmark a locally published compiler (sbt clean community-build/prepareCommunityBuild).
-val dottyVersion = sys.props.getOrElse("dotty.version", "3.10.0-RC1-bin-20260730-ae2ed95-NIGHTLY")
+val dottyVersion = sys.props.getOrElse("dotty.version", "3.10.0-RC1-bin-20260730-0cb7a4c-NIGHTLY")
 val dottyOrganization = sys.props.getOrElse("dotty.organization", "ch.epfl.lara")
 
 scalaVersion := dottyVersion
