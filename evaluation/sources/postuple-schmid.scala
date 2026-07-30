@@ -1,4 +1,4 @@
 object Foo {
   class PosTuple(val a: Int)(val b: {v: Int if a + v > 0})
-  new PosTuple(0)(1)
+  val t = new PosTuple(0)(1)
 }
