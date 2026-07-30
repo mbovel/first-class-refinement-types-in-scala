@@ -135,5 +135,10 @@ COPY --chown=rocq:rocq evaluation/run.sh evaluation/run.sh
 # everything compiles).
 COPY --chown=rocq:rocq mechanization mechanization
 
+# Everything below runs as `rocq`, so bind-mounted outputs (benchmark
+# results, the regenerated table) appear on the host owned by that UID; this
+# variable makes run.sh create them world-writable, so the host user can
+# modify or delete them without sudo.
+ENV ARTIFACT_CONTAINER=1
 COPY --chown=rocq:rocq run.sh run.sh
 ENTRYPOINT ["/work/run.sh"]

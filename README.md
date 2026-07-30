@@ -118,10 +118,18 @@ directory, one timestamped file per suite per run:
 
 ```sh
 mkdir results
-chmod +777 results
+chmod 777 results
 docker run --rm --platform linux/amd64 -v "$PWD/results:/work/evaluation/results" \
   refinement-artifact evaluation bench --suite all --runs 10
 ```
+
+> [!NOTE]
+> The `chmod` lets the container's non-root user write into the host-created
+> directory; in the other direction, the container creates its output
+> world-writable, so the result files can be moved or deleted on the host
+> without sudo. This matters wherever bind mounts expose raw file ownership
+> (native Linux, and some macOS/Windows runtimes); Docker Desktop remaps
+> ownership to the host user by itself, making both steps harmless no-ops.
 
 Once runs have completed, render the table from your own results instead of
 the shipped ones by mounting them read-only and pointing `--results-dir` at

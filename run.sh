@@ -9,6 +9,15 @@
 #   run.sh implementation SBT_ARGS...      run sbt in the qualified-types compiler checkout
 set -euo pipefail
 
+# In the artifact image (ARTIFACT_CONTAINER is set by the Dockerfile), files
+# created in bind mounts belong to the in-container `rocq` user, whose UID the
+# host user generally does not own; world-writable outputs keep them editable
+# and deletable on the host without sudo. Guarded so that running directly
+# from a checkout keeps normal permissions.
+if [[ "${ARTIFACT_CONTAINER:-}" == 1 ]]; then
+  umask 000
+fi
+
 cd "$(dirname "$0")"
 
 usage() {
