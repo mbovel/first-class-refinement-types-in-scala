@@ -1,0 +1,1715 @@
+==> Run 1: schmid benchmarks (2026-07-30-1443-dry)...
+[info] welcome to sbt 1.10.11 (Eclipse Adoptium Java 25.0.3)
+[info] loading settings for project schmid-build from plugins.sbt...
+[info] loading project definition from /work/evaluation/schmid/project
+[info] loading settings for project bench from build.sbt...
+[info] set current project to bench (in build file:/work/evaluation/schmid/)
+[success] Total time: 0 s, completed Jul 30, 2026, 2:43:15 PM
+[info] compiling 8 Scala sources to /work/evaluation/schmid/target/scala-2.11/classes ...
+[info] done compiling
+[info] running (fork) org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator /work/evaluation/schmid/target/scala-2.11/classes /work/evaluation/schmid/target/scala-2.11/src_managed/jmh /work/evaluation/schmid/target/scala-2.11/resource_managed/jmh default
+[info] Processing 32 classes from /work/evaluation/schmid/target/scala-2.11/classes with "reflection" generator
+[info] Writing out Java source to /work/evaluation/schmid/target/scala-2.11/src_managed/jmh and resources to /work/evaluation/schmid/target/scala-2.11/resource_managed/jmh
+[info] compiling 32 Java sources to /work/evaluation/schmid/target/scala-2.11/classes ...
+[warn] source value 8 is obsolete and will be removed in a future release
+[warn] target value 8 is obsolete and will be removed in a future release
+[warn] To suppress warnings about obsolete options, use -Xlint:-options.
+[info] done compiling
+[info] running (fork) org.openjdk.jmh.Main -wi 0 -i 1 -foe true -gc true -rf json -rff /work/evaluation/results/schmid/2026-07-30-1443-dry.json
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.arrfold
+[info] # Run progress: 0.00% complete, ETA 00:00:00
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1104.477 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.hof1
+[info] # Run progress: 4.17% complete, ETA 00:00:46
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 997.736 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.hof2
+[info] # Run progress: 8.33% complete, ETA 00:00:43
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1061.274 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.intarray
+[info] # Run progress: 12.50% complete, ETA 00:00:41
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 967.395 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.list1
+[info] # Run progress: 16.67% complete, ETA 00:00:39
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1065.491 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.list2
+[info] # Run progress: 20.83% complete, ETA 00:00:37
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1109.103 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.matrixDims
+[info] # Run progress: 25.00% complete, ETA 00:00:35
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1066.097 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.max
+[info] # Run progress: 29.17% complete, ETA 00:00:33
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 969.468 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.postuple
+[info] # Run progress: 33.33% complete, ETA 00:00:31
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 929.626 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.rational
+[info] # Run progress: 37.50% complete, ETA 00:00:29
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 972.907 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.sqrt
+[info] # Run progress: 41.67% complete, ETA 00:00:27
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 970.672 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidBaseBenchmarks.sumnat
+[info] # Run progress: 45.83% complete, ETA 00:00:25
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1064.853 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.arrfold
+[info] # Run progress: 50.00% complete, ETA 00:00:23
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1390.758 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.hof1
+[info] # Run progress: 54.17% complete, ETA 00:00:22
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1287.151 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.hof2
+[info] # Run progress: 58.33% complete, ETA 00:00:20
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1177.029 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.intarray
+[info] # Run progress: 62.50% complete, ETA 00:00:18
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1165.017 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.list1
+[info] # Run progress: 66.67% complete, ETA 00:00:16
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1188.253 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.list2
+[info] # Run progress: 70.83% complete, ETA 00:00:14
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1207.150 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.matrixDims
+[info] # Run progress: 75.00% complete, ETA 00:00:12
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1263.877 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.max
+[info] # Run progress: 79.17% complete, ETA 00:00:10
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1123.364 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.postuple
+[info] # Run progress: 83.33% complete, ETA 00:00:08
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1150.143 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.rational
+[info] # Run progress: 87.50% complete, ETA 00:00:06
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1291.865 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.sqrt
+[info] # Run progress: 91.67% complete, ETA 00:00:04
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1160.431 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 1.8.0_492, OpenJDK 64-Bit Server VM, 25.492-b09
+[info] # VM invoker: /opt/java/jdk8/jre/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: full + dont-inline hint (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.SchmidRefinementBenchmarks.sumnat
+[info] # Run progress: 95.83% complete, ETA 00:00:02
+[info] # Fork: 1 of 1
+[info] -XX:CompileCommandFile=/tmp/jmh4615803929347053103compilecommand -XX:InitialHeapSize=8589934592 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
+[info] Iteration   1: 1253.456 ms/op
+[info] # Run complete. Total time: 00:00:52
+[info] REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+[info] why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+[info] experiments, perform baseline and negative tests that provide experimental control, make sure
+[info] the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+[info] Do not assume the numbers tell you what you want them to tell.
+[info] Benchmark                              Mode  Cnt     Score   Error  Units
+[info] SchmidBaseBenchmarks.arrfold             ss       1104.477          ms/op
+[info] SchmidBaseBenchmarks.hof1                ss        997.736          ms/op
+[info] SchmidBaseBenchmarks.hof2                ss       1061.274          ms/op
+[info] SchmidBaseBenchmarks.intarray            ss        967.395          ms/op
+[info] SchmidBaseBenchmarks.list1               ss       1065.491          ms/op
+[info] SchmidBaseBenchmarks.list2               ss       1109.103          ms/op
+[info] SchmidBaseBenchmarks.matrixDims          ss       1066.097          ms/op
+[info] SchmidBaseBenchmarks.max                 ss        969.468          ms/op
+[info] SchmidBaseBenchmarks.postuple            ss        929.626          ms/op
+[info] SchmidBaseBenchmarks.rational            ss        972.907          ms/op
+[info] SchmidBaseBenchmarks.sqrt                ss        970.672          ms/op
+[info] SchmidBaseBenchmarks.sumnat              ss       1064.853          ms/op
+[info] SchmidRefinementBenchmarks.arrfold       ss       1390.758          ms/op
+[info] SchmidRefinementBenchmarks.hof1          ss       1287.151          ms/op
+[info] SchmidRefinementBenchmarks.hof2          ss       1177.029          ms/op
+[info] SchmidRefinementBenchmarks.intarray      ss       1165.017          ms/op
+[info] SchmidRefinementBenchmarks.list1         ss       1188.253          ms/op
+[info] SchmidRefinementBenchmarks.list2         ss       1207.150          ms/op
+[info] SchmidRefinementBenchmarks.matrixDims    ss       1263.877          ms/op
+[info] SchmidRefinementBenchmarks.max           ss       1123.364          ms/op
+[info] SchmidRefinementBenchmarks.postuple      ss       1150.143          ms/op
+[info] SchmidRefinementBenchmarks.rational      ss       1291.865          ms/op
+[info] SchmidRefinementBenchmarks.sqrt          ss       1160.431          ms/op
+[info] SchmidRefinementBenchmarks.sumnat        ss       1253.456          ms/op
+[info] Benchmark result is saved to /work/evaluation/results/schmid/2026-07-30-1443-dry.json
+[success] Total time: 57 s, completed Jul 30, 2026, 2:44:13 PM
+==> Run 1: first-class benchmarks (2026-07-30-1444-dry)...
+[info] welcome to sbt 1.12.6 (Eclipse Adoptium Java 25.0.3)
+[info] loading settings for project first-class-build from plugins.sbt...
+[info] loading project definition from /work/evaluation/first-class/project
+[info] loading settings for project first-class from build.sbt...
+[info] set current project to first-class (in build file:/work/evaluation/first-class/)
+[success] Total time: 0 s, completed Jul 30, 2026, 2:44:16 PM
+[info] compiling 8 Scala sources to /work/evaluation/first-class/bench/target/scala-3.10.0-RC1-bin-20260720-5f1bae1-NIGHTLY/classes ...
+[info] done compiling
+[info] running (fork) org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator /work/evaluation/first-class/bench/target/scala-3.10.0-RC1-bin-20260720-5f1bae1-NIGHTLY/classes /work/evaluation/first-class/bench/target/scala-3.10.0-RC1-bin-20260720-5f1bae1-NIGHTLY/src_managed/jmh /work/evaluation/first-class/bench/target/scala-3.10.0-RC1-bin-20260720-5f1bae1-NIGHTLY/resource_managed/jmh default
+[info] Processing 11 classes from /work/evaluation/first-class/bench/target/scala-3.10.0-RC1-bin-20260720-5f1bae1-NIGHTLY/classes with "reflection" generator
+[info] Writing out Java source to /work/evaluation/first-class/bench/target/scala-3.10.0-RC1-bin-20260720-5f1bae1-NIGHTLY/src_managed/jmh and resources to /work/evaluation/first-class/bench/target/scala-3.10.0-RC1-bin-20260720-5f1bae1-NIGHTLY/resource_managed/jmh
+[info] compiling 50 Java sources to /work/evaluation/first-class/bench/target/scala-3.10.0-RC1-bin-20260720-5f1bae1-NIGHTLY/classes ...
+[info] done compiling
+[info] running (fork) org.openjdk.jmh.Main -wi 0 -i 1 -foe true -gc true -rf json -rff /work/evaluation/results/first-class/2026-07-30-1444-dry.json
+[error] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[error] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[error] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[error] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.arrfold
+[info] # Run progress: 0.00% complete, ETA 00:00:00
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1464.799 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.collect
+[info] # Run progress: 2.38% complete, ETA 00:01:39
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1681.235 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.fansi
+[info] # Run progress: 4.76% complete, ETA 00:01:40
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 2778.157 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.fibMemo
+[info] # Run progress: 7.14% complete, ETA 00:01:53
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1619.944 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.hof1
+[info] # Run progress: 9.52% complete, ETA 00:01:47
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1325.754 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.hof2
+[info] # Run progress: 11.90% complete, ETA 00:01:40
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1344.287 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.intarray
+[info] # Run progress: 14.29% complete, ETA 00:01:34
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1482.291 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.list1
+[info] # Run progress: 16.67% complete, ETA 00:01:30
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1473.796 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.list2
+[info] # Run progress: 19.05% complete, ETA 00:01:27
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1614.981 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.matrix
+[info] # Run progress: 21.43% complete, ETA 00:01:24
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1642.641 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.matrixDims
+[info] # Run progress: 23.81% complete, ETA 00:01:22
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1612.394 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.max
+[info] # Run progress: 26.19% complete, ETA 00:01:19
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1316.375 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.maxGen
+[info] # Run progress: 28.57% complete, ETA 00:01:16
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1872.959 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.maxGenBig
+[info] # Run progress: 30.95% complete, ETA 00:01:14
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1662.967 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.mergeSort
+[info] # Run progress: 33.33% complete, ETA 00:01:11
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1528.561 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.postuple
+[info] # Run progress: 35.71% complete, ETA 00:01:08
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[error] -- [E129] Potential Issue Warning: /work/evaluation/sources/postuple-first-class-base.scala:3:2 
+[error] 3 |  new PosTuple(0)(1)
+[error]   |  ^^^^^^^^^^^^^^^^^^
+[error]   |  A pure expression does nothing in statement position
+[error]   |
+[error]   | longer explanation available when compiling with `-explain`
+[error] 1 warning found
+[info] Iteration   1: 1295.966 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.range
+[info] # Run progress: 38.10% complete, ETA 00:01:05
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1565.934 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.rational
+[info] # Run progress: 40.48% complete, ETA 00:01:03
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1296.903 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.sqrt
+[info] # Run progress: 42.86% complete, ETA 00:01:00
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1351.044 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.sumnat
+[info] # Run progress: 45.24% complete, ETA 00:00:57
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1464.405 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBaseBenchmarks.vec
+[info] # Run progress: 47.62% complete, ETA 00:00:54
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1441.208 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.arrfold
+[info] # Run progress: 50.00% complete, ETA 00:00:52
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1532.008 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.collect
+[info] # Run progress: 52.38% complete, ETA 00:00:49
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1666.361 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.fansi
+[info] # Run progress: 54.76% complete, ETA 00:00:47
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 2937.497 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.fibMemo
+[info] # Run progress: 57.14% complete, ETA 00:00:45
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1764.682 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.hof1
+[info] # Run progress: 59.52% complete, ETA 00:00:43
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1542.432 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.hof2
+[info] # Run progress: 61.90% complete, ETA 00:00:40
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1422.705 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.intarray
+[info] # Run progress: 64.29% complete, ETA 00:00:38
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1695.815 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.list1
+[info] # Run progress: 66.67% complete, ETA 00:00:35
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1542.902 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.list2
+[info] # Run progress: 69.05% complete, ETA 00:00:32
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1588.440 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.matrix
+[info] # Run progress: 71.43% complete, ETA 00:00:30
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1922.954 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.matrixDims
+[info] # Run progress: 73.81% complete, ETA 00:00:27
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1590.468 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.max
+[info] # Run progress: 76.19% complete, ETA 00:00:25
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1377.050 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.maxGen
+[info] # Run progress: 78.57% complete, ETA 00:00:22
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1666.061 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.maxGenBig
+[info] # Run progress: 80.95% complete, ETA 00:00:20
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1805.843 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.mergeSort
+[info] # Run progress: 83.33% complete, ETA 00:00:17
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1728.069 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.postuple
+[info] # Run progress: 85.71% complete, ETA 00:00:15
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[error] -- [E129] Potential Issue Warning: /work/evaluation/sources/postuple-first-class.scala:3:2 
+[error] 3 |  new PosTuple(0)(1)
+[error]   |  ^^^^^^^^^^^^^^^^^^
+[error]   |  A pure expression does nothing in statement position
+[error]   |
+[error]   | longer explanation available when compiling with `-explain`
+[error] 1 warning found
+[info] Iteration   1: 1403.537 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.range
+[info] # Run progress: 88.10% complete, ETA 00:00:12
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1892.581 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.rational
+[info] # Run progress: 90.48% complete, ETA 00:00:10
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1355.120 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.sqrt
+[info] # Run progress: 92.86% complete, ETA 00:00:07
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1393.666 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.sumnat
+[info] # Run progress: 95.24% complete, ETA 00:00:05
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1356.827 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.FirstClassBenchmarks.vec
+[info] # Run progress: 97.62% complete, ETA 00:00:02
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh14639148433788030490compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/first-class/target/bg-jobs/sbt_43873c56/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: 1397.030 ms/op
+[info] # Run complete. Total time: 00:01:45
+[info] REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+[info] why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+[info] experiments, perform baseline and negative tests that provide experimental control, make sure
+[info] the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+[info] Do not assume the numbers tell you what you want them to tell.
+[info] NOTE: Current JVM experimentally supports Compiler Blackholes, and they are in use. Please exercise
+[info] extra caution when trusting the results, look into the generated code to check the benchmark still
+[info] works, and factor in a small probability of new VM bugs. Additionally, while comparisons between
+[info] different JVMs are already problematic, the performance difference caused by different Blackhole
+[info] modes can be very significant. Please make sure you use the consistent Blackhole mode for comparisons.
+[info] Benchmark                            Mode  Cnt     Score   Error  Units
+[info] FirstClassBaseBenchmarks.arrfold       ss       1464.799          ms/op
+[info] FirstClassBaseBenchmarks.collect       ss       1681.235          ms/op
+[info] FirstClassBaseBenchmarks.fansi         ss       2778.157          ms/op
+[info] FirstClassBaseBenchmarks.fibMemo       ss       1619.944          ms/op
+[info] FirstClassBaseBenchmarks.hof1          ss       1325.754          ms/op
+[info] FirstClassBaseBenchmarks.hof2          ss       1344.287          ms/op
+[info] FirstClassBaseBenchmarks.intarray      ss       1482.291          ms/op
+[info] FirstClassBaseBenchmarks.list1         ss       1473.796          ms/op
+[info] FirstClassBaseBenchmarks.list2         ss       1614.981          ms/op
+[info] FirstClassBaseBenchmarks.matrix        ss       1642.641          ms/op
+[info] FirstClassBaseBenchmarks.matrixDims    ss       1612.394          ms/op
+[info] FirstClassBaseBenchmarks.max           ss       1316.375          ms/op
+[info] FirstClassBaseBenchmarks.maxGen        ss       1872.959          ms/op
+[info] FirstClassBaseBenchmarks.maxGenBig     ss       1662.967          ms/op
+[info] FirstClassBaseBenchmarks.mergeSort     ss       1528.561          ms/op
+[info] FirstClassBaseBenchmarks.postuple      ss       1295.966          ms/op
+[info] FirstClassBaseBenchmarks.range         ss       1565.934          ms/op
+[info] FirstClassBaseBenchmarks.rational      ss       1296.903          ms/op
+[info] FirstClassBaseBenchmarks.sqrt          ss       1351.044          ms/op
+[info] FirstClassBaseBenchmarks.sumnat        ss       1464.405          ms/op
+[info] FirstClassBaseBenchmarks.vec           ss       1441.208          ms/op
+[info] FirstClassBenchmarks.arrfold           ss       1532.008          ms/op
+[info] FirstClassBenchmarks.collect           ss       1666.361          ms/op
+[info] FirstClassBenchmarks.fansi             ss       2937.497          ms/op
+[info] FirstClassBenchmarks.fibMemo           ss       1764.682          ms/op
+[info] FirstClassBenchmarks.hof1              ss       1542.432          ms/op
+[info] FirstClassBenchmarks.hof2              ss       1422.705          ms/op
+[info] FirstClassBenchmarks.intarray          ss       1695.815          ms/op
+[info] FirstClassBenchmarks.list1             ss       1542.902          ms/op
+[info] FirstClassBenchmarks.list2             ss       1588.440          ms/op
+[info] FirstClassBenchmarks.matrix            ss       1922.954          ms/op
+[info] FirstClassBenchmarks.matrixDims        ss       1590.468          ms/op
+[info] FirstClassBenchmarks.max               ss       1377.050          ms/op
+[info] FirstClassBenchmarks.maxGen            ss       1666.061          ms/op
+[info] FirstClassBenchmarks.maxGenBig         ss       1805.843          ms/op
+[info] FirstClassBenchmarks.mergeSort         ss       1728.069          ms/op
+[info] FirstClassBenchmarks.postuple          ss       1403.537          ms/op
+[info] FirstClassBenchmarks.range             ss       1892.581          ms/op
+[info] FirstClassBenchmarks.rational          ss       1355.120          ms/op
+[info] FirstClassBenchmarks.sqrt              ss       1393.666          ms/op
+[info] FirstClassBenchmarks.sumnat            ss       1356.827          ms/op
+[info] FirstClassBenchmarks.vec               ss       1397.030          ms/op
+[info] Benchmark result is saved to /work/evaluation/results/first-class/2026-07-30-1444-dry.json
+[success] Total time: 111 s (0:01:51.0), completed Jul 30, 2026, 2:46:07 PM
+==> Run 1: stainless benchmarks (2026-07-30-1446-dry)...
+[info] welcome to sbt 1.12.6 (Eclipse Adoptium Java 25.0.3)
+[info] loading settings for project stainless-build from plugins.sbt...
+[info] loading project definition from /work/evaluation/stainless/project
+[info] loading settings for project stainless from build.sbt...
+[info] set current project to stainless (in build file:/work/evaluation/stainless/)
+[success] Total time: 0 s, completed Jul 30, 2026, 2:46:10 PM
+[info] compiling 9 Scala sources to /work/evaluation/stainless/bench/target/scala-3.7.2/classes ...
+[info] done compiling
+[info] running (fork) org.openjdk.jmh.generators.bytecode.JmhBytecodeGenerator /work/evaluation/stainless/bench/target/scala-3.7.2/classes /work/evaluation/stainless/bench/target/scala-3.7.2/src_managed/jmh /work/evaluation/stainless/bench/target/scala-3.7.2/resource_managed/jmh default
+[info] Processing 22 classes from /work/evaluation/stainless/bench/target/scala-3.7.2/classes with "reflection" generator
+[info] Writing out Java source to /work/evaluation/stainless/bench/target/scala-3.7.2/src_managed/jmh and resources to /work/evaluation/stainless/bench/target/scala-3.7.2/resource_managed/jmh
+[info] compiling 24 Java sources to /work/evaluation/stainless/bench/target/scala-3.7.2/classes ...
+[info] done compiling
+[info] running (fork) org.openjdk.jmh.Main -wi 0 -i 1 -foe true -gc true -rf json -rff /work/evaluation/results/stainless/2026-07-30-1446-dry.json
+[error] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[error] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[error] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[error] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessBaseBenchmarks.intarray
+[info] # Run progress: 0.00% complete, ETA 00:00:00
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 1511.330 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessBaseBenchmarks.matrixDims
+[info] # Run progress: 6.25% complete, ETA 00:00:54
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 1453.983 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessBaseBenchmarks.max
+[info] # Run progress: 12.50% complete, ETA 00:00:42
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 1246.556 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessBaseBenchmarks.mergeSort
+[info] # Run progress: 18.75% complete, ETA 00:00:35
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 1520.152 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessBaseBenchmarks.postuple
+[info] # Run progress: 25.00% complete, ETA 00:00:32
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 1505.533 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessBaseBenchmarks.rational
+[info] # Run progress: 31.25% complete, ETA 00:00:29
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 1392.935 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessBaseBenchmarks.sqrt
+[info] # Run progress: 37.50% complete, ETA 00:00:25
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 1240.915 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessBaseBenchmarks.vec
+[info] # Run progress: 43.75% complete, ETA 00:00:22
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 1299.455 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessVerifyBenchmarks.intarray
+[info] # Run progress: 50.00% complete, ETA 00:00:20
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 2418.272 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessVerifyBenchmarks.matrixDims
+[info] # Run progress: 56.25% complete, ETA 00:00:18
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 2736.885 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessVerifyBenchmarks.max
+[info] # Run progress: 62.50% complete, ETA 00:00:16
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 2186.594 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessVerifyBenchmarks.mergeSort
+[info] # Run progress: 68.75% complete, ETA 00:00:13
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 9248.407 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessVerifyBenchmarks.postuple
+[info] # Run progress: 75.00% complete, ETA 00:00:13
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 2315.690 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessVerifyBenchmarks.rational
+[info] # Run progress: 81.25% complete, ETA 00:00:10
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 2395.811 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessVerifyBenchmarks.sqrt
+[info] # Run progress: 87.50% complete, ETA 00:00:06
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 2493.128 ms/op
+[info] # JMH version: 1.37
+[info] # VM version: JDK 25.0.3, OpenJDK 64-Bit Server VM, 25.0.3+9-LTS
+[info] # VM invoker: /opt/java/openjdk/bin/java
+[info] # VM options: -XX:+PrintCommandLineFlags -Xms8G -Xmx8G
+[info] # Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+[info] # Warmup: <none>
+[info] # Measurement: 1 iterations, single-shot each
+[info] # Timeout: 10 min per iteration
+[info] # Threads: 1 thread
+[info] # Benchmark mode: Single shot invocation time
+[info] # Benchmark: bench.StainlessVerifyBenchmarks.vec
+[info] # Run progress: 93.75% complete, ETA 00:00:03
+[info] # Fork: 1 of 1
+[info] -XX:-AOTInvokeDynamicLinking -XX:-AOTRecordTraining -XX:-AOTReplayTraining -XX:CompileCommandFile=/tmp/jmh819854580231420852compilecommand -XX:ConcGCThreads=2 -XX:G1ConcRefinementThreads=8 -XX:InitialHeapSize=8589934592 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=8589934592 -XX:MinHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:-THPStackMitigation -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+UseCompressedOops -XX:+UseG1GC 
+[info] WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.openjdk.jmh.util.Utils (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/8d7a11ed/1296d6b9/jmh-core-1.37.jar)
+[info] WARNING: Please consider reporting this to the maintainers of class org.openjdk.jmh.util.Utils
+[info] WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[info] Iteration   1: WARNING: A restricted method in java.lang.System has been called
+[info] WARNING: java.lang.System::load has been called by z3.Z3Wrapper in an unnamed module (file:/work/evaluation/stainless/target/bg-jobs/sbt_39921b76/target/24b4e34f/cb021591/stainless-assembly.jar)
+[info] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+[info] WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+[info] 2680.158 ms/op
+[info] # Run complete. Total time: 00:00:54
+[info] REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+[info] why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+[info] experiments, perform baseline and negative tests that provide experimental control, make sure
+[info] the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+[info] Do not assume the numbers tell you what you want them to tell.
+[info] NOTE: Current JVM experimentally supports Compiler Blackholes, and they are in use. Please exercise
+[info] extra caution when trusting the results, look into the generated code to check the benchmark still
+[info] works, and factor in a small probability of new VM bugs. Additionally, while comparisons between
+[info] different JVMs are already problematic, the performance difference caused by different Blackhole
+[info] modes can be very significant. Please make sure you use the consistent Blackhole mode for comparisons.
+[info] Benchmark                             Mode  Cnt     Score   Error  Units
+[info] StainlessBaseBenchmarks.intarray        ss       1511.330          ms/op
+[info] StainlessBaseBenchmarks.matrixDims      ss       1453.983          ms/op
+[info] StainlessBaseBenchmarks.max             ss       1246.556          ms/op
+[info] StainlessBaseBenchmarks.mergeSort       ss       1520.152          ms/op
+[info] StainlessBaseBenchmarks.postuple        ss       1505.533          ms/op
+[info] StainlessBaseBenchmarks.rational        ss       1392.935          ms/op
+[info] StainlessBaseBenchmarks.sqrt            ss       1240.915          ms/op
+[info] StainlessBaseBenchmarks.vec             ss       1299.455          ms/op
+[info] StainlessVerifyBenchmarks.intarray      ss       2418.272          ms/op
+[info] StainlessVerifyBenchmarks.matrixDims    ss       2736.885          ms/op
+[info] StainlessVerifyBenchmarks.max           ss       2186.594          ms/op
+[info] StainlessVerifyBenchmarks.mergeSort     ss       9248.407          ms/op
+[info] StainlessVerifyBenchmarks.postuple      ss       2315.690          ms/op
+[info] StainlessVerifyBenchmarks.rational      ss       2395.811          ms/op
+[info] StainlessVerifyBenchmarks.sqrt          ss       2493.128          ms/op
+[info] StainlessVerifyBenchmarks.vec           ss       2680.158          ms/op
+[info] Benchmark result is saved to /work/evaluation/results/stainless/2026-07-30-1446-dry.json
+[success] Total time: 60 s, completed Jul 30, 2026, 2:47:11 PM
