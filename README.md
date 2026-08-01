@@ -79,7 +79,7 @@ A final `✅ Done` banner confirms all three stages succeeded.
 files: the LaTeX table goes to stdout (redirect it to a file), and a
 human-readable version with relative-overhead columns is printed to stderr.
 By default it reads the paper's own results, recorded in
-[evaluation/results-laraserver4/](evaluation/results-laraserver4/) and
+[evaluation/results-laraserver4-2/](evaluation/results-laraserver4-2/) and
 shipped in the image — so this reproduces the paper's table exactly, with
 no volume mounts needed:
 

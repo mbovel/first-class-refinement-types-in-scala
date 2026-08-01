@@ -23,7 +23,7 @@
 #   docker run -v "$PWD/results:/work/evaluation/results" refinement-artifact
 #
 # `evaluation make-table` regenerates the results table (LaTeX + console). By
-# default it reads the paper's results (evaluation/results-laraserver4,
+# default it reads the paper's results (evaluation/results-laraserver4-2,
 # shipped in the image) and writes /work/paper/bench_table.tex — mount the
 # paper directory to collect it; pass --results-dir for freshly collected
 # results:
@@ -127,7 +127,7 @@ RUN pip3 install --no-cache-dir --break-system-packages -r evaluation/requiremen
 USER rocq
 
 COPY --chown=rocq:rocq evaluation/make_table.py evaluation/make_table.py
-COPY --chown=rocq:rocq evaluation/results-laraserver4 evaluation/results-laraserver4
+COPY --chown=rocq:rocq evaluation/results-laraserver4-2 evaluation/results-laraserver4-2
 COPY --chown=rocq:rocq evaluation/stainless/stainless.conf evaluation/stainless/stainless.conf
 COPY --chown=rocq:rocq evaluation/run.sh evaluation/run.sh
 

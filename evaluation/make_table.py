@@ -26,7 +26,7 @@ from pathlib import Path
 # Config
 # ---------------------------------------------------------------------------
 
-DEFAULT_RESULTS_DIR = Path(__file__).parent / "results-laraserver4"
+DEFAULT_RESULTS_DIR = Path(__file__).parent / "results-laraserver4-2"
 SOURCES_DIR = Path(__file__).parent / "sources"
 
 # Suite class name -> column mapping
@@ -286,7 +286,7 @@ def print_console_table(table):
 def main():
     parser = argparse.ArgumentParser(description="Generate the benchmark results LaTeX table from JMH JSON results.")
     parser.add_argument("--results-dir", type=Path, default=DEFAULT_RESULTS_DIR,
-                        help="directory containing <suite>/<run>.json files (default: results-laraserver4/, the paper's results)")
+                        help="directory containing <suite>/<run>.json files (default: results-laraserver4-2/, the paper's results)")
     parser.add_argument("--output", type=Path, default=None,
                         help="write the LaTeX table to this .tex path instead of stdout")
     args = parser.parse_args()

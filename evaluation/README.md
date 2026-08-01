@@ -24,7 +24,7 @@ how to run individual benchmarks.
   programmatically on the sources.
 - [`run.sh`](./run.sh): the benchmark runner (see below).
 - [`make_table.py`](./make_table.py): generates the paper's results table (see below).
-- [`results-laraserver4/`](./results-laraserver4/): the paper's results, collected on a dedicated
+- [`results-laraserver4-2/`](./results-laraserver4-2/): the paper's results, collected on a dedicated
   x86-64 Linux server.
 
 ## Running benchmarks (`run.sh`)
@@ -61,7 +61,7 @@ python3 make_table.py [--results-dir DIR] [--output FILE]
 ```
 
 Reads every `<results-dir>/<suite>/<run>.json` file (default:
-`results-laraserver4/`, the paper's results — so running it with no
+`results-laraserver4-2/`, the paper's results — so running it with no
 arguments reproduces the paper's table), writes the LaTeX table to stdout
 (or to `--output FILE`), and prints a human-readable version with
 additional relative-overhead columns to stderr. Files that do not parse
