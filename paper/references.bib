@@ -440,6 +440,7 @@ year="2010",
 publisher="Springer Berlin Heidelberg",
 address="Berlin, Heidelberg",
 pages="348--370",
+doi="10.1007/978-3-642-17511-4_20",
 abstract="Traditionally, the full verification of a program's functional correctness has been obtained with pen and paper or with interactive proof assistants, whereas only reduced verification tasks, such as extended static checking, have enjoyed the automation offered by satisfiability-modulo-theories (SMT) solvers. More recently, powerful SMT solvers and well-designed program verifiers are starting to break that tradition, thus reducing the effort involved in doing full verification.",
 isbn="978-3-642-17511-4"
 }
@@ -706,13 +707,18 @@ keywords = {Rust, concurrency, heap-manipulating programs, type systems}
 }
 
 @inproceedings{cartwright1976,
-  author = {Cartwright, Robert},
-  title = {User-Defined Data Types as an Aid to Verifying {LISP} Programs},
-  booktitle = {Proceedings of the 3rd ACM SIGACT-SIGPLAN Symposium on Principles of Programming Languages (POPL)},
-  year = {1976},
-  pages = {228--256},
-  publisher = {ACM},
-  doi = {10.1145/512927.512951}
+  author       = {Robert Cartwright},
+  editor       = {S. Michaelson and
+                  Robin Milner},
+  title        = {User-Defined Data Types as an Aid to Verifying {LISP} Programs},
+  booktitle    = {Third International Colloquium on Automata, Languages and Programming,
+                  University of Edinburgh, UK, July 20-23, 1976},
+  pages        = {228--256},
+  publisher    = {Edinburgh University Press},
+  year         = {1976},
+  timestamp    = {Mon, 08 Jul 2019 11:03:55 +0200},
+  biburl       = {https://dblp.org/rec/conf/icalp/Cartwright76.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 
 @incollection{constable1986,
@@ -787,14 +793,24 @@ keywords = {type systems, static checking, dynamic checking, contracts}
   note = {Rust crate documentation}
 }
 
-@inproceedings{schneider2024,
-  author = {Schneider, Rudi and Koehler, Thomas and Steuwer, Michel},
-  title = {Slotted E-Graphs},
-  year = {2025},
-  booktitle = {Proceedings of the ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI)},
-  publisher = {Association for Computing Machinery}
+@article{schneider2024,
+author = {Schneider, Rudi and Rossel, Marcus and Shaikhha, Amir and Goens, Andr{\'e}s and K{\oe}hler, Thomas and Steuwer, Michel},
+title = {Slotted E-Graphs: First-Class Support for (Bound) Variables in E-Graphs},
+year = {2025},
+issue_date = {June 2025},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {9},
+number = {PLDI},
+url = {https://doi.org/10.1145/3729326},
+doi = {10.1145/3729326},
+abstract = {Equality saturation has gained significant interest as a powerful optimization and reasoning technique. At its heart is the e-graph data structure, that space-efficiently represents equal sub-terms uniquely. An important open problem in this context is extending this efficient representation to languages featuring (bound) variables. Independent of how we represent variables in e-graphs, either as names or nameless (using de Bruijn indices), sharing is broken as sub-terms that differ only in the names of their variables are represented separately. This results in aggressive e-graph growth, bad performance, as well as reduced expressiveness.In this paper, we present a novel approach to representing bound variables in e-graphs by making them a first-class built-in feature of the data structure. Our slotted e-graph represents terms that differ only by (bound or free) variable names uniquely. To do so, e-classes that represent equivalent terms via e-nodes are parameterized by slots, abstracting over free variables of the represented terms. Referring to an e-class from an e-node now requires relating the variables from its context to the slots of the e-class.Our evaluation of slotted e-graph uses two case studies from compiler optimization and theorem proving to show that performing equality saturation for languages with bound variables is greatly simplified and that we can solve practically relevant problems that cannot be solved with e-graphs using de Bruijn indices.},
+journal = {Proc. ACM Program. Lang.},
+month = jun,
+articleno = {223},
+numpages = {23},
+keywords = {binders, e-graphs, equality saturation, rewrite systems}
 }
-
 
 @inproceedings{10.1145/2784731.2784737,
 author = {Keil, Matthias and Thiemann, Peter},
@@ -943,4 +959,16 @@ doi = {10.1145/3798248},
 journal = {Proc. ACM Program. Lang.},
 month = apr,
 pages = {1321--1347},
+}
+
+@software{bovel_2026_21737784,
+  author       = {Bovel, Matt and
+                  Kun\v{c}ak, Viktor and
+                  Odersky, Martin},
+  title        = {First-Class Refinement Types in Scala --- Artifact},
+  month        = aug,
+  year         = 2026,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.21737784},
+  url          = {https://doi.org/10.5281/zenodo.21737784},
 }

@@ -1,28 +1,35 @@
 
-\documentclass[acmsmall,screen,review,anonymous]{acmart}
+\documentclass[acmsmall]{acmart}
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
 \AtBeginDocument{%
   \providecommand\BibTeX{{%
     Bib\TeX}}}
 
+\usepackage[utf8]{inputenc}
+
+%% Allow a little extra interword stretch as a last resort, so long
+%% inline-code fragments do not protrude into the margin.
+\setlength{\emergencystretch}{2em}
+
 %% Rights management information.  This information is sent to you
 %% when you complete the rights form.  These commands have SAMPLE
 %% values in them; it is your responsibility as an author to replace
 %% the commands and values with those provided to you when you
 %% complete the rights form.
-%%\acmConference[Conference acronym 'XX]{Make sure to enter the correct
-%%  conference title from your rights confirmation email}{June 03--05,
-%%  2026}{Woodstock, NY}
-%%\acmISBN{978-1-4503-XXXX-X/2026/06}
+\setcopyright{cc}
+\setcctype{by}
+\acmDOI{10.1145/3839541}
+\acmYear{2026}
+\acmJournal{PACMPL}
+\acmVolume{10}
+\acmNumber{OOPSLA2}
+\acmArticle{409}
+\acmMonth{10}
+\acmSubmissionID{oopslab26main-p1986-p}
+\received{2026-03-23}
+\received[accepted]{2026-08-06}
 
-
-%%
-%% Submission ID.
-%% Use this when submitting an article to a sponsored event. You'll
-%% receive a unique submission ID from the organizers
-%% of the event, and this ID should be used as the parameter to this command.
-%%\acmSubmissionID{123-A56-BU3}
 
 %%
 %% For managing citations, it is recommended to use bibliography
@@ -103,31 +110,32 @@
 \title{First-Class Refinement Types for Scala}
 
 \author{Matt Bovel}
-\email{matthieu@bovel.net}
+\correspondingauthor
 \orcid{0009-0005-5132-0279}
 \affiliation{%
   \institution{EPFL}
   \city{Lausanne}
   \country{Switzerland}
 }
+\email{matthieu.bovel@epfl.ch}
 
-\author{Viktor Kun\v{c}ak}
-\email{viktor.kuncak@epfl.ch}
+\author{Viktor Kunčak}
 \orcid{0000-0001-7044-9522}
 \affiliation{%
   \institution{EPFL}
   \city{Lausanne}
   \country{Switzerland}
 }
+\email{viktor.kuncak@epfl.ch}
 
 \author{Martin Odersky}
-\email{martin.odersky@epfl.ch}
 \orcid{0009-0005-3923-8993}
 \affiliation{%
   \institution{EPFL}
   \city{Lausanne}
   \country{Switzerland}
 }
+\email{martin.odersky@epfl.ch}
 
 
 %%
@@ -156,8 +164,18 @@ We present the design of first-class refinement types for Scala~3, where refinem
   <concept_significance>500</concept_significance>
  </concept>
  <concept>
-  <concept_id>10011007.10011006.10011008.10011024.10011032</concept_id>
-  <concept_desc>Software and its engineering~Constraints</concept_desc>
+  <concept_id>10003752.10003790.10011740</concept_id>
+  <concept_desc>Theory of computation~Type theory</concept_desc>
+  <concept_significance>500</concept_significance>
+ </concept>
+ <concept>
+  <concept_id>10011007.10011006.10011008.10011024.10011028</concept_id>
+  <concept_desc>Software and its engineering~Data types and structures</concept_desc>
+  <concept_significance>300</concept_significance>
+ </concept>
+ <concept>
+  <concept_id>10003752.10010124.10010131</concept_id>
+  <concept_desc>Theory of computation~Program semantics</concept_desc>
   <concept_significance>300</concept_significance>
  </concept>
 </ccs2012>
@@ -165,9 +183,11 @@ We present the design of first-class refinement types for Scala~3, where refinem
 
 \ccsdesc[500]{Software and its engineering~Compilers}
 \ccsdesc[500]{Software and its engineering~Formal software verification}
-\ccsdesc[300]{Software and its engineering~Constraints}
+\ccsdesc[500]{Theory of computation~Type theory}
+\ccsdesc[300]{Software and its engineering~Data types and structures}
+\ccsdesc[300]{Theory of computation~Program semantics}
 
-\keywords{Refinement Types, Scala, Type Inference, Verification}
+\keywords{Refinement Types, Scala, Definitional Interpreter, Semantic Types, Rocq}
 
 %%
 %% This command processes the author and affiliation and title
@@ -177,13 +197,13 @@ We present the design of first-class refinement types for Scala~3, where refinem
 \section{Introduction}
 
 % Context: refinement types and their history.
-A \emph{refinement type} restricts a base type to values satisfying a logical predicate. For example, the type \(\{x\!:\!\mathit{Int} \mid x > 0\}\) denotes the positive integers. Logical refinements as subsets of values have a long history~\cite{jhala2021}, going back at least to Cartwright~\cite{cartwright1976}. Freeman and Pfenning~\cite{freeman1991} coined the term \emph{refinement types} for a more restricted mechanism that distinguishes subtypes of algebraic datatypes by their constructor structure. Flanagan~\cite{flanagan2006} returned to general predicate refinements, checking them statically when possible and dynamically otherwise (\emph{hybrid type checking}). Rondon et al.~\cite{rondon2008} then made predicate refinements more practical with \emph{Liquid Types}, which automatically infer refinements via predicate abstraction and discharge proof obligations with SMT solvers. Systems built on these ideas such as Liquid Haskell~\cite{vazou2014}, F*~\cite{swamy2016}, and Dafny~\cite{leino2010} have since been used to verify properties ranging from safe array indexing~\cite{rondon2008} to the functional correctness of production cryptographic libraries~\cite{zinzindohoue2017}.
+A \emph{refinement type} restricts a base type to values satisfying a logical predicate. For example, the type \(\{x\!:\!\mathit{Int} \mid x > 0\}\) denotes the positive integers. Logical refinements as subsets of values have a long history~\cite{jhala2021}, going back at least to Cartwright~\cite{cartwright1976}. Freeman and Pfenning~\cite{freeman1991} coined the term \emph{refinement types} for a more restricted mechanism distinguishing subtypes of algebraic datatypes by constructor structure. Flanagan~\cite{flanagan2006} returned to general predicate refinements, checking them statically when possible and dynamically otherwise (\emph{hybrid type checking}). Rondon et al.~\cite{rondon2008} then made predicate refinements more practical with \emph{Liquid Types}, which automatically infer refinements via predicate abstraction and discharge proof obligations with SMT solvers. Systems built on these ideas such as Liquid Haskell~\cite{vazou2014}, F*~\cite{swamy2016}, and Dafny~\cite{leino2010} have since verified properties ranging from safe array indexing~\cite{rondon2008} to the functional correctness of production cryptographic libraries~\cite{zinzindohoue2017}.
 
 % Context: Why do they work well? Because refinement types are types, so we get all the benefits of types.
-The appeal of refinement types is that refinements are just \emph{types}: they are checked statically, composed through ordinary type constructors, and propagated by standard typing rules. For instance, retrieving an element from a list of non-empty strings yields a non-empty string by parametric polymorphism alone; no other logical reasoning is needed. More fundamentally, refinement types can be seen as~\cite{jhala2019why} a generalization of Floyd-Hoare logic in which invariants are attached to \emph{types} rather than \emph{program points}, delegating abstraction and instantiation to the type system using established techniques such as subtyping and type inference. In practice, this means that programmers can specify and verify properties using the type system they already know, with the same error messages, IDE support, and mental model.
+The appeal of refinement types is that refinements are just \emph{types}: they are checked statically, composed through ordinary type constructors, and propagated by standard typing rules. For instance, retrieving an element from a list of non-empty strings yields a non-empty string by parametric polymorphism alone. More fundamentally, refinement types can be seen as~\cite{jhala2019why} a generalization of Floyd-Hoare logic in which invariants are attached to \emph{types} rather than \emph{program points}, delegating abstraction and instantiation to the type system using subtyping and type inference. In practice, programmers can specify and verify properties using the type system they already know, with the same error messages, IDE support, and mental model.
 
 % Gap: Separate-phase problem: usability barriers
-However, in practice, these benefits are often diminished because existing refinement type systems process refinements in a \emph{separate phase}, disconnected from the host language's type checker. In Liquid Haskell, for instance, refinements are written inside special comments and verified by an external tool. Note how the type of \lstinline!x! is declared twice in the following snippet: once as \lstinline!Int! for the Haskell type checker, and once as \lstinline!{v:Int | v mod 2 == 0}! for Liquid Haskell:
+However, these benefits are often diminished because existing refinement type systems process refinements in a \emph{separate phase}, disconnected from the host language's type checker. In Liquid Haskell, for instance, refinements are written inside special comments and verified by an external tool. Note how the type of \lstinline!x! is declared twice in the following snippet: once as \lstinline!Int! for the Haskell type checker, and once as \lstinline!{v:Int | v mod 2 == 0}! for Liquid Haskell:
 %
 \begin{lstlisting}[language=Haskell,escapechar=!]
 !\color{gray}\ttfamily\{-@ x :: \{v:Int | v mod 2 == 0 \} @-\}!
@@ -193,12 +213,12 @@ let x = 42 :: Int in ...
 As a result, refinement types are not ``just types'': programmers must maintain two mental models, one for the host type system and one for the refinement layer, with separate error messages, separate IDE support, and limited ability to debug failures across the boundary. A recent usability study by Gamboa et al.~\cite{gamboa2025} confirms this: one participant observed that ``comments are usually seen as just optional information in the code and not something that is directly used by the compiler,'' and another remarked, ``It's sort of like you're doing two things at once because you're implementing in Haskell. But you're also talking to GHC, but you're also talking to LiquidHaskell.''
 
 % Gap: Separate-phase problem: separate inference
-The consequences of this separation run deeper than usability. Because the refinement checker operates after or alongside the host type checker, it must duplicate much of the host's type inference machinery, a significant engineering burden that also limits expressiveness. Schmid and Kun\v{c}ak~\cite{schmid2016} implemented qualified types for an earlier version of the Scala compiler (Dotty) with a refinement checker ``largely independent of Scala's own type checker.'' This architecture meant that refinement types could not interact with Scala's type inference (for instance, they could not be inferred as type arguments in generic code) and required a separate qualifier inference algorithm that proved difficult to scale.
+The consequences of this separation run deeper than usability. Because the refinement checker operates after or alongside the host type checker, it must duplicate much of the host's type inference machinery, an engineering burden that also limits expressiveness. Schmid and Kun\v{c}ak~\cite{schmid2016} implemented qualified types for an earlier version of the Scala compiler (Dotty) with a refinement checker ``largely independent of Scala's own type checker.'' This architecture meant refinement types could not interact with Scala's type inference (they could not be inferred as type arguments in generic code) and required a separate qualifier inference algorithm that proved difficult to scale.
 
-Userland libraries in the Scala ecosystem such as Iron~\cite{iron} and Refined~\cite{refined} take a different trade-off: they encode refinement-like checks using opaque types and implicit evidence, benefiting from Scala's own type inference and tooling, but at the cost of expressiveness; refinement proofs are limited to what Scala's implicit resolution can discharge, ruling out dedicated efficient decision procedures for equality, arithmetic, ordering, or other domain-specific theories.
+Userland Scala libraries such as Iron~\cite{iron} and Refined~\cite{refined} take a different trade-off: they encode refinement-like checks using opaque types and implicit evidence, benefiting from Scala's own type inference and tooling, but at the cost of expressiveness; refinement proofs are limited to what Scala's implicit resolution can discharge, ruling out dedicated efficient decision procedures for equality, arithmetic, ordering, or other domain-specific theories.
 
 % Innovation: Our solution
-\subsection{First-class refinement types}
+\subsection{First-class Refinement Types}
 
 We show that refinement types can be first-class types in a mainstream programming language. Rather than adding a separate refinement layer, we extend the Scala~3 type checker itself so that refinement types are ordinary Scala types, checked during the initial type-checking phase and flowing naturally through subtyping and type inference. The Liquid Haskell example above becomes:
 %
@@ -206,11 +226,11 @@ We show that refinement types can be first-class types in a mainstream programmi
 val x: (Int with x % 2 == 0) = 42
 \end{lstlisting}
 %
-Here, \lstinline!Int with x % 2 == 0! is a regular Scala type: it participates in subtyping, interacts with generics, pattern matching, type bounds, overloading, and implicits, eliminating the two-mental-models problem. There is one type system, one set of error messages, and one inference algorithm.
+Here, \lstinline!Int with x % 2 == 0! is a regular Scala type: it participates in subtyping, generics, pattern matching, type bounds, overloading, and implicits, eliminating the two-mental-models problem. There is one type system, one set of error messages, and one inference algorithm.
 
 Integrating refinement types into the host language's type system is not entirely new: Dafny~\cite{leino2010} and F*~\cite{swamy2016} already treat refinement types as first-class citizens of their type checkers, and use subtyping to relate a refinement type to its base type. However, these languages were designed from the ground up around verification. To our knowledge, ours is the first integration of refinement types into a pre-existing language where subtyping is central and pervasive, relied upon by classes, traits, mixin composition, path-dependent types, bounded polymorphism, overloading, and implicit resolution, while preserving the type system's existing behavior.
 
-As a concrete example of the expressiveness this integration enables, consider Scala's bounded type polymorphism. In the following snippet, type inference must instantiate \lstinline!U! to \lstinline!Even!, which succeeds because a refinement type is a subtype of its base type, and therefore \lstinline!Even <: Int! satisfies the bound \lstinline!U <: T!. The result type is then inferred as \lstinline!Even!. This is one of the examples that was used to motivate \emph{abstract refinements}~\cite{vazou2013}. In our system it requires no additional type system mechanism; it follows directly from subtyping:
+As a concrete example, consider Scala's bounded type polymorphism. In the following snippet, type inference must instantiate \lstinline!U! to \lstinline!Even!, which succeeds because a refinement type is a subtype of its base type, and therefore \lstinline!Even <: Int! satisfies the bound \lstinline!U <: T!. The result type is then inferred as \lstinline!Even!. This example was used to motivate \emph{abstract refinements}~\cite{vazou2013}. In our system, it follows directly from subtyping:
 
 \begin{figure}[H]
 \begin{lstlisting}[language=Scala]
@@ -223,7 +243,7 @@ def example1: Even = maximum(List(2, 4, 6))
 \label{fig:example1}
 \end{figure}
 
-As another example, consider overload resolution, a feature characteristic of object-oriented languages. Below, we define two overloads of \lstinline!min!: one for sorted lists, which returns the head in constant time, and one for arbitrary lists, which traverses the list in linear time. Because refinement types participate in overload resolution, the compiler dispatches \lstinline!min(l)! to the more specific overload when \lstinline!l! is known to be sorted:
+As another example, consider overload resolution, a feature characteristic of object-oriented languages. Below, we define two overloads of \lstinline!min!: one for sorted lists and one for arbitrary lists. Because refinement types participate in overload resolution, the compiler dispatches \lstinline!min(l)! to the more specific overload when \lstinline!l! is known to be sorted:
 
 \begin{figure}[H]
 \begin{lstlisting}[language=Scala]
@@ -322,7 +342,7 @@ A concrete path toward enforcing purity is offered by \emph{capture checking}~\c
 
 With these checks in place, purity checking of predicates reduces to a simple condition: reject any predicate that references a capability, calls a method that uses one, or reads a mutable variable. Weaker checks are also conceivable: tracking the \emph{read set} of each predicate (the read-only capabilities it uses) and invalidating established refinement facts whenever an element of that set is written to. Separation checking would make such invalidation sound, as all writes are explicit and un-aliased. Similar ideas underpin refinement type systems for Rust, where ownership likewise guarantees exclusive access to written state (\S\ref{sec:related-work}). We leave these integrations to future work.
 
-\subsection{Non-termination and partial correctness}\label{sec:termination}
+\subsection{Non-termination and Partial Correctness}\label{sec:termination}
 
 Our system uses a \emph{partial-correctness} semantics: a term~\lstinline!e! has type \lstinline!{x: T with p(x)}! if, whenever \lstinline!e! terminates with a value~\lstinline!v!, the predicate \lstinline!p(v)! holds. No termination guarantee is required for typing. Formally, the term interpretation $\mathcal{E}\llbracket A \rrbracket$ (\S\ref{sec:interpretation}) asserts that \emph{if} a term evaluates to a value, that value satisfies the type's interpretation. This is a key difference from prior systems, designed around termination: System~FR~\cite{hamza2019} enforces total correctness and requires termination proofs for all recursive functions, Liquid Haskell requires termination of functions reflected into refinements~\cite{vazou2014}, and F*~\cite{swamy2016} and Dafny~\cite{leino2010} require specification-level computation to terminate.
 
@@ -355,7 +375,7 @@ Termination considerations are confined to a single judgment: the \emph{semantic
 
 Because the type system is sound without any termination assumption, termination can be handled permissively, as a solver concern rather than a typing one. We therefore give the implication judgment a semantic definition only, and leave developing a syntactic proof system for predicate entailment as future work. In practice, few entailment rules are termination-sensitive: within the checked predicate fragment (\S\ref{sec:purity}), every construct except function calls trivially terminates, and termination only matters for specific rules, such as the simplification of $t \mathbin{\texttt{\&\&}} \texttt{false}$ to $\texttt{false}$ above, or the use of a predicate from a called function's result type. Even with a termination checker in place, proofs would be required only for the specific functions those rules touch---never systematically for every function used in a predicate. We believe this matters for adoption: Scala is a general-purpose language, and systematically requiring termination proofs would create a significant barrier. For now, our solver (\S\ref{sec:solver}) simply assumes termination of the functions called in predicates, as it does purity---a deliberately permissive first approximation. Verifying the termination-sensitive entailment rules and adding a termination checker are future work.
 
-\subsection{Mixed-precision type inference}\label{sec:inference}
+\subsection{Mixed-precision Type Inference}\label{sec:inference}
 
 The previous sections describe how refinement types are \emph{written} and what they \emph{mean}. This section addresses how expressions actually \emph{receive} refinement types during type checking. A key design goal is backward compatibility: enabling refinement types should not change the inferred types of existing code.
 
@@ -384,7 +404,7 @@ The binding \lstinline!val mPlusN = m + n! in Figure~\ref{fig:vec} is inferred a
 
 The second mechanism is \emph{selfification} (\textsc{T-Self} in Figure~\ref{fig:typing}). When checking an expression~\lstinline!e! of type~\lstinline!T! against a refinement type, the compiler assigns it the self-referencing type \lstinline!{x: T with x == e}!, provided \lstinline!e! is a valid predicate term. This lifts expressions into types on demand without changing inference for unannotated code.
 
-\subsection{Run-time checks}\label{sec:runtime}
+\subsection{Run-time Checks}\label{sec:runtime}
 
 Refinement predicates are checked statically by default, but when the compiler cannot verify a predicate, two run-time mechanisms are available.
 
@@ -432,7 +452,7 @@ The abstract syntax is given in Figure~\ref{fig:syntax}. Types and terms are mut
 The mechanization uses de~Bruijn indices throughout. For readability, the paper presentation uses named variables and omits explicit shifts; all rules should be read modulo $\alpha$-equivalence.
 
 \paragraph{Terms.}
-Bounded type abstractions $\Lambda (X :> L <: U).\, b$ carry both a lower bound~$L$ and an upper bound~$U$, as in $F_{<:>}$, to model Scala's bounded polymorphism.
+Bounded type abstractions $\Lambda (X {:>} L {<:} U).\, b$ carry both a lower bound~$L$ and an upper bound~$U$, as in $F_{<:>}$, to model Scala's bounded polymorphism.
 
 $\textsf{loop}(a)\; x.\; b$ is a limited form of general recursion that suffices to express tail recursion: the initial state~$a$ is bound to~$x$ in the body~$b$, which returns $\textsf{inl}(v_1)$ to continue with a new state, or $\textsf{inr}(v)$ to exit with result~$v$.
 
@@ -442,7 +462,7 @@ Integer arithmetic uses signed 32-bit wrapping semantics ($\texttt{Int32}$) rath
 As in other definitional interpreter developments~\cite{owens2016, amin2017}, values are distinct from terms: while term lambdas $\lambda x{:}A.\, b$ may have free variables, value closures $\langle \rho, \lambda x.\, b \rangle$ capture their environment~$\rho$ as a list of values. This separation reflects the big-step evaluation strategy: evaluation produces values with closed environments, not terms.
 
 \paragraph{Types.}
-The type language includes dependent function types $\Pi x{:}A.\, B$, dependent pairs $\Sigma x{:}A.\, B$, bounded universal types $\forall (X :> L <: U).\, A$, sum types, union and intersection types, and refinement types $\{x : A \mid p\}$ where the predicate~$p$ is an arbitrary term. Refinement types can be nested, as in the implementation.
+The type language includes dependent function types $\Pi x{:}A.\, B$, dependent pairs $\Sigma x{:}A.\, B$, bounded universal types $\forall (X {:>} L {<:} U).\, A$, sum types, union and intersection types, and refinement types $\{x : A \mid p\}$ where the predicate~$p$ is an arbitrary term. Refinement types can be nested, as in the implementation.
 
 The base types include singleton types $\texttt{True}$ and $\texttt{False}$ rather than a single $\texttt{Bool}$ because this enables defining the refinement type interpretation succinctly: a value satisfies $\{x : A \mid p\}$ when it belongs to $\mathcal{V}\llbracket A \rrbracket$ and $p$ evaluates to $\texttt{true}$, which is exactly membership in $\mathcal{E}\llbracket \texttt{True} \rrbracket$. The conventional $\texttt{Bool}$ is recovered as $\texttt{True} \lor \texttt{False}$.
 
@@ -453,7 +473,7 @@ The type $\mu X.\, A$ denotes an equi-recursive type, interpreted as the interse
 \paragraph{Contexts.}
 A typing context~$\Gamma$ (Figure~\ref{fig:syntax}) contains three kinds of entries: term bindings $x : A$, type variable bounds $X :> L <: U$, and equality facts $a_1 \sim a_2$. Equality facts record that two terms evaluate to the same value. They are introduced by \textsc{T-Let}, which records that a let-bound variable equals its definition, and by \textsc{T-If}, which records that the condition equals $\textsf{true}$ or $\textsf{false}$ in the respective branches. These facts are used during subtyping to justify predicate entailment.
 
-\subsection{Operational semantics}\label{sec:operational-semantics}
+\subsection{Operational Semantics}\label{sec:operational-semantics}
 
 The rules for successful evaluation $\rho \vdash a \Downarrow v$ are given in Figure~\ref{fig:eval}. Closures capture the environment at the point of creation: evaluating $\lambda x{:}A.\, b$ under~$\rho$ yields $\langle \rho, \lambda x.\, b \rangle$. Application evaluates the function and argument, then evaluates the body in the closure's environment extended with the argument. In rule \textsc{E-BinOp}, primitive operations are interpreted by the partial function $\textsf{evalop}(\mathit{op}, v_a, v_b)$ (\texttt{eval\_bin\_op} in the mechanization), which is undefined for ill-typed combinations of operands, making such applications stuck.
 
@@ -527,7 +547,7 @@ The equi-recursive rules \textsc{S-Mu-Fold} and \textsc{S-Mu-Unfold} establish t
 
 \input{fig-spos}
 
-\subsection{Soundness and main lemmas}\label{sec:soundness}
+\subsection{Soundness and Main Lemmas}\label{sec:soundness}
 
 Each typing rule in Figure~\ref{fig:typing} and each subtyping rule in Figure~\ref{fig:subtyping} is individually proven sound as a lemma about the semantic judgments $\Gamma \vDash a : A$ and $\Gamma \vDash A <: B$. Since these semantic judgments directly assert that well-typed terms do not get stuck and that subtyping preserves value membership, any derivation composed from these rules inherits the safety guarantee. This is the fundamental theorem of the logical relation.
 
@@ -631,7 +651,7 @@ We implement refinement types in Dotty, the production Scala~3 compiler. The res
   \item \emph{Run-time checks.} The type-test lowering phase compiles pattern matches against $\{x : A \mid p\}$ into a type test against~$A$ followed by a run-time evaluation of~$p$~\cite{quentin,valentin}.
 \end{itemize}
 
-\subsection{Hoisting and skolems}\label{sec:anf}
+\subsection{Hoisting and Skolems}\label{sec:anf}
 
 In the formalization (\S\ref{sec:formalization}), \textsc{T-App} (Figure~\ref{fig:typing}) requires the argument to be a variable~$y$, so that the return type $B[x \mapsto y]$ is a simple substitution of one variable for another. In practice, Scala allows arbitrary expressions as arguments, so the implementation must recover this structure on demand through two mechanisms.
 
@@ -704,25 +724,25 @@ On the other hand, both Schmid's system and Stainless have substantially more po
 \section{Related Work}\label{sec:related-work}
 
 \paragraph{Mechanized refinement type systems.}
-Hamza et~al.~\cite{hamza2019} mechanize System~FR, a dependently-typed calculus with refinement types, polymorphism, recursive types, and dependent pairs, serving as a foundation for the Stainless verifier. Their system is the closest to ours in ambition and was a major inspiration, particularly for the positivity-based treatment of recursive types. Key differences are: (1)~System~FR enforces \emph{total correctness}, requiring termination proofs for all recursive functions, while our partial-correctness approach avoids this burden; (2)~System~FR uses dependent pairs as existentials to handle variables going out of scope, while we use avoidance; and (3)~System~FR uses index-guarded recursive types $\textsf{Rec}(n)(\alpha \Rightarrow \tau)$ with explicit natural-number indices, while we use equi-recursive types with fold/unfold subtyping rules.
+Hamza et~al.~\cite{hamza2019} mechanize System~FR, a dependently-typed calculus with refinement types, polymorphism, recursive types, and dependent pairs, serving as a foundation for the Stainless verifier. Their system is the closest to ours in ambition and was a major inspiration, particularly for the positivity-based treatment of recursive types. Key differences are: (1)~System~FR enforces \emph{total correctness}, requiring termination proofs for all recursive functions, while our partial-correctness approach avoids this burden; (2)~System~FR uses dependent pairs as existentials to handle variables going out of scope, while we use avoidance; and (3)~System~FR uses index-guarded recursive types $\textsf{Rec}(n)(\alpha \Rightarrow \tau)$, while we use equi-recursive types with fold/unfold subtyping.
 %
-Borkowski et~al.~\cite{borkowski2022} mechanize a refinement type system extending System~F in Liquid Haskell. They restrict refinements to base types (no nested refinements), use well-formedness conditions and existential types rather than avoidance, and provide an elegant axiomatization of the implication judgment: they identify eleven abstract properties that an SMT oracle must satisfy for soundness, without committing to a specific solver. Our system does not axiomatize implication, instead leaving it as a fully semantic judgment (\S\ref{sec:soundness}).
+Borkowski et~al.~\cite{borkowski2022} mechanize a refinement type system extending System~F in Liquid Haskell. They restrict refinements to base types (no nested refinements), use well-formedness conditions and existential types rather than avoidance, and elegantly axiomatize the implication judgment as eleven abstract properties that an SMT oracle must satisfy for soundness, without committing to a specific solver. We instead leave implication fully semantic (\S\ref{sec:soundness}).
 %
 Sun et~al.~\cite{sun2024} mechanize RFJ, a refinement type system for a Featherweight Java-like language, in Coq. They provide both type soundness and logical soundness (characterizing which formulas are valid). Their system lacks parametric polymorphism but handles selfification and class-based subtyping in an object-oriented setting.
 
 \paragraph{Definitional interpreters and semantic soundness.}
-Our mechanization builds on Amin and Rompf's~\cite{amin2017} technique of proving type safety via a fuel-bounded definitional interpreter. One of their key insight is that big-step semantics sidesteps the ``bad bounds'' problem that plagues small-step proofs for languages with type members, making it particularly suitable for Scala-like type systems. However, their development proves syntactic type safety (progress and preservation) rather than defining semantic types.
+Our mechanization builds on Amin and Rompf's~\cite{amin2017} technique of proving type safety via a fuel-bounded definitional interpreter. One of their key insights is that big-step semantics sidesteps the ``bad bounds'' problem that plagues small-step proofs for languages with type members. However, their development proves syntactic type safety (progress and preservation) rather than defining semantic types.
 %
-Owens et~al.~\cite{owens2016} introduced functional big-step semantics, and Paraskevopoulou et~al.~\cite{paraskevopoulou2021} use a similar interpreter-based approach with step-indexed logical relations for multi-pass compiler verification. In both systems, the fuel is consumed at every evaluation step, maintaining a global step counter, whereas our fuel bounds evaluation depth (\S\ref{para:fuel}).
+Owens et~al.~\cite{owens2016} introduced functional big-step semantics, and Paraskevopoulou et~al.~\cite{paraskevopoulou2021} use a similar interpreter-based approach with step-indexed logical relations for multi-pass compiler verification. In both systems, fuel is consumed at every evaluation step, whereas ours bounds evaluation depth (\S\ref{para:fuel}).
 %
-Semantic typing, interpreting types as predicates or relations on values, has a long history in logical relations~\cite{timany2024}. Giarrusso et~al.~\cite{giarrusso2020} develop a semantic model for DOT, with subtyping and recursive types using step-indexed logical relations, requiring a ``later'' modality to handle the recursive type interpretation. We avoid step-indexing in the semantic types entirely by instead requiring strict positivity for recursive type binders (following Hamza et~al.~\cite{hamza2019}), which enables a direct fixpoint construction via intersected approximations (\S\ref{sec:soundness}).
+Semantic typing, interpreting types as predicates or relations on values, has a long history in logical relations~\cite{timany2024}. Giarrusso et~al.~\cite{giarrusso2020} develop a semantic model for DOT, with subtyping and recursive types using step-indexed logical relations and a ``later'' modality in the type syntax. We avoid step-indexing entirely by requiring strict positivity for recursive type binders (following Hamza et~al.~\cite{hamza2019}), enabling a direct fixpoint construction via intersected approximations (\S\ref{sec:soundness}).
 
 \paragraph{Refinement types in other languages.}
-We reviewed the history of refinement types in the introduction. Flanagan's hybrid type checking~\cite{flanagan2006} introduced the idea of automatically inserting run-time checks when the static system cannot discharge a refinement obligation, requiring a formalization of the interaction between static and dynamic checking. In our system, run-time checks are not inserted automatically: the programmer explicitly requests them via \lstinline!.runtimeChecked! or pattern matching (\S\ref{sec:design}), which the type system treats as an ordinary conditional branch. This makes the formalization straightforward---no special rules are needed for the static/dynamic boundary. Moreover, our run-time checks are restricted to first-order predicates, which avoids the blame assignment problem that arises when monitoring higher-order contracts~\cite{keil2015}: since functions cannot be checked eagerly, systems that automatically insert run-time checks for higher-order values must carefully track which party is at fault when a contract violation is detected at a later call site.
+We reviewed the history of refinement types in the introduction. Flanagan's hybrid type checking~\cite{flanagan2006} introduced the idea of automatically inserting run-time checks when the static system cannot discharge a refinement obligation. In our system, run-time checks are not inserted automatically: the programmer explicitly requests them via \lstinline!.runtimeChecked! or pattern matching (\S\ref{sec:design}), which the type system treats as an ordinary conditional branch, so no special rules are needed for the static/dynamic boundary. Moreover, our run-time checks are restricted to first-order predicates, which avoids the blame assignment problem that arises when monitoring higher-order contracts~\cite{keil2015}: since functions cannot be checked eagerly, a violation detected at a later call site must be attributed to the party at fault.
 
-Liquid Haskell~\cite{vazou2014, vazou2017} brings refinement types to Haskell as a separate plugin, with refinement inference running apart from GHC's own type checking, whereas our refinements are typed and inferred by the compiler itself. Termination also plays a different role: Liquid Haskell requires, by default, that every function be proven terminating, while our system imposes no such global obligation; termination is needed only by the solver, to justify certain normalization and unfolding rules (\S\ref{sec:termination}). Finally, Liquid Haskell discharges obligations with an SMT solver over decidable theories, while our solver (\S\ref{sec:solver}) combines e-graphs with normalization rules: it forgoes arithmetic decision procedures, but natively performs beta reduction and limited higher-order reasoning over predicate lambdas. Interestingly, the recent PLEX extension~\cite{ferrarini2026} adds normalization---eta-expansion, beta-reduction, and dependent pattern matching---to Liquid Haskell's Proof by Logical Evaluation layer, precisely to recover higher-order reasoning over a first-order SMT solver.
+Liquid Haskell~\cite{vazou2014, vazou2017} brings refinement types to Haskell as a separate plugin, with refinement inference running apart from GHC's own type checking, whereas our refinements are typed and inferred by the compiler itself. Termination also plays a different role: Liquid Haskell by default requires every function to be proven terminating, while we need termination only in the solver, to justify certain normalization and unfolding rules (\S\ref{sec:termination}). Finally, Liquid Haskell discharges obligations with an SMT solver over decidable theories, while our solver (\S\ref{sec:solver}) combines e-graphs with normalization rules: it forgoes arithmetic decision procedures, but natively performs beta reduction and limited higher-order reasoning over predicate lambdas. The recent PLEX extension~\cite{ferrarini2026} adds normalization---eta-expansion, beta-reduction, and dependent pattern matching---to Liquid Haskell's Proof by Logical Evaluation layer, precisely to recover higher-order reasoning over a first-order SMT solver.
 
-In the systems programming space, refinement types have been combined with mutation. The central difficulty mutation raises is deciding when established predicates must be invalidated: a refinement of a mutable location can be treated as an \emph{invariant} that every write must preserve, or as a flow-sensitive fact that a write updates or invalidates. Under aliasing, knowing which writes affect which facts is itself hard.
+In the systems programming space, refinement types have been combined with mutation, where the central difficulty is deciding when established predicates must be invalidated: a refinement of a mutable location can be treated as an \emph{invariant} that every write must preserve, or as a flow-sensitive fact that a write updates or invalidates. Under aliasing, knowing which writes affect which facts is itself hard.
 Refinement type systems for Rust lean on the ownership discipline: Flux~\cite{lehmann2023} permits \emph{strong updates}, changing a location's refinement, through exclusively owned pointers, but only invariant-preserving \emph{weak updates} through mutable borrows, while Thrust~\cite{thrust2025} and RefinedRust~\cite{gaher2024} type a borrow as its current value paired with a \emph{prophecy variable} for its final value.
 RefinedC~\cite{sammler2021} and RefinedRust come with foundational soundness proofs in the Iris separation logic, and Verus~\cite{lattuada2023} provides SMT-based verification for Rust using linear ghost types; these systems target memory safety and low-level invariants. Generic refinement types~\cite{lehmann2025} add refinement polymorphism to Flux.
 The separation checking sketched in \S\ref{sec:purity} would give Scala a similar handle on invalidation: like ownership, capabilities~\cite{xu2025} with separation checking~\cite{xu2026} make writes explicit and un-aliased, identifying the facts a write can invalidate. For TypeScript, Refined TypeScript~\cite{vekris2016} sidesteps invalidation by allowing refinements to mention object state only through immutable fields, and recovers flow-sensitive reasoning for local variables via an SSA translation.
@@ -738,13 +758,20 @@ On the theoretical side, we provide the first mechanized soundness proof that co
 
 \FloatBarrier
 
+\clearpage
+
 \section*{Data-Availability Statement}
 
-The accompanying artifact contains:
+The accompanying artifact~\cite{bovel_2026_21737784} contains:
 
 \begin{itemize}
-  \item \textbf{Mechanization.} The Rocq formalization of the language, type system, semantics, and soundness proof.
-  \item \textbf{Implementation.} The source of our Dotty extension, also published on Maven and usable from any SBT project with \lstinline!scalaOrganization := "<redacted for anonymity>"! and \lstinline!scalaVersion := "3.10.0-RC1-bin-20260720-5f1bae1-NIGHTLY"!.
+  \item \textbf{Mechanization.} The Rocq formalization of the type system, with its soundness proof.
+  \item \textbf{Implementation.} The source of our Dotty extension, also published on Maven and usable from any SBT project with:
+\begin{lstlisting}[language=Scala]
+scalaOrganization := "ch.epfl.lara"
+scalaVersion := "3.10.0-RC1-bin-20260720-5f1bae1-NIGHTLY"
+scalacOptions ++= Seq("-language:experimental.qualifiedTypes")
+\end{lstlisting}
   \item \textbf{Benchmarks.} The JMH benchmark suites used for the evaluation, compiling similar programs with our Dotty fork, Schmid's prototype, and Stainless, together with scripts to run them and collect results.
 \end{itemize}
 
@@ -770,6 +797,8 @@ We thank the LAMP and LARA teams at EPFL for insightful discussions and the prio
 \bibliography{references}
 
 
+\clearpage
+
 %%
 %% If your work has an appendix, this is the place to put it.
 \appendix
@@ -777,15 +806,13 @@ We thank the LAMP and LARA teams at EPFL for insightful discussions and the prio
 
 \section{More examples}
 
-
-\begin{figure}[H]
-\label{fig:example3}
 \begin{lstlisting}[language=Scala]
 // Example 3: Matrix operations with checked dimensions
 case class Matrix(width: Pos, height: Pos):
   private val size = width * height
   private val data = CheckedArray(size.runtimeChecked)
-  def index(i: Pos with i < height, j: Pos with j < width): {res: Pos with res < data.size} =
+  def index(i: Pos with i < height,
+            j: Pos with j < width): {res: Pos with res < data.size} =
     (i * width + j).runtimeChecked
   def apply(i: Pos with i < height, j: Pos with j < width): Double =
     data(index(i, j))
@@ -827,7 +854,6 @@ def fibMemo(n: Int): {res: Int with res == fib(n)} =
       cache.put(n, res)
       res
 \end{lstlisting}
-\end{figure}
 
 \end{document}
 \endinput

@@ -74,7 +74,7 @@
 
 \infrule[S-Forall]
 {\Gamma \vDash L_1 <: L_2 \andalso \Gamma \vDash U_2 <: U_1 \andalso \Gamma, X :> L_2 <: U_2 \vDash A <: B}
-{\Gamma \vDash \forall (X :> L_1 <: U_1).\, A <: \forall (X :> L_2 <: U_2).\, B}
+{\Gamma \vDash \forall (X {:>} L_1 {<:} U_1).\, A <: \forall (X {:>} L_2 {<:} U_2).\, B}
 
 \vspace{-1em}
 \caption{Subtyping rules. All rules are proven sound with respect to the semantic subtyping judgment.}\label{fig:subtyping}

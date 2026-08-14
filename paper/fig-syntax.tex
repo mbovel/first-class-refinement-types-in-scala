@@ -19,7 +19,7 @@
 	& x  \tag*{variable} \\
 	& \lambda x{:}A.\, b  \tag*{abstraction} \\
 	& f\; a  \tag*{application} \\
-	& \Lambda (X :> L <: U).\, b  \tag*{type abstraction} \\
+	& \Lambda (X {:>} L {<:} U).\, b  \tag*{type abstraction} \\
 	& f\,[A]  \tag*{type application} \\
 	& \textsf{let}\; x{:}A = a \;\textsf{in}\; b  \tag*{let} \\
 	& (a_1, a_2)  \tag*{pair} \\
@@ -58,7 +58,7 @@
 	& \top \tag*{top} \\
 	& \bot  \tag*{bottom} \\
 	& \Pi x{:}A.\, B  \tag*{dependent\ function} \\
-	& \forall (X :> L <: U).\, A  \tag*{bounded $\forall$} \\
+	& \forall (X {:>} L {<:} U).\, A  \tag*{bounded $\forall$} \\
 	& \Sigma x{:}A.\, B  \tag*{dependent\ pair} \\
 	& A + B  \tag*{sum} \\
 	& \{x : A \mid p\}  \tag*{refinement} \\

@@ -22,7 +22,7 @@
   \mathcal{V}\llbracket \Pi x{:}A.\, B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
     \exists \rho_f, b.\; v = \langle \rho_f, \lambda x.\, b \rangle \land \forall v_a.\; \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v_a) \implies \mathcal{E}\llbracket B \rrbracket_{\delta}^{\rho_f[x \mapsto v_a]}(b)
   \\[0.5em]
-  \mathcal{V}\llbracket \forall (X :> L <: U).\, B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
+  \mathcal{V}\llbracket \forall (X {:>} L {<:} U).\, B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
     \exists \rho_f, b.\; v = \langle \rho_f, \Lambda X.\, b \rangle \land \forall S.\; \mathcal{V}\llbracket L \rrbracket_{\delta}^{\rho} \subseteq S \subseteq \mathcal{V}\llbracket U \rrbracket_{\delta}^{\rho} \implies \mathcal{E}\llbracket B \rrbracket_{\delta[X \mapsto S]}^{\rho_f}(b)
   \\[0.5em]
   \mathcal{V}\llbracket \Sigma x{:}A.\, B \rrbracket_{\delta}^{\rho}(v) &\triangleq&
@@ -41,7 +41,7 @@
 \end{array}
 \end{math}
 
-\vspace{1em}
+\vspace{0.7em}
 \noindent\textbf{Term interpretation} \hfill \fbox{$\mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(a)$}
 
 \vspace{0.5em}
@@ -51,7 +51,7 @@
 \end{array}
 \end{math}
 
-\vspace{1em}
+\vspace{0.7em}
 \noindent\textbf{Context well-formedness} \hfill \fbox{$\mathrm{wf}(\delta, \Gamma, \rho)$}
 
 \vspace{0.5em}
@@ -59,13 +59,13 @@
 \begin{array}{r@{\;}c@{\;}l}
   \mathrm{wf}(\delta, \Gamma, \rho) &\triangleq& \forall (x : A) \in \Gamma.\; \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(\rho(x))
   \\
-  && \land\; \forall (X :> L <: U) \in \Gamma.\; \mathcal{V}\llbracket L \rrbracket_{\delta}^{\rho} \subseteq \delta(X) \subseteq \mathcal{V}\llbracket U \rrbracket_{\delta}^{\rho}
+  && \land\; \forall (X {:>} L {<:} U) \in \Gamma.\; \mathcal{V}\llbracket L \rrbracket_{\delta}^{\rho} \subseteq \delta(X) \subseteq \mathcal{V}\llbracket U \rrbracket_{\delta}^{\rho}
   \\
   && \land\; \forall (a_1 \sim a_2) \in \Gamma.\; \exists v.\; \rho \vdash a_1 \Downarrow v \land \rho \vdash a_2 \Downarrow v
 \end{array}
 \end{math}
 
-\vspace{1em}
+\vspace{0.7em}
 \noindent\textbf{Semantic typing} \hfill \fbox{$\Gamma \vDash a : A$}
 
 \vspace{0.5em}
@@ -75,7 +75,7 @@
 \end{array}
 \end{math}
 
-\vspace{1em}
+\vspace{0.7em}
 \noindent\textbf{Semantic subtyping} \hfill \fbox{$\Gamma \vDash A <: B$}
 
 \vspace{0.5em}
@@ -85,7 +85,7 @@
 \end{array}
 \end{math}
 
-\vspace{1em}
+\vspace{0.7em}
 \noindent\textbf{Semantic implication} \hfill \fbox{$\Gamma \vDash p_1 \Rightarrow p_2$}
 
 \vspace{0.5em}
@@ -95,7 +95,7 @@
 \end{array}
 \end{math}
 
-\vspace{1em}
+\vspace{0.7em}
 \noindent\textbf{Semantic type inclusion} \hfill \fbox{$S_1 \subseteq S_2$}
 
 \vspace{0.5em}
