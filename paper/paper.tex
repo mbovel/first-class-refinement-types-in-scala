@@ -230,7 +230,7 @@ Here, \lstinline!Int with x % 2 == 0! is a regular Scala type: it participates i
 
 Integrating refinement types into the host language's type system is not entirely new: Dafny~\cite{leino2010} and F*~\cite{swamy2016} already treat refinement types as first-class citizens of their type checkers, and use subtyping to relate a refinement type to its base type. However, these languages were designed from the ground up around verification. To our knowledge, ours is the first integration of refinement types into a pre-existing language where subtyping is central and pervasive, relied upon by classes, traits, mixin composition, path-dependent types, bounded polymorphism, overloading, and implicit resolution, while preserving the type system's existing behavior.
 
-As a concrete example, consider Scala's bounded type polymorphism. In the following snippet, type inference must instantiate \lstinline!U! to \lstinline!Even!, which succeeds because a refinement type is a subtype of its base type, and therefore \lstinline!Even <: Int! satisfies the bound \lstinline!U <: T!. The result type is then inferred as \lstinline!Even!. This example was used to motivate \emph{abstract refinements}~\cite{vazou2013}. In our system, it follows directly from subtyping:
+As a concrete example, consider Scala's bounded type polymorphism. In the snippet below, the ordering is defined for \lstinline!Int! only, yet \lstinline!maximum! applied to even numbers should return \lstinline!Even!; this challenge motivated \emph{abstract refinements}~\cite{vazou2013}. In our system, bounded polymorphism and subtyping suffice: \lstinline!List(2, 4, 6)! is typed as \lstinline!List[2 | 4 | 6]!, type inference instantiates \lstinline!T! to \lstinline!Int!, whose \lstinline!Ordering! instance performs the comparisons, and \lstinline!U! to \lstinline!2 | 4 | 6!, and the result checks against \lstinline!Even! since each literal satisfies the predicate:
 
 \begin{figure}[H]
 \begin{lstlisting}[language=Scala]
@@ -239,7 +239,7 @@ type Even = {v: Int with v % 2 == 0}
 def example1: Even = maximum(List(2, 4, 6))
 \end{lstlisting}
 \vspace{-1em}
-\caption{Instantiation of a bounded type parameter with a refinement type.}
+\caption{A refinement type interacting with bounded type polymorphism.}
 \label{fig:example1}
 \end{figure}
 
