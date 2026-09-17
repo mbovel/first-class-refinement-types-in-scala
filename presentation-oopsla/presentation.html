@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="CS-642 project presentation Matt Bovel">
+  <meta name="dcterms.date" content="2026-05-31">
+  <title>Semantics of Recursive Types</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^5/dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^5/dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^5/dist/theme/white.css" id="theme">
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
+  <link rel="stylesheet" href="custom.css" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Semantics of<br/>Recursive Types</h1>
+  <p class="author">CS-642 project presentation<br/>Matt Bovel</p>
+  <p class="date">May 31, 2026</p>
+</section>
+
+<section id="recursive-types" class="slide level2">
+<h2>Recursive types</h2>
+<div class="columns">
+<div class="column" style="flex: 1">
+<div class="fragment">
+<p>This Scala definition is recursive:</p>
+<pre class="scala"><code>enum List[A]:
+  case Nil()
+  case Cons(head: A, tail: List[A])</code></pre>
+</div>
+<div class="fragment">
+<p>Syntax of STLC + recursive types:</p>
+<p><span class="math display">
+\begin{aligned}
+  \text{Terms} &amp;\quad t ::= x \mid \lambda x. t \mid t_1 \; t_2 \\
+  \text{Types} &amp;\quad T ::= T_1 \to T_2 \; \, {\color{#a626a4} \bf
+\mid  X \mid \mu X. T}
+\end{aligned}
+</span></p>
+</div>
+<div class="fragment">
+<p>Additionally using unit, disjoint sum and pair types, we can
+define:</p>
+<p><span class="math display">
+\text{List[A]} \triangleq \mu X. \, Unit + (A, X)
+</span></p>
+</div>
+</div><div class="column" style="flex: 1">
+<div class="fragment">
+<p>A recursive type can be unfolded:</p>
+<p><span class="math display">
+\begin{aligned}
+\mu X. \, &amp; Unit + (A, X) \\
+\equiv \; &amp; Unit + (A, \mu X. \, Unit + (A, X)) \\
+\equiv \; &amp; Unit + (A, Unit + (A, \mu X. \, Unit + (A, X))) \\
+\end{aligned}
+</span></p>
+</div>
+<div class="fragment">
+<p>We want a typing rule to unfold:</p>
+<p><span class="math display">
+\frac{\Gamma \vdash t : \mu X. T}{\Gamma \vdash t : T[X \mapsto \mu X.
+T]}
+</span></p>
+</div>
+<div class="fragment">
+<p>And one to fold:</p>
+<p><span class="math display">
+\frac{\Gamma \vdash t : T[X \mapsto \mu X. T]}{\Gamma \vdash t : \mu X.
+T}
+</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="syntax-definitional-interpreter" class="slide level2">
+<h2>Syntax &amp; Definitional interpreter</h2>
+<div class="columns">
+<div class="column">
+<pre class="coq small"><code>Inductive Term : Type :=
+  | tbool : bool -&gt; Term
+  | tvar : nat -&gt; Term
+  | tabs : Ty -&gt; Term -&gt; Term
+  | tapp : Term -&gt; Term -&gt; Term.
+
+Inductive Ty : Type :=
+  | TBool : Ty
+  | TFun : Ty -&gt; Ty -&gt; Ty.</code></pre>
+<ul>
+<li>We use de Bruijn indices for bindings</li>
+<li>Terms and values are separate</li>
+<li>Types don’t have runtime semantics</li>
+<li>Lambdas capture their environment</li>
+</ul>
+</div><div class="column">
+<pre class="coq small"><code>Inductive Value : Type :=
+  | vbool : bool -&gt; Value
+  | vabs  : (list Value) -&gt; Term -&gt; Value.
+  
+Fixpoint eval_wrong (env: list Value) (t: Term) : option Value :=
+  match t with
+  | tbool b =&gt; Some (vbool b)
+  | tvar i =&gt; nth_error env i
+  | tabs _ b =&gt; Some (vabs env b)
+  | tapp f a =&gt;
+      match (eval_wrong env f) with
+      | Some (vabs envf b) =&gt;
+          match (eval_wrong env a) with
+          | None =&gt; None
+          | Some va =&gt; eval_wrong (va::envf) b
+          end
+      | _ =&gt; None
+      end
+  end.</code></pre>
+</div>
+</div>
+</section>
+<section id="definitional-interpreter-termination" class="slide level2">
+<h2>Definitional interpreter <small>(termination)</small></h2>
+<p>We bound depth of recursive calls to ensure termination by adding a
+fuel parameter.<br />
+We return a layered option type: <code>None</code> means timeout,
+<code>Some None</code> means a runtime error.</p>
+<div style="font-size: 0.9em;">
+<pre class="coq"><code>Fixpoint eval (fuel: nat) (env: list Value) (t: Term) : option (option Value) :=
+  match fuel with
+  | 0 =&gt; None
+  | S fuel&#39; =&gt;
+    match t with
+    …
+    | tapp f a =&gt;
+        match (eval fuel&#39; env f) with
+        | None =&gt; None
+        | Some (Some (vabs envf b)) =&gt;
+            match (eval fuel&#39; env a) with
+            | None =&gt; None
+            | Some None =&gt; Some None
+            | Some (Some va) =&gt; eval fuel&#39; (va::envf) b
+            end
+        | _ =&gt; Some None
+    …</code></pre>
+</div>
+</section>
+<section id="definitional-interpreter-reference" class="slide level2">
+<h2>Definitional interpreter <small>(reference)</small></h2>
+<p><img src="./amin.png" class="paper"/></p>
+</section>
+<section id="semantic-types" class="slide level2">
+<h2>Semantic Types</h2>
+<div class="columns">
+<div class="column" style="flex: 1 1 0">
+<div class="fragment">
+<p>The <em>value interpretation</em> defines what it means for a value
+to have a syntactic type:</p>
+<div style="font-size: 0.9em;">
+<pre class="coq"><code>Fixpoint interp (T: Ty) (v: Value) : Prop :=
+  match T with
+  | TBool =&gt; exists b, v = vbool b
+  | TFun A B =&gt;
+      exists env body, v = vabs env body
+      /\ forall arg, interp A arg -&gt;
+           tinterp (arg::env) body (interp B)
+  end.</code></pre>
+</div>
+</div>
+<p><!-- end fragment --></p>
+<div class="fragment">
+<p>The <em>term interpretation</em> defines what it means for a
+<em>term</em> to have a <em>semantic type</em>:</p>
+<pre class="coq small"><code>Definition tinterp (env: list Value) (t: Term)
+                   (T: Value -&gt; Prop) : Prop :=
+  exists v fuel,
+    eval fuel env t = Some (Some v) /\ T v.</code></pre>
+</div>
+<p><!-- end fragment --></p>
+</div><div class="column" style="flex: 1 1 0">
+<div class="fragment">
+<p>The <em>semantic typing judgement</em> is defined as:</p>
+<pre class="coq small"><code>Definition sem_typed (tenv: list Ty) (t: Term)
+                     (T: Ty) : Prop :=
+  forall env, Forall2 interp tenv env -&gt;
+    tinterp env t (interp T).</code></pre>
+</div>
+<!-- end fragment -->
+<div class="fragment">
+<p>It allows us to <em>prove</em> typing rules:</p>
+<pre class="coq small"><code>Lemma sem_typed_app: forall tenv f a A B,
+  sem_typed tenv f (TFun A B) -&gt;
+  sem_typed tenv a A -&gt;
+  sem_typed tenv (tapp f a) B.
+Proof.
+  …
+Qed.</code></pre>
+<p><span class="math display">
+\frac{
+    \Gamma \vDash f : A \to B \qquad \Gamma \vDash a : A
+}{
+    \Gamma \vDash f \; a : B
+}
+</span></p>
+</div>
+<!-- end fragment -->
+</div><!-- end column -->
+</div>
+<!-- end columns -->
+</section>
+<section id="semantic-types-reference" class="slide level2">
+<h2>Semantic Types <small>(reference)</small></h2>
+<p><img src="./timany.png" class="paper"/></p>
+</section>
+<section id="interpretation-of-recursive-types" class="slide level2">
+<h2>Interpretation of recursive types</h2>
+<div class="columns">
+<div class="column" style="flex: 1 1 0">
+<div class="fragment">
+<p>Recursive types have a body, and an implicit de Bruijn binder.
+<code>TVar i</code> refers to <code>i</code>-th bound type.</p>
+<pre class="coq small"><code>Inductive Ty : Type :=
+  …
+  | TVar : nat -&gt; Ty
+  | TMu : Ty -&gt; Ty.</code></pre>
+</div>
+<div class="fragment">
+<p>Remember, we want <span class="math inline">\mu X. T \equiv T[X
+\mapsto \mu X. T]</span>.</p>
+</div>
+<div class="fragment">
+<p>Tentative <code>interp</code> using substitution:</p>
+<pre class="coq small"><code>Fixpoint interp_wrong (T: Ty) (v: Value) : Prop :=
+  match T with
+  …
+  | TVar i =&gt; False
+  | TMu B =&gt; interp (subst_ty 0 (TMu B) B)
+  end.</code></pre>
+</div>
+</div><div class="column" style="flex: 1 1 0">
+<div class="fragment">
+<p>We need <em>step-indexing</em> to break the circularity.</p>
+</div>
+<pre class="coq small fragment"><code>Equations? interp (T: Ty) (k: nat)
+                  (v: Value) : Prop
+  by wf (k, ty_size T)
+    (Equations.Prop.Subterm.lexprod _ _ lt lt) :=
+  …
+  interp (TMu B) 0 v := True;
+  interp (TMu B) (S k&#39;) v :=
+    interp (subst_ty 0 (TMu B) B) k&#39; v.</code></pre>
+<div class="fragment">
+<p>Semantic typing quantifies over all steps:</p>
+<pre class="coq small"><code>Definition sem_typed (tenv: TyEnv) (t: Term)
+                     (T: Ty) : Prop :=
+  forall env k,
+    Forall2 (fun T v =&gt; interp T k v) tenv env -&gt;
+    tinterp env t (fun v =&gt; interp T k v).</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="later-types" class="slide level2">
+<h2>Later types</h2>
+<div class="columns">
+<div class="column" style="flex: 1 1 0">
+<div class="fragment">
+<p>Remember, we want <span class="math inline">\mu X. T \equiv T[X
+\mapsto \mu X. T]</span>.</p>
+</div>
+<div class="fragment">
+<p>But the well-founded version of <code>interp</code> gives us only
+<span class="math inline">\llbracket \mu X. T \rrbracket^k \equiv
+\llbracket T[X \mapsto\mu X. T] \rrbracket^{k-1}</span>.</p>
+</div>
+<div class="fragment">
+<p>We define a <em>later</em> type <span
+class="math inline">\triangleright \, T</span> to mean “<span
+class="math inline">T</span> but one step later”, so we have: <span
+class="math inline">\mu X. T \equiv \triangleright \, T[X \mapsto\mu X.
+T]</span>.</p>
+</div>
+<div class="fragment">
+<p>Interpretation of “later”:</p>
+<pre class="coq small"><code>interp (TLater T&#39;) 0 v := True;
+interp (TLater T&#39;) (S k&#39;) v := interp T&#39; k&#39; v;</code></pre>
+</div>
+</div><div class="column" style="flex: 1 1 0">
+<div class="fragment">
+<p>We can then prove the following typing rules for recursive types:</p>
+<p><span class="math display">
+\frac{
+    \Gamma \vDash t : \triangleright \, T[X \mapsto \mu X. T]
+}{
+    \Gamma \vDash t : \mu X. T
+}
+\qquad
+\frac{
+    \Gamma \vDash t : \mu X. T
+}{
+    \Gamma \vDash t : \triangleright \, T[X \mapsto \mu X. T]
+}
+</span></p>
+</div>
+<div class="fragment">
+<p>Can we get rid of these spooky triangles?</p>
+</div>
+</div>
+</div>
+</section>
+<section id="downward-closure" class="slide level2">
+<h2>Downward closure</h2>
+<div class="columns">
+<div class="column" style="flex: 1 1 0">
+<div class="fragment">
+<p>We can avoid the later type in the folding rule if we require that
+semantic types are <em>downward closed</em>:</p>
+<p><span class="math display">T^{k} \subseteq T^{k&#39;} \text{ for all
+} k&#39; \le k</span></p>
+<p>where <span class="math inline">S \subseteq T</span> means <span
+class="math inline">\forall v, S \, v \implies T \, v</span>.</p>
+</div>
+<div class="fragment">
+<p>This is not true with our definition, due to function types
+contravariance.</p>
+</div>
+<div class="fragment">
+<p>Downward-close <code>interp</code> by quantifying over smaller steps
+in the interpretation of function types:</p>
+<pre class="coq small"><code>interp (TFun A B) k v :=
+  exists env body, v = vabs env body
+  /\ forall j (Hj: j &lt;= k) arg, interp A j arg -&gt;
+       tinterp (arg::env) body (interp B j);</code></pre>
+</div>
+</div><div class="column" style="flex: 1 1 0">
+<div class="fragment">
+<p>Thanks to downward closure of <code>interp</code>, we can now have
+<span class="math inline">\llbracket \mu X. T \rrbracket^k \subseteq
+\llbracket T[X \mapsto\mu X. T] \rrbracket^k</span>, so we can get rid
+of the later type in the folding rule:</p>
+<p><span class="math display">
+\frac{
+    \Gamma \vDash t : T[X \mapsto \mu X. T]
+}{
+    \Gamma \vDash t : \mu X. T
+}
+\qquad
+\frac{
+    \Gamma \vDash t : \mu X. T
+}{
+    \Gamma \vDash t : \triangleright \, T[X \mapsto \mu X. T]
+}
+</span></p>
+</div>
+<div class="fragment">
+<p>Later types in the wild:
+<img src="giarrusso.png" class="paper" style="width: 60%;"/>
+<small><em>Scala step-by-step: soundness for DOT with step-indexed
+logical relations in Iris</em><br/>Paolo G. Giarrusso, Léo Stefanesco,
+Amin Timany, Lars Birkedal, and Robbert Krebbers</small></p>
+</div>
+</div>
+</div>
+</section>
+<section id="indexed-judgements" class="slide level2">
+<h2>Indexed judgements</h2>
+<div class="columns">
+<div class="column" style="flex: 1">
+<div class="fragment">
+<p>Instead of using later types, can we move steps from the
+interpretation to the typing judgement?</p>
+</div>
+<div class="fragment">
+<p><span class="math display">
+\frac{
+    \Gamma \vDash_k t : \mu X. T
+}{
+    \Gamma \vDash_{k-1} t : \, T[X \mapsto \mu X. T]
+}
+</span></p>
+</div>
+<div class="fragment">
+<pre class="coq small"><code>Definition sem_typed (tenv: TyEnv) (n: nat)
+                     (t: Term) (T: Ty) : Prop :=
+  forall env k, n &lt; k -&gt;
+    Forall2 (fun T v =&gt; interp T k v) tenv env -&gt;
+    tinterp env t (fun v =&gt; interp T (k - n) v).</code></pre>
+</div>
+<div class="fragment">
+<p>It makes sense:</p>
+<pre class="coq small"><code>Lemma sem_typed_distribute: forall env tenv n e T,
+  sem_typed tenv n e T -&gt;
+  (forall k,
+     Forall2 (fun T v =&gt; interp T k v) tenv env) -&gt;
+  tinterp env e (fun v =&gt; forall j, interp T j v).</code></pre>
+</div>
+</div><div class="column" style="flex: 1">
+<div class="fragment">
+<p>For the application rule to go through, we also need to allow a gap
+inside the function interpretation:</p>
+<pre class="coq small"><code>Inductive Ty : Type :=
+  …
+  | TFun : nat -&gt; Ty -&gt; Ty -&gt; Ty
+  …</code></pre>
+<pre class="coq small"><code>interp (TFun g A B) k v :=
+  exists env body, v = vabs env body
+  /\ forall j (Hjlo: g &lt; j) (Hjhi: j &lt;= k) arg,
+       interp A j arg -&gt;
+       tinterp (arg::env) body (interp B (j - g));</code></pre>
+</div>
+<div class="fragment">
+<p>So we still have noise in the syntax,<br />
+<em>and</em> now also in the typing rules:</p>
+<p><span class="math display">
+\frac{
+    \Gamma \vDash_{i} f : A \to_j B \qquad \Gamma \vDash_{k} a : A
+}{
+    \Gamma \vDash_{i + j + k} f \; a : B
+}
+</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="existential-gaps" class="slide level2">
+<h2>Existential gaps</h2>
+<div class="fragment">
+<p>Can we existentially quantify over the gaps?</p>
+</div>
+<div class="fragment">
+<p>No.</p>
+</div>
+<div class="fragment">
+<p>More in the report.</p>
+</div>
+</section>
+<section id="science-to-the-rescue" class="slide level2">
+<h2>Science to the rescue</h2>
+<p><img src="./science2.png" class="paper" style="position: absolute; right: -2%; top: 5%; width: 20%;"/></p>
+<p><img src="./science.png" class="paper"/></p>
+</section>
+<section id="insight-1.-global-steps" class="slide level2">
+<h2>Insight 1. Global steps</h2>
+<p>In the definitional interpreter, count global evaluation steps
+instead of depth of recursive calls (🥲).</p>
+<pre class="coq small"><code>Equations? eval_sig (fuel: nat) (env: ValueEnv) (t: Term) :
+  option ({fuel&#39; : nat | fuel&#39; &lt; fuel} * option Value) by wf fuel lt :=
+eval_sig 0 _ _ := None;
+…
+eval_sig (S fuel) env (tapp f a) with eval_sig fuel env f =&gt; {
+  | None =&gt; None;
+  | Some (exist _ fuel1 _, None) =&gt; Some (exist _ fuel1 _, None);
+  | Some (exist _ fuel1 _, Some (vbool _)) =&gt; Some (exist _ fuel1 _, None);
+  | Some (exist _ fuel1 _, Some (vabs envf body)) with eval_sig fuel1 env a =&gt; {
+    | None =&gt; None;
+    | Some (exist _ fuel2 _, None) =&gt; Some (exist _ fuel2 _, None);
+    | Some (exist _ fuel2 _, Some va) with eval_sig fuel2 (va::envf) body =&gt; {
+      | None =&gt; None;
+      | Some (exist _ fuel3 _, r) =&gt; Some (exist _ fuel3 _, r)
+    }
+  }
+}.</code></pre>
+</section>
+<section id="insight-2.-make-steps-arithmetic-work"
+class="slide level2">
+<h2>Insight 2. Make steps arithmetic work</h2>
+<div class="columns">
+<div class="column" style="flex: 1 1 0">
+<ol type="1">
+<li>Tie type steps to evaluation steps.</li>
+<li>Decrease steps in the interpretation of <em>all</em>
+types<br/><em>but</em> recursive types.</li>
+<li>Interp recursive types as function power.</li>
+</ol>
+<pre class="coq small fragment"><code>Definition SemTy : Type := nat -&gt; Value -&gt; Prop.
+
+Definition tinterp (env: list Value) (k: nat)
+                   (t: Term) (T: SemTy) : Prop :=
+  forall k&#39; r, eval k env t = Some (k&#39;, r) -&gt;
+    exists v, r = Some v /\ T k&#39; v.
+
+Fixpoint fun_pow {A: Type} (k: nat)
+                 (f: A -&gt; A) (z: A) : A :=
+  match k with
+  | 0 =&gt; z
+  | S k =&gt; f (fun_pow k f z)
+  end</code></pre>
+</div><div class="column" style="flex: 1 1 0">
+<pre class="coq small fragment"><code>Definition mu_F (F: SemTy -&gt; SemTy) : SemTy :=
+  fun k v =&gt; fun_pow (S k) F Bot k v.
+
+Fixpoint interp (tenv: list SemTy) (T: Ty)
+                (k: nat) (v: Value) : Prop :=
+  match T with
+  | TVar i =&gt;
+      match nth_error tenv i with
+      | Some A =&gt; A k v
+      | None =&gt; False
+      end
+  | TBool =&gt; exists b, v = vbool b
+  | TFun A B =&gt;
+      exists env body, v = vabs env body /\
+        forall j (Hj: j &lt; k) arg,
+          interp tenv A j arg -&gt;
+          tinterp (arg::env) j body (interp tenv B)
+  | TMu B =&gt;
+    mu_F (fun Self =&gt; interp (Self :: tenv) B) k v
+  end.</code></pre>
+</div>
+</div>
+</section>
+<section id="insight-3.-contractive-magic" class="slide level2">
+<h2>Insight 3. Contractive magic</h2>
+<div class="columns">
+<div class="column" style="flex: 1 1 0">
+<div class="fragment">
+<p><img src="./science5.png" class="paper" style="width: 80%; margin-top: 0;"/></p>
+<pre class="coq small"><code>Definition approx (k: nat) (F: SemTy): SemTy :=
+  fun j v =&gt; j &lt; k /\ F j v.</code></pre>
+</div>
+<div class="fragment">
+<p><img src="./science6.png" class="paper" style="width: 80%; margin-top: 0;"/></p>
+<pre class="coq small"><code>Definition wf (F: SemTy -&gt; SemTy) : Prop :=
+  forall k Z,
+    approx (S k) (F Z)
+    = approx (S k) (F (approx k Z)).</code></pre>
+</div>
+</div><div class="column" style="flex: 1 1 0">
+<div class="fragment">
+<p><img src="./science9.png" class="paper" style="width: 85%; margin-top: 0;"/></p>
+</div>
+<div class="fragment">
+<pre class="coq small"><code>Lemma F_well_founded: forall tenv B,
+  contractive B -&gt;
+  wf (fun X =&gt; interp (X :: tenv) B).</code></pre>
+</div>
+<div class="fragment">
+<pre class="coq small"><code>Definition contractive (T: Ty) : Prop :=
+  match T with
+  | TVar _ =&gt; False
+  | TBool =&gt; True
+  | TFun _ _ =&gt; True
+  | TMu _ =&gt; False
+  end.</code></pre>
+<p>Means the binder only occurs under other types.<br />
+<span class="math inline">\mu X. X</span> is not contractive, but <span
+class="math inline">\mu X. X \to X</span> is.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="insight-3.-contractive-magic-continued"
+class="slide level2">
+<h2>Insight 3. Contractive magic (continued)</h2>
+<div class="fragment">
+<p>This allows us to prove the following rule:</p>
+<p><span class="math display">
+\frac{
+    \Gamma \vDash t : T[X \mapsto \mu X. T] \qquad X \text{ contractive
+in } T
+}{
+    \Gamma \vDash t : \mu X. T
+}\qquad \frac{
+    \Gamma \vDash t : \mu X. T \qquad X \text{ contractive in } T
+}{
+    \Gamma \vDash t : T[X \mapsto \mu X. T]
+}
+</span></p>
+</div>
+<div class="fragment">
+<p>Maybe we can have the contractiveness condition by construction.</p>
+<pre class="scala"><code>enum List[A]:
+  case Nil()
+  case Cons(head: A, tail: List[A]) // okay</code></pre>
+<pre class="scala"><code>type A = A // not okay</code></pre>
+</div>
+</section>
+<section id="conclusion" class="slide level2">
+<h2>Conclusion</h2>
+<p>We mechanized soundness of 3 different semantics for recursive
+types:</p>
+<ol type="1">
+<li>Depth-bounded + later types</li>
+<li>Depth-bounded + indexed judgements</li>
+<li>Global steps + contractiveness</li>
+</ol>
+<p>This allowed us to better understand the tradeoffs between these
+approaches.</p>
+<p>Approach 3. seems better than what I previously had (positivity
+restriction).</p>
+<p>We also investigated the existential gap approach, and found it
+doesn’t work.</p>
+<p>Equations is a bit annoying to work with.</p>
+</section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^5/dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^5/plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^5/plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^5/plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: true,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1200,
+
+        height: 675,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/scala.min.js"></script><script src="highlightjs-coq.js"></script><script>hljs.highlightAll();</script>
+    </body>
+</html>

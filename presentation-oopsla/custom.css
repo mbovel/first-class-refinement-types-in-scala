@@ -1,0 +1,221 @@
+:root {
+    /* Configurable variables: https://github.com/hakimel/reveal.js/blob/master/css/theme/template/exposer.scss */
+    /* --r-main-font: Helvetica; */
+    --primary-color: rgb(182, 125, 0);
+    --selection-color: rgb(182, 125, 0);
+    --r-main-font-size: 26px;
+    --r-link-color: var(--primary-color);
+    --r-link-color-hover: rgb(214, 146, 0);
+    --r-block-margin: 1em 0;
+    --r-heading-margin: .5em 0 1em;
+}
+
+.reveal {
+    font-weight: 300;
+    color: #444;
+    line-height: 1.5;
+}
+
+.reveal .slides {
+    text-align:left;
+}
+
+#title-slide {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.reveal pre {
+    box-shadow: none;
+    line-height: 1.5;
+    font-size: 1em;
+    width: auto;
+}
+
+.reveal code {
+    background-color: #f4f4f4;
+    font-size: 0.8em;
+}
+
+.reveal pre code {
+    max-height: none;
+    display: block;
+    width: auto;
+}
+
+.reveal pre.small {
+    font-size: 0.9em;
+}
+
+:not(pre) code {
+    display: inline-block;
+    padding: 0.1em 0.3em;
+    border-radius: 6px;
+}
+
+.reveal small,
+.reveal small * {
+    vertical-align: inherit;
+}
+
+.reveal ul ul {
+    margin: 0;
+}
+
+.reveal li {
+    margin-bottom: 0.25em;
+}
+
+pre code.hljs {
+    border-radius: 6px;
+    padding: 0;
+}
+
+code {
+    background-color: #fafafa;
+}
+
+:not(pre) code {
+    background-color: #fafafa;
+    display: inline-block;
+    padding: 0.1em 0.3em;
+    border-radius: 6px;
+}
+
+.katex {
+    font-size: 1em;
+}
+
+.reveal h1 {
+    margin-bottom: 0.5em;
+    line-height: 1.1;
+}
+
+.reveal h1::after {
+    content: "";
+    display: block;
+    width: 3em;
+    height: 0.3em;
+    background-color: var(--primary-color);
+}
+
+.reveal h2 {
+    font-size: 1.4em;
+}
+
+.reveal h2::after {
+    content: "";
+    display: block;
+    width: 2em;
+    height: 0.2em;
+    background-color: var(--primary-color);
+}
+
+.reveal h3 {
+    margin-bottom: 1em;
+}
+
+.reveal h3::after {
+    content: "";
+    display: block;
+    width: 1.5em;
+    height: 0.15em;
+    background-color: var(--primary-color);
+}
+
+.reveal ul, .reveal ol {
+    display: block;
+    margin: 1em 0em;
+    padding-left: 1em;
+}
+
+.reveal .slides section .fragment {
+    opacity: 0.1;
+    visibility: visible;
+}
+
+.reveal .slides section .fragment.visible {
+    opacity: 1;
+}
+
+.reveal ::selection {
+    background-color: var(--selection-color);
+}
+
+#TOC ul {
+    columns: 2;
+}
+
+.reveal .references {
+    margin: 0;
+}
+
+.reveal .slide-number {
+    font-size: 3vh;
+    padding: 0.5vh 1vh;
+    right: 1.5vh;
+    bottom: 1.5vh;
+}
+
+.katex-display {
+    margin: 0;
+}
+
+.hljs {
+    background-color: transparent !important;
+}
+
+.column {
+    scrollbar-width: none;
+}
+
+.column > *:first-child,
+.column > div:first-child > *:first-child {
+    margin-top: 0;
+}
+
+.paper {
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+}
+
+.reveal .progress {
+    height: 4px;
+    bottom: 4px;
+}
+
+.hljs-comment {
+    color: #888888;
+}
+
+.hljs-keyword, .hljs-built_in  {
+    color: #982f96;
+}
+
+.hljs-function .hljs-title {
+    color: #3462c5;
+}
+
+.hljs-type, .hljs-class .hljs-title {
+    color: #bd8100;
+}
+
+.fragment {
+    outline-offset: 0;
+}
+
+.fragment.visible {
+    /*outline: 1px solid #982f962f;*/
+    outline-offset: 8px;
+    border-radius: 6px;
+}
+
+.fragment.visible.current-fragment {
+    outline: 1px solid #982f96;
+}
+
+.column, .columns {
+    overflow: visible !important;
+}
