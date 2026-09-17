@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Matt Bovel, EPFL co-supervised by Viktor Kunčak (Stainless) and Martin Odersky (Scala)  work done in collaboration with Quentin Bernet and Valentin Schneeberger">
+  <meta name="dcterms.date" content="2026-01-17">
+  <title>First-Class Refinement Types for Scala 3</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^5/dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^5/dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^5/dist/theme/white.css" id="theme">
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css" />
+  <link rel="stylesheet" href="custom.css" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">First-Class Refinement Types<br/>for Scala 3</h1>
+  <p class="author"><a href="mailto:matthieu@bovel.net">Matt Bovel</a>,
+EPFL<br/>co-supervised by Viktor Kunčak (<a
+href="https://github.com/epfl-lara/stainless">Stainless</a>) and Martin
+Odersky (<a href="https://github.com/scala/scala3/">Scala</a>) <br/>work
+done in collaboration with Quentin Bernet and Valentin Schneeberger</p>
+  <p class="date">January 17, 2026</p>
+</section>
+
+<section id="refinement-types" class="slide level2">
+<h2><span class="chapter">Refinement types</span></h2>
+<div class="text">
+<p>Refinement types are types qualified with logical predicates.</p>
+<div class="fragment">
+<p>For example, <span class="math display">\{ x: \text{Int} \mid x &gt;
+0 \}</span> denotes the type of all integers <code>x</code> such that
+<code>x &gt; 0</code>.</p>
+</div>
+<div class="fragment">
+<p>Implemented in many languages: <a
+href="https://ucsd-progsys.github.io/liquidhaskell/">Liquid Haskell</a>,
+<a
+href="https://fstar-lang.org/tutorial/book/part1/part1_getting_off_the_ground.html#boolean-refinement-types">Boolean
+refinement types in F*</a>, <a
+href="https://dafny.org/latest/DafnyRef/DafnyRef#sec-subset-types">Subset
+types in Dafny</a>, etc.</p>
+</div>
+<div class="fragment">
+<p>Prior art in Scala: <a
+href="https://dl.acm.org/doi/10.1145/2998392.2998398">SMT-based checking
+of predicate-qualified types for Scala</a> (Schmid and Kunčak, Scala
+Symposium 2016), <a href="https://github.com/fthomas">Refined</a>, <a
+href="https://github.com/Iltotore/iron">Iron</a>.</p>
+</div>
+</div>
+<p><!-- .text --></p>
+</section>
+<section id="outline" class="slide level2">
+<h2><span class="chapter">Outline</span></h2>
+<div class="columns">
+<div class="column wide-lists" style="flex: 2.2;">
+<p>We present a work-in-progress implementation of refinement types in
+Scala 3, with focus on:</p>
+<ul>
+<li class="fragment">
+<strong>First-class integration:</strong> implemented in the Scala
+compiler directly, not as a plugin or a separate tool.
+</li>
+<li class="fragment">
+<strong>Typing:</strong> imprecise types by default, recover refinements
+when needed.
+</li>
+<li class="fragment">
+<strong>Runtime checks:</strong> pattern matching and sugar.
+</li>
+<li class="fragment">
+<strong>Solver:</strong> lightweight custom solver for subtyping.
+</li>
+<li class="fragment">
+<strong>Mechanization:</strong> are we sound yet?
+</li>
+</ul>
+</div><div class="column">
+<figure style="text-align: center">
+<img src="images/qualified_type.png" alt="qualified types" style="width: 50%">
+<figcaption>
+<em>Un type qualifié</em>, by Marina Granados Castro
+</figcaption>
+</figure>
+</div><p><!-- .column --></p>
+</div>
+<p><!-- .columns --></p>
+</section>
+<section id="syntax" class="slide level2">
+<h2><span class="chapter">Syntax</span></h2>
+<p>Consider the type of non-empty lists:</p>
+<p><span class="math display">\{ l: \text{List[A]} \mid
+l.\text{nonEmpty} \}</span></p>
+<div class="fragment">
+<p>In Scala, we use <code>with</code> instead of <code>|</code> because
+the latter is already used for union types:</p>
+<pre class="scala"><code>type NonEmptyList[A] = { l: List[A] with l.nonEmpty }</code></pre>
+<ul>
+<li><code>l</code>: binder</li>
+<li><code>List[A]</code>: parent type</li>
+<li><code>l.nonEmpty</code>: qualifier (predicate)</li>
+</ul>
+</div>
+<aside class="notes">
+<p>A refinement type defines a subset of values. Here <code>l</code> is
+a binder, <code>List[A]</code> is the parent type, and
+<code>l.nonEmpty</code> is the predicate or qualifier. This reads “all
+List[A] values l such that l is non-empty”. We call them logically
+qualified types in Scala to distinguish from structural refinement
+types, which refine members like <code>val</code> and
+<code>def</code>.</p>
+</aside>
+</section>
+<section id="syntax-shorthand" class="slide level2">
+<h2><span class="chapter">Syntax:</span> Shorthand</h2>
+<p>When a binder already exists, such as in:</p>
+<pre class="scala"><code>def zip[A, B](xs: List[A], ys: {ys: List[B] with ys.size == xs.size})</code></pre>
+<div class="fragment">
+<p>We can omit it:</p>
+<pre class="scala"><code>def zip[A, B](xs: List[A], ys: List[B] with ys.size == xs.size)</code></pre>
+</div>
+<div class="fragment">
+<p>The second version is desugared to the first.</p>
+</div>
+<aside class="notes">
+<p>When the value already has a name, like a parameter or val, you can
+skip the binder. The name is reused in the predicate.</p>
+</aside>
+</section>
+<section id="syntax-example-sized-list-api" class="slide level2">
+<h2><span class="chapter">Syntax:</span> Example sized List API</h2>
+<pre class="scala"><code>def zip[A, B](xs: List[A], ys: List[B] with ys.size == xs.size):
+  {l: List[(A, B)] with l.size == xs.size}</code></pre>
+<pre class="scala fragment"><code>def concat[T](xs: List[T], ys: List[T]):
+  {res: List[T] with res.size == xs.size + ys.size}</code></pre>
+<pre class="scala fragment"><code>val xs: List[Int] = ...
+val ys: List[Int] = ...
+zip(concat(xs, ys), concat(ys, xs))
+zip(concat(xs, ys), concat(xs, xs)) // error</code></pre>
+</section>
+<section id="first-class" class="slide level2">
+<h2><span class="chapter">First-class</span></h2>
+<p>Liquid Haskell is a plugin that runs after type checking.</p>
+<pre class="haskell"><code>{-@ x :: {v:Int | v mod 2 == 0 } @-}
+let x = 42 :: Int in ...</code></pre>
+<div class="fragment">
+<p>In contrast, our implementation is directly integrated into the Scala
+3 compiler:</p>
+<pre class="scala"><code>val x: Int with (x % 2 == 0) = 42</code></pre>
+</div>
+<div class="fragment">
+<p>Refinement type subtyping is checked during type checking, not as a
+separate phase. Early prototypes did this as a separate phase, with more
+drawbacks than benefits.</p>
+<p><small>See also <a
+href="https://dl.acm.org/doi/10.1145/3729327">Usability Barriers for
+Liquid Types</a> (Gamboa, Reese, Fonseca and Aldrich, PLDI
+2025).</small></p>
+</div>
+</section>
+<section id="first-class-error-messages" class="slide level2">
+<h2><span class="chapter">First-class:</span> Error messages</h2>
+<p>Predicates are type-checked like other Scala expressions:</p>
+<pre class="scala"><code>def f[A](l: List[A] with l.notEmpty) = () // error</code></pre>
+<pre class="text"><code>-- [E008] Not Found Error: tests/neg-custom-args/qualified-types/predicate_error.scala:1:27 ----------------------------
+1 |def f[A](l: List[A] with l.notEmpty) = () // error
+  |                         ^^^^^^^^^^
+  |                         value notEmpty is not a member of List[A]
+  |                         - did you mean l.nonEmpty?</code></pre>
+</section>
+<section id="first-class-error-messages-and-inference"
+class="slide level2">
+<h2><span class="chapter">First-class:</span> Error messages and
+inference</h2>
+<p>Same inference and error reporting as for other Scala types:</p>
+<pre class="scala"><code>def g[T](f: T =&gt; Unit, x: T) = f(x)
+g((x: PosInt) =&gt; x * 2, -2) // error</code></pre>
+<pre class="text"><code>-- [E007] Type Mismatch Error: tests/neg-custom-args/qualified-types/infer.scala:2:29 ------------------------
+2 |  g((x: PosInt) =&gt; x * 2, -2) // error
+  |                          ^^
+  |                          Found:    (-2 : Int)
+  |                          Required: {v: Int with v &gt; 0}</code></pre>
+</section>
+<section id="first-class-overload-resolution" class="slide level2">
+<h2><span class="chapter">First-class:</span> Overload resolution</h2>
+<p>Consider the following two overloads of <code>min</code>:</p>
+<pre class="scala"><code>/** Minimum of a list. O(n) */
+def min(l: List[Int]): Int = l.min
+
+/** Minimum of a sorted list. O(1) */
+def min(l: List[Int] with l.isSorted): Int = l.head</code></pre>
+<div class="fragment">
+<p>The second, more efficient overload is called if the list is known to
+be sorted:</p>
+<pre class="scala"><code>val l2: List[Int] with l2.isSorted = l.sorted
+min(l2) // calls second overload</code></pre>
+</div>
+</section>
+<section id="typing" class="slide level2">
+<h2><span class="chapter">Typing</span></h2>
+<p>For backward compatibility and performance reasons, refinement types
+are not inferred from terms by default. The wider type is inferred
+instead:</p>
+<pre class="scala"><code>val x: /* Int */ = 42</code></pre>
+<div class="fragment">
+<p>Why not type <code>x</code> as <code>{v: Int with v == 42}</code>
+directly?</p>
+</div>
+<div class="fragment">
+<p>Because it would:</p>
+<ol type="1">
+<li><strong>Not be backward compatible:</strong> overload resolution and
+implicit search return different results for a type vs. a more precise
+subtype.</li>
+<li><strong>Hurt UX:</strong> users would be flooded with complex
+types.</li>
+<li><strong>Hurt performance:</strong> big types slow down type
+checking.</li>
+</ol>
+</div>
+</section>
+<section id="typing-selfification" class="slide level2">
+<h2><span class="chapter">Typing</span>: Selfification</h2>
+<p>However, when a refinement type is expected, the compiler can
+<em>selfify</em> the typed expression: that is, to give
+<code>e: T</code> the refinement type <code>x: T with x == e</code>:</p>
+<pre class="scala"><code>val x: {v: Int with v == 42} = 42</code></pre>
+<div class="fragment">
+<p>As a typing rule:</p>
+<p><span class="math display">
+\frac{\Gamma \vDash a : A \qquad \text{firstorder}(A)}{\Gamma \vDash a :
+\lbrace  x : A \mid x == a \rbrace }
+\text{(T-Self)}
+</span></p>
+</div>
+<div class="fragment">
+<p>Selfification is standard in other refinement type systems. Typing
+based on the expected type is standard in Scala. We also do so for
+singleton types or union types.</p>
+</div>
+</section>
+<section id="typing-local-unfolding" class="slide level2">
+<h2><span class="chapter">Typing</span>: Local unfolding</h2>
+<p>The system can also recover precise selfified types from local
+definitions:</p>
+<pre class="scala"><code>val v1: Int = readInt()
+val v2: Int = v1
+val v3: Int with (v3 == v1) = v2</code></pre>
+<div class="fragment">
+<p>Conceptually done by remembering definitions in a “fact context”:</p>
+<p><span class="math display">
+\frac{\Gamma \vDash a : A \qquad \Gamma, x : A, \lbrace x == a \rbrace
+\vDash b : B \qquad \text{firstorder}(A) }{\Gamma \vDash \texttt{let}\ x
+: A = a\ \texttt{in}\ b : \text{avoid}(B, x)}
+\text{(T-LetEq)}
+</span></p>
+</div>
+<div class="fragment">
+<p>Similar rule in <a href="https://doi.org/10.1145/3360592">System FR
+as Foundations for Stainless</a> (Hamza, Voirol and Kunčak, OOPSLA
+2019).</p>
+</div>
+</section>
+<section id="runtime-checks" class="slide level2">
+<h2><span class="chapter">Runtime checks</span></h2>
+<p>When static checking fails, a refinement type can be checked at
+runtime using pattern matching:</p>
+<pre class="scala"><code>val idRegex = &quot;^[a-zA-Z_][a-zA-Z0-9_]*$&quot;
+type ID = {s: String with s.matches(idRegex)}</code></pre>
+<div class="fragment">
+<pre class="scala"><code>&quot;a2e7-e89b&quot; match
+    case id: ID =&gt;
+        id: ID // matched, id has type ID
+    case id     =&gt;
+        // default case, did not match</code></pre>
+</div>
+<aside class="notes">
+<p>When the compiler can’t verify a predicate statically, you can use
+runtime checks. Pattern matching checks the predicate at runtime.</p>
+</aside>
+</section>
+<section id="runtime-checks-.runtimechecked" class="slide level2">
+<h2><span class="chapter">Runtime checks:</span>
+<code>.runtimeChecked</code></h2>
+<p>You can also use <code>.runtimeChecked</code> (<a
+href="https://docs.scala-lang.org/sips/replace-nonsensical-unchecked-annotation.html">SIP-57</a>)
+when you expect the check to always pass:</p>
+<pre class="scala"><code>val id: ID = &quot;a2e7-e89b&quot;.runtimeChecked</code></pre>
+<div class="fragment">
+<p>Desugars to:</p>
+<pre class="scala"><code>val id: ID =
+  if (&quot;a2e7-e89b&quot;.matches(idRegex)) &quot;a2e7-e89b&quot;.asInstanceOf[ID]
+  else throw new IllegalArgumentException()</code></pre>
+</div>
+<div class="fragment" style="font-size: 0.8em;">
+<p>Note: like with other types, you can also use
+<code>.asInstanceOf[ID]</code> directly to skip the check
+altogether.</p>
+</div>
+</section>
+<section id="example-bound-checked-merge-sort" class="slide level2">
+<h2><span class="chapter">Example:</span> Bound-checked merge sort</h2>
+<p>Specify a type for non-negative integers (<code>Pos</code>) and a
+safe division function:</p>
+<pre class="scala"><code>type Pos = {x: Int with x &gt;= 0}
+
+def safeDiv(x: Pos, y: Pos with y &gt; 1): {res: Pos with res &lt; x} =
+  (x / y).runtimeChecked</code></pre>
+<p>Define an opaque type for bound-checked sequences:</p>
+<pre class="scala"><code>opaque type SafeSeq[T] = Seq[T]
+
+object SafeSeq:
+  def fromSeq[T](seq: Seq[T]): SafeSeq[T] = seq
+  def apply[T](elems: T*): SafeSeq[T] = fromSeq(elems)</code></pre>
+</section>
+<section id="example-bound-checked-merge-sort-2" class="slide level2">
+<h2><span class="chapter">Example:</span> Bound-checked merge sort
+(2)</h2>
+<p>Add some methods to <code>SafeSeq</code>:</p>
+<pre class="scala"><code>extension [T](a: SafeSeq[T])
+  def len: Pos = a.length.runtimeChecked
+  def apply(i: Pos with i &lt; a.len): T =  a(i)
+  def ++(that: SafeSeq[T]): SafeSeq[T] = a ++ that
+  def splitAt(i: Pos with i &lt; a.len): (SafeSeq[T], SafeSeq[T]) =
+    a.splitAt(i)</code></pre>
+<p>These methods are only defined for non-empty sequences:</p>
+<pre class="scala"><code>extension [T](a: SafeSeq[T] with a.len &gt; 0)
+  def head: T = a.head
+  def tail: SafeSeq[T] = a.tail</code></pre>
+</section>
+<section id="example-bound-checked-merge-sort-3" class="slide level2">
+<h2><span class="chapter">Example:</span> Bound-checked merge sort
+(3)</h2>
+<p>We can match on non-empty sequences, ensuring <code>head</code> and
+<code>tail</code> are safe to use:</p>
+<pre class="scala"><code>def merge[T: Ordering as ord](left: SafeSeq[T], right: SafeSeq[T]): SafeSeq[T] =
+  (left, right) match
+    case (l: SafeSeq[T] with l.len &gt; 0, r: SafeSeq[T] with r.len &gt; 0) =&gt;
+      if ord.lt(l.head, r.head) then
+        SafeSeq(l.head) ++ merge(l.tail, r)
+      else
+        SafeSeq(r.head) ++ merge(l, r.tail)
+    case (l, r) =&gt;
+      if l.len == 0 then r else l</code></pre>
+<div class="fragment">
+<p>This would be simplified with flow-sensitive typing.</p>
+</div>
+</section>
+<section id="example-bound-checked-merge-sort-4" class="slide level2">
+<h2><span class="chapter">Example:</span> Bound-checked merge sort
+(4)</h2>
+<p><code>middle</code> is known to be less than <code>len</code>, so
+<code>splitAt</code> is safe to use:</p>
+<pre class="scala"><code>def mergeSort[T: Ordering](list: SafeSeq[T]): SafeSeq[T] =
+  val len = list.len
+  val middle = safeDiv(len, 2)
+  if middle == 0 then
+    list
+  else
+    val (left, right) = list.splitAt(middle)
+    merge(mergeSort(left), mergeSort(right))</code></pre>
+</section>
+<section id="subtyping" class="slide level2">
+<h2><span class="chapter">Subtyping</span></h2>
+<p>How does the compiler check
+<code>{x: T with p(x)} &lt;: {y: S with q(y)}</code>?</p>
+<ol type="1">
+<li>Check <code>T &lt;: S</code></li>
+<li>Check <code>p(x)</code> implies <code>q(x)</code> for all
+<code>x</code></li>
+</ol>
+<div class="fragment">
+<p>A solver is needed to check logical implication (2.).</p>
+</div>
+<div class="fragment">
+<p>We developed a lightweight custom solver that combines several
+techniques:</p>
+</div>
+<ul>
+<li class="fragment">
+constant folding,
+</li>
+<li class="fragment">
+normalization,
+</li>
+<li class="fragment">
+unfolding,
+</li>
+<li class="fragment">
+equality reasoning.
+</li>
+</ul>
+<aside class="notes">
+<p>To check if one refinement type is a subtype of another, the compiler
+checks if the parent types are related, and if the first predicate
+implies the second. Our implementation uses a lightweight custom solver
+that combines several techniques.</p>
+</aside>
+</section>
+<section id="future-work-flow-sensitive-typing" class="slide level2">
+<h2><span class="chapter">Future work:</span> Flow-sensitive typing</h2>
+<p>Works with pattern matching:</p>
+<pre class="scala"><code>x match
+  case x: Int with x &gt; 0 =&gt;
+    x: {v: Int with v &gt; 0}</code></pre>
+<div class="fragment">
+<p>Could also work with <code>if</code> conditions:</p>
+<pre class="scala"><code>if x &gt; 0 then
+  x: {v: Int with v &gt; 0}</code></pre>
+</div>
+</section>
+<section id="future-work-external-checks" class="slide level2">
+<h2><span class="chapter">Future work:</span> External checks</h2>
+<p>Our solver is lightweight 👍 but incomplete 👎.</p>
+<div class="fragment">
+<p>In particular, it cannot handle ordering relations yet, for example
+it cannot prove:</p>
+<pre class="scala"><code>{v: Int with v &gt; 2} &lt;: {v: Int with v &gt; 0}</code></pre>
+</div>
+<div class="fragment">
+<p>For this and for more complex predicates, we could integrate with an
+external SMT solver like <a
+href="https://microsoft.github.io/z3guide/docs/logic/intro/">Z3</a>, <a
+href="https://cvc5.github.io/">CVC5</a>, or <a
+href="https://philipp.ruemmer.org/princess.shtml">Princess</a> for
+explicit checks only:</p>
+<pre class="scala"><code>x: {v: Int with v &gt; 0} // checked by the type checker
+x.runtimeChecked: {v: Int with v &gt; 0} // checked at runtime
+x.externallyChecked: {v: Int with v &gt; 0} // checked by an external tool
+x.asInstanceOf[{v: Int with v &gt; 0}] // unchecked</code></pre>
+</div>
+</section>
+<section id="mechanization" class="slide level2">
+<h2><span class="chapter">Mechanization</span></h2>
+<p>Syntax of the language formalized so far:</p>
+<p><span class="math display">
+\begin{aligned}
+A, B &amp;::= X \mid  \texttt{Unit} \mid \texttt{Bool} \mid \Pi x: A.\ B
+\mid \forall X.\ A \mid \lbrace  x : A \mid b \rbrace \mid A \lor B \mid
+A \land B \\
+a, b, f &amp;::= \texttt{unit} \mid \texttt{true} \mid \texttt{false}
+\mid x \mid \lambda x: A.\ b \mid \Lambda X.\ b \mid f\ a \mid f[A] \\
+         &amp;\quad \mid \texttt{let}\ x : A = b\ \texttt{in}\ a \mid a
+== b \mid \texttt{if}\ a\ \texttt{then}\ b_1\ \texttt{else}\ b_2
+\end{aligned}
+</span></p>
+<div class="fragment">
+<p>Mechanization done in Rocq, using a definitional interpreter,
+semantic types, and Autosubst (for de Bruijn indices). Does not yet
+include the implication solver.</p>
+<p><small>See <a href="https://doi.org/10.1145/3632912">Mechanizing
+Refinement Types</a> (Borkowski, Vazou and Jhala, POPL 2024), <a
+href="https://doi.org/10.1145/3093333.3009866">Type Soundness Proofs
+with Definitional Interpreters</a> (Amin and Tiark Rompf, POPL 2017), <a
+href="https://doi.org/10.1145/3676954">A Logical Approach to Type
+Soundness</a> (Timany, Krebbers, Dreyer and Birkedal, Journal of the ACM
+2024), <a href="https://doi.org/10.1007/978-3-319-22102-1_24">Autosubst:
+Reasoning with de Bruijn Terms and Parallel Substitutions</a> (Schäfer,
+Tebbi and Smolka, ITP 2015).</small></p>
+</div>
+</section>
+<section id="mechanization-interpretation" class="slide level2">
+<h2><span class="chapter">Mechanization</span>: Interpretation</h2>
+<p>A semantic type is a predicate on values. The interpretation <span
+class="math inline">⟦ A ⟧_{\delta}^{\rho}</span> maps a syntactic type
+<span class="math inline">A</span> to a semantic type, given a type
+variable environment <span class="math inline">\delta</span> and a value
+environment <span class="math inline">\rho</span>:</p>
+<p><span class="math display">
+\begin{aligned}
+\cdots\\
+⟦ \texttt{Bool} ⟧_{\delta}^{\rho} &amp;= \lambda v.\ v = \texttt{true}
+\lor v = \texttt{false} \\
+\cdots\\
+⟦ \lbrace  x : A \mid p \rbrace  ⟧_{\delta}^{\rho} &amp;= \lambda v.\ ⟦
+A ⟧_{\delta}^{\rho}(v) \land \rho, x \mapsto v \vdash p \Downarrow
+\texttt{true} \\
+\cdots\\
+\end{aligned}
+</span></p>
+</section>
+<section id="mechanization-typing" class="slide level2">
+<h2><span class="chapter">Mechanization</span>: Typing</h2>
+<p>The rule for let-bindings that stores equalities in the fact
+context:</p>
+<p><span class="math display">
+\frac{\Gamma \vDash a : A \qquad \text{firstorder}(A) \qquad \Gamma, x :
+A, \lbrace x == a \rbrace \vDash b : B}{\Gamma \vDash \texttt{let}\ x :
+A = a\ \texttt{in}\ b : \text{avoid}(B, x)}
+\text{(T-LetEq)}
+</span></p>
+<p>The rule for selfification:</p>
+<p><span class="math display">
+\frac{\Gamma \vDash a : A \qquad \text{firstorder}(A)}{\Gamma \vDash a :
+\lbrace  x : A \mid x == a \rbrace }
+\text{(T-Self)}
+</span></p>
+<p>The rule for <code>if</code> expressions:</p>
+<p><span class="math display">
+\frac{\Gamma \vDash a : \texttt{Bool} \qquad \Gamma, \lbrace a ==
+\texttt{true} \rbrace \vDash b_1 : B_1 \qquad \Gamma, \lbrace a ==
+\texttt{false} \rbrace \vDash b_2 : B_2}{\Gamma \vDash \texttt{if}\ a\
+\texttt{then}\ b_1\ \texttt{else}\ b_2 : B_1 \lor B_2}
+\text{(T-If)}
+</span></p>
+</section>
+<section id="conclusion" class="slide level2">
+<h2><span class="chapter">Conclusion</span></h2>
+<div class="columns">
+<div class="column wide-lists" style="flex: 3.6;">
+<ul>
+<li><strong>Syntax:</strong> <code>{x: T with p(x)}</code>, can omit
+binder,</li>
+<li><strong>First-class:</strong> integrates with Scala UX and features
+(overloading, extension methods, givens, etc.),</li>
+<li><strong>Typing:</strong> imprecise types by default, can recover
+refinements using <em>selfification</em> and local unfolding,</li>
+<li><strong>Runtime checks:</strong> pattern matching,
+<code>.runtimeChecked</code>,</li>
+<li><strong>Subtyping:</strong> normalization, local unfolding, equality
+reasoning, compatibility with other types,</li>
+<li><strong>Future work:</strong> flow-sensitive typing, external
+checks,</li>
+<li><strong>Mechanization:</strong> System F with refinement types and
+more, using a definitional interpreter and semantic types.</li>
+</ul>
+</div><div class="column">
+<figure style="text-align: center">
+<img src="images/qualified_type.png" alt="qualified types" style="width: 80%">
+<figcaption>
+<em>Un type qualifié</em>, by Marina Granados Castro
+</figcaption>
+</figure>
+</div><p><!-- .column --></p>
+</div>
+<p><!-- .columns --></p>
+</section>
+<section id="backup-predicate-restrictions" class="slide level2">
+<h2><span class="chapter">Backup:</span> Predicate restrictions</h2>
+<div class="fragment">
+<pre class="scala"><code>var x = 3
+val y: Int with y == 3 = x // ⛔️ x is mutable</code></pre>
+</div>
+<div class="fragment">
+<pre class="scala"><code>class Box(val value: Int)
+val b: Box with b == Box(3) = Box(3) // ⛔️ Box has equality by reference</code></pre>
+</div>
+<div class="fragment">
+<p>The predicate language is restricted to a fragment of Scala
+consisting of constants, stable identifiers, field selections over
+<code>val</code> fields, pure term applications, type applications, and
+constructors of case classes without initializers.</p>
+</div>
+<div class="fragment">
+<p>Purity of functions is currently not enforced. Should it be?</p>
+</div>
+</section>
+<section id="backup-lh-usability-barriers" class="slide level2">
+<h2><span class="chapter">Backup:</span> LH Usability Barriers</h2>
+<p>From <a href="https://dl.acm.org/doi/10.1145/3729327">“Usability
+Barriers for Liquid Types”</a> [1]:</p>
+<ul>
+<li>4.2 Unclear Divide between Haskell and LiquidHaskell:
+<ul>
+<li><small>“comments are usually seen as just optional information in
+the code and not something that is directly used by the
+compiler”</small></li>
+<li><small>“It’s sort of like you’re doing two things at once because
+you’re implementing in Haskell. But you’re also talking to GHC, but
+you’re also talking to LiquidHaskell.”</small></li>
+</ul></li>
+<li>4.7 Unhelpful Error Messages
+<ul>
+<li><small>“[…] error messages produced from typing errors inside the
+predicates, seemed indistinguishable from those produced by verification
+errors.”</small></li>
+</ul></li>
+<li>4.8 Limited IDE Support
+<ul>
+<li><small>“[user] tried to use the function <code>length</code>, but
+since it was not imported, it was impossible to use in this
+case.”</small></li>
+</ul></li>
+</ul>
+<p><small>[1] Catarina Gamboa, Abigail Reese, Alcides Fonseca, and
+Jonathan Aldrich. 2025. Usability Barriers for Liquid Types. Proc. ACM
+Program. Lang. 9, PLDI, Article 224 (June 2025), 26 pages.
+<a href="https://dl.acm.org/doi/10.1145/3729327">doi:10.1145/3729327</a></small></p>
+</section>
+<section id="backup-list.collect" class="slide level2">
+<h2><span class="chapter">Backup:</span> <code>List.collect</code></h2>
+<p>Scala type parameters are <em>erased</em> at runtime, so we cannot
+match on a <code>List[T]</code>.</p>
+<div class="fragment">
+<p>However, we can use <code>.collect</code> to filter and convert a
+list:</p>
+<pre class="scala"><code>type Pos = { v: Int with v &gt;= 0 }
+
+val xs = List(-1,2,-2,1)
+xs.collect { case x: Pos =&gt; x } : List[Pos]</code></pre>
+</div>
+</section>
+<section id="backup-specify-using-assertions" class="slide level2">
+<h2><span class="chapter">Backup:</span> Specify using assertions
+😕</h2>
+<div class="columns">
+<div class="column">
+<p>We can use assertions:</p>
+<pre class="scala"><code>def zip[A, B](
+  xs: List[A],
+  ys: List[B]
+) : List[(A, B)] = {
+  require(xs.size == ys.size)
+  ...
+}.ensuring(_.size == xs.size)</code></pre>
+</div><div class="column fragment">
+<p>Limitations:</p>
+<ul>
+<li><em>Runtime overhead</em>: checked at runtime, not compile
+time,</li>
+<li><em>No static guarantees</em>: only checked for specific
+inputs,</li>
+<li><em>Not part of the API</em>: not visible in function type,</li>
+<li><em>Hard to compose</em>: cannot be passed as type argument.</li>
+</ul>
+</div><p><!-- .column --></p>
+</div>
+<p><!-- .columns --></p>
+<aside class="notes">
+<p>We can use assertions, but they have limitations. The check happens
+at runtime, so there’s overhead. The compiler can’t verify the
+precondition is always satisfied. The precondition is not visible in the
+function type. And assertions don’t compose well—imagine passing a list
+of values that all satisfy some property.</p>
+</aside>
+</section>
+<section id="backup-specify-using-dependent-types" class="slide level2">
+<h2><span class="chapter">Backup:</span> Specify using dependent types
+😕</h2>
+<div class="columns">
+<div class="column">
+<p>Can we use path-dependent types?</p>
+<pre class="scala"><code>def zip[A, B](
+  xs: List[A],
+  ys: List[B] {
+    val size: xs.size.type
+  }
+): List[(A, B)] {
+  val size: xs.size.type
+} = ...</code></pre>
+</div><div class="column fragment">
+<p>Limitations:</p>
+<ul>
+<li><em>Limited reasoning</em>: only fields, literals and constant
+folding,</li>
+<li><em>Not inferred</em>: need manual type annotations, or not typable
+at all,</li>
+<li><em>Different languages</em>: term-level vs type-level.</li>
+</ul>
+</div><p><!-- .column --></p>
+</div>
+<p><!-- .columns --></p>
+</section>
+<section id="future-work-term-parameterized-types" class="slide level2">
+<h2><span class="chapter">Future work:</span> term-parameterized
+types</h2>
+<pre class="scala"><code>extension [T](list: List[T])
+  def get(index: Int with index &gt;= 0 &amp;&amp; index &lt; list.size): T = ...</code></pre>
+<div class="fragment">
+<p>To modularize the “range” concept, we could introduce
+term-parameterized types:</p>
+<pre class="scala"><code>type Range(from: Int, to: Int) = {v: Int with v &gt;= from &amp;&amp; v &lt; to}
+extension [T](list: List[T])
+  def get(index: Range(0, list.size)): T = ...</code></pre>
+</div>
+</section>
+<section id="future-work-flow-sensitive-typing-2" class="slide level2">
+<h2><span class="chapter">Future work:</span> Flow-sensitive typing
+(2)</h2>
+<p>This would be required for reasoning with refinement types inside
+cases:</p>
+<div style="font-size: 0.7em;">
+<pre class="scala"><code>enum MyList[+T]:
+  case Cons(head: T, tail: MyList[T])
+  case Nil
+
+def myLength(xs: MyList[Int]): Int =
+  xs match
+    case MyList.Nil =&gt;
+      // Add assumption xs == MyList.Nil
+      0
+    case MyList.Cons(_, xs1) =&gt;
+      // Add assumption xs == MyList.Cons(?, xs1)
+      1 + myLength(xs1)</code></pre>
+</div>
+</section>
+<section id="subtyping-constant-folding" class="slide level2">
+<h2><span class="chapter">Subtyping:</span> Constant folding</h2>
+<pre class="scala"><code>{v: Int with v == 1 + 1}     &lt;: {v: Int with v == 2}</code></pre>
+</section>
+<section id="subtyping-normalization" class="slide level2">
+<h2><span class="chapter">Subtyping:</span> Normalization</h2>
+<p>Arithmetic expressions are normalized using standard algebraic
+properties, for example commutativity of addition:</p>
+<pre class="scala"><code>{v: Int with v == x + 1}     &lt;: {v: Int with v == 1 + x}</code></pre>
+<div class="fragment">
+<pre class="scala"><code>{v: Int with v == y + x}     &lt;: {v: Int with v == x + y}</code></pre>
+</div>
+<div class="fragment">
+<p>Or grouping operands with the same constant factor in sums of
+products:</p>
+<pre class="scala"><code>{v: Int with v == x + 3 * y} &lt;: {v: Int with v == 2 * y + (x + y)}</code></pre>
+</div>
+</section>
+<section id="subtyping-local-unfolding" class="slide level2">
+<h2><span class="chapter">Subtyping:</span> Local unfolding</h2>
+<p>As mentioned, refinement types are not inferred from terms by
+default. However, the solver can unfold definitions of local
+<code>val</code> (only), even when they have an imprecise type:</p>
+<pre class="scala"><code>val x: Int = ...
+val y: Int = x + 1
+
+{v: Int with v == y} =:= {v: Int with v == x + 1}</code></pre>
+</section>
+<section id="subtyping-equality-reasoning" class="slide level2">
+<h2><span class="chapter">Subtyping:</span> Equality reasoning</h2>
+<p>Transitivity of equality:</p>
+<pre class="scala"><code>{v: Int with v == a &amp;&amp; a == b} &lt;: {v: Int with v == b}</code></pre>
+<div class="fragment">
+<p>Congruence of equality:</p>
+<pre class="scala"><code>{v: Int with a == b}           &lt;: {v: Int with f(a) == f(b)}</code></pre>
+</div>
+<div class="fragment">
+<p>This is implemented using an E-Graph-like data structure.</p>
+</div>
+</section>
+<section id="subtyping-with-other-scala-types" class="slide level2">
+<h2><span class="chapter">Subtyping:</span> With other Scala types</h2>
+<p>Literal types are subtypes of singleton refinement types:</p>
+<pre class="scala"><code>3 &lt;: {v: Int with v == 3}</code></pre>
+<div class="fragment">
+<p>We plan to support subtyping with other Scala types in the
+future.</p>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^5/dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^5/plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^5/plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^5/plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: true,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1200,
+
+        height: 675,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.16,
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/scala.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/haskell.min.js"></script><script>hljs.highlightAll();</script>
+    </body>
+</html>

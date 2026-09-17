@@ -1,0 +1,198 @@
+:root {
+    /* Configurable variables: https://github.com/hakimel/reveal.js/blob/master/css/theme/template/exposer.scss */
+    /* --r-main-font: Helvetica; */
+    --primary-color: #2d9d70;
+    --selection-color: #2096679c;
+    --r-main-font-size: 33px;
+    --r-link-color: var(--primary-color);
+    --r-link-color-hover: #188257;
+    --r-block-margin: 1em;
+}
+
+.reveal {
+    font-weight: 300;
+    color: #444;
+    line-height: 1.5;
+}
+
+.reveal section {
+    text-align: left;
+}
+
+.reveal small,
+.reveal small * {
+    vertical-align: inherit;
+}
+
+.reveal ul ul {
+    margin: 0;
+}
+
+.reveal .wide-lists li {
+    margin-bottom: 0.5em;
+}
+
+.chapter {
+    color: var(--primary-color);
+}
+
+.reveal pre {
+    box-shadow: none;
+    line-height: 1.5;
+    font-size: 1em;
+    width: auto;
+    max-height: auto;
+}
+
+.reveal pre code.hljs {
+    padding: 0.5em;
+}
+
+.reveal code {
+    background-color: #fafafa;
+    font-size: 0.8em;
+}
+
+.reveal pre code {
+    max-height: none;
+    display: block;
+    width: auto;
+}
+
+:not(pre) code {
+    display: inline-block;
+    padding: 0.1em 0.3em;
+    border-radius: 6px;
+}
+
+.hljs-comment {
+    color: #888888;
+}
+
+
+.hljs-keyword, .hljs-title {
+    color: #982f96;
+}
+
+.hljs-function .hljs-title {
+    color: #3462c5;
+}
+
+.hljs-string, .hljs-number {
+    color: var(--primary-color);
+}
+
+.hljs-type, .hljs-class .hljs-title {
+    color: #bd8100;
+}
+
+
+.katex {
+    font-size: 1em;
+}
+
+
+.reveal h1 {
+    margin-bottom: 0.5em;
+    font-size: 2.2em;
+}
+
+.reveal h1::after {
+    content: "";
+    display: block;
+    width: 3em;
+    height: 0.3em;
+    background-color: var(--primary-color);
+}
+
+
+.reveal h2 {
+    margin-bottom: 1em;
+    font-size: 1.2em;
+}
+
+.reveal h2::after {
+    content: "";
+    display: block;
+    width: 2em;
+    height: 0.2em;
+    background-color: var(--primary-color);
+}
+
+.reveal h3 {
+    margin-bottom: 1em;
+}
+
+.reveal h3::after {
+    content: "";
+    display: block;
+    width: 1.5em;
+    height: 0.15em;
+    background-color: var(--primary-color);
+}
+
+.reveal ul, .reveal ol {
+    display: block;
+    padding-left: 1.5em;
+}
+
+.reveal ul, .reveal ol, .reveal p {
+    margin: 1em 0em;
+}
+
+.reveal .slides section .fragment {
+    opacity: 0.1;
+    visibility: visible;
+}
+
+.reveal .slides section .fragment.visible {
+    opacity: 1;
+}
+
+.reveal ::selection {
+    background-color: var(--selection-color);
+}
+
+#TOC ul {
+    columns: 2;
+}
+
+div.text {
+    width: 80%;
+}
+
+div.column {
+    flex: 1;
+}
+
+div.column *:first-child {
+    margin-top: 0;
+}
+
+#title-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reveal hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 1em 0;
+}
+
+.reveal img {
+    margin: 0;
+}
+
+.reveal figcaption {
+    font-size: 0.4em;
+    margin-top: -0.4em;
+}
+
+.reveal .slide-number {
+    font-size: 3vh;
+    padding: 0.5vh 1vh;
+    right: 1.5vh;
+    bottom: 1.5vh;
+}
