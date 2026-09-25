@@ -108,7 +108,9 @@
 \title{First-Class Refinement Types for Scala}
 
 \author{Matt Bovel}
-\correspondingauthor
+%% LaTeXML's acmart binding does not define \correspondingauthor, and the
+%% arXiv HTML prints it literally, in red, above the title.
+\iflatexml\else\correspondingauthor\fi
 \orcid{0009-0005-5132-0279}
 \affiliation{%
   \institution{EPFL}
