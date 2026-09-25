@@ -795,6 +795,15 @@ We thank the LAMP and LARA teams at EPFL for insightful discussions and the prio
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
 
+%% acmart prints "Received ...; accepted ..." from an \AtEndDocument hook,
+%% which with an appendix lands it on a near-empty page after it. Print it
+%% here, where the main matter ends, and empty the macro so the hook is a
+%% no-op.
+\makeatletter
+\par\bigskip\noindent{\small\normalfont\@received\par}%
+\gdef\@received{}%
+\makeatother
+
 \clearpage
 
 \appendix
