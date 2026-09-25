@@ -189,9 +189,11 @@ def build_table(results):
 
 def generate_latex_table(table):
     lines = []
-    lines.append(r"\begin{figure*}[t]")
+    lines.append(r"\begin{table*}[t]")
     lines.append(r"\centering")
     lines.append(r"\captionsetup{font=small}")
+    lines.append(r"\caption{Compilation time benchmarks (ms/op, single-shot). Each run (JMH fork) is reduced to its mean; scores are the mean of the per-run means $\pm$ the 95\% confidence interval across runs (Student's $t$). Each platform shows the unchecked baseline time and the absolute overhead of checking; the checked time is $\text{base} + \Delta$. Since the baseline and checked samples are independent, the overhead interval is $\sqrt{\smash[b]{e_b^2 + e_c^2}}$, where $e_b$ and $e_c$ are the baseline and checked intervals.}")
+    lines.append(r"\label{tab:bench-table}")
     lines.append(r"\footnotesize")
     lines.append(r"\begin{tabular}{l" + " rrr" * len(PLATFORMS) + "}")
     lines.append(r"\toprule")
@@ -247,9 +249,7 @@ def generate_latex_table(table):
 
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}")
-    lines.append(r"\caption{Compilation time benchmarks (ms/op, single-shot). Each run (JMH fork) is reduced to its mean; scores are the mean of the per-run means $\pm$ the 95\% confidence interval across runs (Student's $t$). Each platform shows the unchecked baseline time and the absolute overhead of checking; the checked time is $\text{base} + \Delta$. Since the baseline and checked samples are independent, the overhead interval is $\sqrt{\smash[b]{e_b^2 + e_c^2}}$, where $e_b$ and $e_c$ are the baseline and checked intervals.}")
-    lines.append(r"\label{fig:bench-table}")
-    lines.append(r"\end{figure*}")
+    lines.append(r"\end{table*}")
     return "\n".join(lines)
 
 # ---------------------------------------------------------------------------

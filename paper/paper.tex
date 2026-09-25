@@ -698,9 +698,9 @@ This design is strictly more powerful than substitution alone: congruence closur
 We evaluate our implementation along two axes: compilation time overhead and expressiveness compared to two existing systems for Scala---Schmid and Kun\v{c}ak's previous prototype~\cite{schmid2016} and the Stainless verifier~\cite{hamza2019}. Stainless is not a refinement type system; it checks pre- and postconditions. It is, however, the de facto tool for verifying Scala programs, even for lightweight properties that refinement types could cover. This makes it a natural point of comparison for our system, on the programs that both systems can verify.
 
 \paragraph{Compilation overhead.}
-We measure single-shot compilation time on a suite of small benchmark programs, comparing each system against its own baseline: the same programs without refinement annotations, compiled with checking disabled. Where possible, we port the same program to Schmid's system and to Stainless. Baselines are per-system because the systems build on different compiler versions and the ported programs differ slightly in code shape. Benchmarks run under JMH; each benchmark is compiled with 150 single-shot warm-up iterations followed by 20 measurement iterations, and the whole experiment is repeated in 10 independent runs. Each run is reduced to the mean of its measurement iterations; Figure~\ref{fig:bench-table} reports the mean of the per-run means with 95\% confidence intervals (Student's $t$), and the overhead~$\Delta$ as the difference between checked and baseline times.
+We measure single-shot compilation time on a suite of small benchmark programs, comparing each system against its own baseline: the same programs without refinement annotations, compiled with checking disabled. Where possible, we port the same program to Schmid's system and to Stainless. Baselines are per-system because the systems build on different compiler versions and the ported programs differ slightly in code shape. Benchmarks run under JMH; each benchmark is compiled with 150 single-shot warm-up iterations followed by 20 measurement iterations, and the whole experiment is repeated in 10 independent runs. Each run is reduced to the mean of its measurement iterations; Table~\ref{tab:bench-table} reports the mean of the per-run means with 95\% confidence intervals (Student's $t$), and the overhead~$\Delta$ as the difference between checked and baseline times.
 
-On our benchmarks, our system (labelled ``First-class'' in the figure) adds modest overhead: 0--12\% of the baseline compilation time. This is consistently less than the two other systems: on the benchmarks they support, Schmid's system adds 20--38\% and Stainless at least 56\%.
+On our benchmarks, our system (labelled ``First-class'' in the table) adds modest overhead: 0--12\% of the baseline compilation time. This is consistently less than the two other systems: on the benchmarks they support, Schmid's system adds 20--38\% and Stainless at least 56\%.
 
 To gauge overhead on a realistic codebase, we applied our system to \emph{Fansi}~\cite{fansi}, a 1\,000-line terminal-color library. The only change was replacing three run-time \lstinline!require! checks in a color-index function with a refinement type alias:
 %
@@ -796,64 +796,7 @@ We thank the LAMP and LARA teams at EPFL for insightful discussions and the prio
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
 
-
-\clearpage
-
-%%
-%% If your work has an appendix, this is the place to put it.
-\appendix
-
-
-\section{More examples}
-
-\begin{lstlisting}[language=Scala]
-// Example 3: Matrix operations with checked dimensions
-case class Matrix(width: Pos, height: Pos):
-  private val size = width * height
-  private val data = CheckedArray(size.runtimeChecked)
-  def index(i: Pos with i < height,
-            j: Pos with j < width): {res: Pos with res < data.size} =
-    (i * width + j).runtimeChecked
-  def apply(i: Pos with i < height, j: Pos with j < width): Double =
-    data(index(i, j))
-  def update(i: Pos with i < height, j: Pos with j < width, x: Double): Unit =
-    data(index(i, j)) = x
-  def transpose(): {v: Matrix with v.width == height && v.height == width} = ???
-  def mul(that: Matrix with that.height == width):
-    {v: Matrix with v.width == that.width && v.height == height}
-  =
-    val res = Matrix(that.width, height)
-    forRange(0, height): i =>
-      forRange(0, that.width): j =>
-        var sum = 0.0
-        forRange(0, width): k =>
-          sum = sum + this(i, k) * that(k, j)
-        res(i, j) = sum
-    res
-def matricesExample =
-  val m1 = Matrix(2, 3)
-  val m2 = Matrix(3, 2)
-  m1.mul(m2)
-  val m1T = m1.transpose()
-  m1T.mul(m1)
-
-// Example 4: Memoized Fibonacci with a dependent map
-case class DepMap[K, V](p: (K, V) => Boolean):
-  def put(n: K, v: V with p(n, v)): Unit = ???
-  def get(n: K): Option[{res: V with p(n, res)}] = ???
-def fib(n: Int): {r: Int with r == (if n <= 1 then 1 else fib(n - 1) + fib(n - 2))} =
-  if n <= 1 then 1 else fib(n - 1) + fib(n - 2)
-val cache: (DepMap[Int, Int] with (cache == DepMap[Int, Int]((k, v) => v == fib(k)))) =
-  DepMap[Int, Int]((k, v) => v == fib(k))
-def fibMemo(n: Int): {res: Int with res == fib(n)} =
-  cache.get(n) match
-    case Some(res) => res
-    case None =>
-      val res: (Int with (res == fib(n))) =
-        if n <= 1 then 1 else fibMemo(n - 1) + fibMemo(n - 2)
-      cache.put(n, res)
-      res
-\end{lstlisting}
+%% The appendix is built separately, as appendix.tex -> appendix.pdf.
 
 \end{document}
 \endinput

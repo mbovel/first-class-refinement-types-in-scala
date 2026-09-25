@@ -5,6 +5,12 @@
 #
 # Includes the LaTeX sources, acmart.cls (the checker verifies its
 # version and errors if it is absent), and the compiled PDF and .bbl.
+#
+# appendix.tex is deliberately left out: it is a second \documentclass
+# root, and the checker rejects an archive with more than one main TeX
+# file ("Suspicious article setup"). The appendix ships separately, as
+# appendix.pdf.
+#
 # Built from the CLI so no __MACOSX/AppleDouble junk ends up in the
 # zip (Finder adds those).
 set -euo pipefail
