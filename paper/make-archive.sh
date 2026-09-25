@@ -7,10 +7,8 @@
 # its version and errors if it is absent; arXiv's own acmart may be older),
 # and the .bbl, so neither side has to run BibTeX.
 #
-# --arxiv swaps two files: html-fixes.css is added, because paper.tex
-# \lxRequireResource's it for the LaTeXML build behind arXiv's HTML view,
-# and paper.pdf is left out, since arXiv compiles the sources itself and
-# asks that the generated PDF not be submitted alongside them.
+# --arxiv leaves out paper.pdf: arXiv compiles the sources itself and asks
+# that the generated PDF not be submitted alongside them.
 #
 # Built from the CLI so no __MACOSX/AppleDouble junk ends up in the
 # zip (Finder adds those).
@@ -27,9 +25,7 @@ cd "$(dirname "$0")"
 
 files=(paper.tex appendix.tex references.bib acmart.cls bcprules.sty
        bench_table.tex fig-*.tex paper.bbl)
-if $arxiv; then
-  files+=(html-fixes.css)
-else
+if ! $arxiv; then
   files+=(paper.pdf)
 fi
 
