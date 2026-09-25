@@ -1,30 +1,5 @@
-%% Standalone build of the paper's appendix -> appendix.pdf.
-%% The main paper (paper.tex) does not include this material.
-\documentclass[acmsmall]{acmart}
-
-%% No topmatter: this PDF starts directly with the appendix sections.
-\settopmatter{printacmref=false}
-\renewcommand\footnotetextcopyrightpermission[1]{}
-\pagestyle{plain}
-
-\usepackage[utf8]{inputenc}
-\usepackage{xcolor}
-\usepackage{listings}
-
-%% Listing style, kept in sync with paper.tex.
-\newcommand{\codesize}{\small}
-\lstset{
-  basicstyle=\ttfamily\codesize,
-  keywordstyle=\bfseries,
-  commentstyle=\color{gray},
-  showstringspaces=false,
-  columns=fullflexible,
-  keepspaces=true,
-}
-
-\begin{document}
-
-\appendix
+%% The appendix, \input by paper.tex after its \appendix.
+%% No preamble of its own.
 
 \section{More examples}
 
@@ -76,5 +51,3 @@ def fibMemo(n: Int): {res: Int with res == fib(n)} =
       cache.put(n, res)
       res
 \end{lstlisting}
-
-\end{document}
