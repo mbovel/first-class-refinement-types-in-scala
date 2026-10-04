@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <meta name="author" content="CS-642 project presentation Matt Bovel">
-  <meta name="dcterms.date" content="2026-05-31">
-  <title>Semantics of Recursive Types</title>
+  <meta name="author" content="Matt Bovel, Viktor Kunčak and Martin Odersky">
+  <meta name="dcterms.date" content="2026-10-04">
+  <title>First-class Refinement Types in Scala</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^5/dist/reset.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^5/dist/reveal.css">
+  <link rel="stylesheet" href="lib/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="lib/reveal.js/dist/reveal.css">
   <style>
     .reveal .sourceCode {  /* see #7635 */
       overflow: visible;
@@ -33,9 +33,8 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^5/dist/theme/white.css" id="theme">
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <link rel="stylesheet" href="lib/reveal.js/dist/theme/white.css" id="theme">
+  <script defer="" src="lib/katex/katex.min.js"></script>
   <script>document.addEventListener("DOMContentLoaded", function () {
  var mathElements = document.getElementsByClassName("math");
  var macros = [];
@@ -50,9 +49,8 @@
    });
 }}});
   </script>
-  <link rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
+  <link rel="stylesheet" href="lib/katex/katex.min.css" />
+  <link rel="stylesheet" href="lib/highlight.js/styles/atom-one-light.min.css">
   <link rel="stylesheet" href="custom.css" />
 </head>
 <body>
@@ -60,590 +58,866 @@
     <div class="slides">
 
 <section id="title-slide">
-  <h1 class="title">Semantics of<br/>Recursive Types</h1>
-  <p class="author">CS-642 project presentation<br/>Matt Bovel</p>
-  <p class="date">May 31, 2026</p>
+  <h1 class="title">First-class Refinement Types<br/>in Scala</h1>
+  <p class="author"><u>Matt Bovel</u>, Viktor Kunčak and Martin
+Odersky</p>
+  <p class="date">October 4, 2026</p>
 </section>
 
-<section id="recursive-types" class="slide level2">
-<h2>Recursive types</h2>
-<div class="columns">
-<div class="column" style="flex: 1">
-<div class="fragment">
-<p>This Scala definition is recursive:</p>
-<pre class="scala"><code>enum List[A]:
-  case Nil()
-  case Cons(head: A, tail: List[A])</code></pre>
-</div>
-<div class="fragment">
-<p>Syntax of STLC + recursive types:</p>
-<p><span class="math display">
-\begin{aligned}
-  \text{Terms} &amp;\quad t ::= x \mid \lambda x. t \mid t_1 \; t_2 \\
-  \text{Types} &amp;\quad T ::= T_1 \to T_2 \; \, {\color{#a626a4} \bf
-\mid  X \mid \mu X. T}
-\end{aligned}
-</span></p>
-</div>
-<div class="fragment">
-<p>Additionally using unit, disjoint sum and pair types, we can
-define:</p>
-<p><span class="math display">
-\text{List[A]} \triangleq \mu X. \, Unit + (A, X)
-</span></p>
-</div>
-</div><div class="column" style="flex: 1">
-<div class="fragment">
-<p>A recursive type can be unfolded:</p>
-<p><span class="math display">
-\begin{aligned}
-\mu X. \, &amp; Unit + (A, X) \\
-\equiv \; &amp; Unit + (A, \mu X. \, Unit + (A, X)) \\
-\equiv \; &amp; Unit + (A, Unit + (A, \mu X. \, Unit + (A, X))) \\
-\end{aligned}
-</span></p>
-</div>
-<div class="fragment">
-<p>We want a typing rule to unfold:</p>
-<p><span class="math display">
-\frac{\Gamma \vdash t : \mu X. T}{\Gamma \vdash t : T[X \mapsto \mu X.
-T]}
-</span></p>
-</div>
-<div class="fragment">
-<p>And one to fold:</p>
-<p><span class="math display">
-\frac{\Gamma \vdash t : T[X \mapsto \mu X. T]}{\Gamma \vdash t : \mu X.
-T}
-</span></p>
-</div>
-</div>
-</div>
-</section>
-<section id="syntax-definitional-interpreter" class="slide level2">
-<h2>Syntax &amp; Definitional interpreter</h2>
+<section id="introduction" class="slide level2">
+<h2>Introduction</h2>
 <div class="columns">
 <div class="column">
-<pre class="coq small"><code>Inductive Term : Type :=
-  | tbool : bool -&gt; Term
-  | tvar : nat -&gt; Term
-  | tabs : Ty -&gt; Term -&gt; Term
-  | tapp : Term -&gt; Term -&gt; Term.
-
-Inductive Ty : Type :=
-  | TBool : Ty
-  | TFun : Ty -&gt; Ty -&gt; Ty.</code></pre>
-<ul>
-<li>We use de Bruijn indices for bindings</li>
-<li>Terms and values are separate</li>
-<li>Types don’t have runtime semantics</li>
-<li>Lambdas capture their environment</li>
-</ul>
+<p>Refinement types are types qualified with logical predicates. For
+example,</p>
+<p><span class="math display">\{ x: \text{Int} \mid x &gt; 0
+\}</span></p>
+<p>denotes the type of all integers <code>x</code> such that
+<code>x &gt; 0</code>.</p>
+<div class="fragment">
+<p>Implemented in many languages: <a
+href="https://ucsd-progsys.github.io/liquidhaskell/">Liquid Haskell</a>,
+<a
+href="https://fstar-lang.org/tutorial/book/part1/part1_getting_off_the_ground.html#boolean-refinement-types">Boolean
+refinement types in F*</a>, <a
+href="https://dafny.org/latest/DafnyRef/DafnyRef#sec-subset-types">Subset
+types in Dafny</a>, etc.</p>
+</div>
 </div><div class="column">
-<pre class="coq small"><code>Inductive Value : Type :=
-  | vbool : bool -&gt; Value
-  | vabs  : (list Value) -&gt; Term -&gt; Value.
-  
-Fixpoint eval_wrong (env: list Value) (t: Term) : option Value :=
-  match t with
-  | tbool b =&gt; Some (vbool b)
-  | tvar i =&gt; nth_error env i
-  | tabs _ b =&gt; Some (vabs env b)
-  | tapp f a =&gt;
-      match (eval_wrong env f) with
-      | Some (vabs envf b) =&gt;
-          match (eval_wrong env a) with
-          | None =&gt; None
-          | Some va =&gt; eval_wrong (va::envf) b
-          end
-      | _ =&gt; None
-      end
-  end.</code></pre>
+<div class="fragment">
+<p>This talk presents:</p>
+</div>
+<div class="fragment">
+<ol type="1">
+<li>A prototype <strong>implementation</strong> of refinement types in
+the Scala 3 compiler as <em>first-class</em> types (§2, §4).</li>
+</ol>
+</div>
+<div class="fragment">
+<ol start="2" type="1">
+<li>A core <strong>calculus</strong> proven sound in Rocq by semantic
+typing, where both programs and predicates may diverge.</li>
+</ol>
+</div>
 </div>
 </div>
 </section>
-<section id="definitional-interpreter-termination" class="slide level2">
-<h2>Definitional interpreter <small>(termination)</small></h2>
-<p>We bound depth of recursive calls to ensure termination by adding a
-fuel parameter.<br />
-We return a layered option type: <code>None</code> means timeout,
-<code>Some None</code> means a runtime error.</p>
-<div style="font-size: 0.9em;">
+<section>
+<section id="part-1-implementation" class="title-slide slide level1">
+<h1><small>Part 1</small><br/>Implementation</h1>
+
+</section>
+<section id="syntax-2.1" class="slide level2">
+<h2>Syntax (§2.1)</h2>
+<div class="columns">
+<div class="column">
+<p><strong>Long form</strong>, mirroring set-builder notation:</p>
+<pre class="scala"><code>type NonEmpty[A] =
+  {l: List[A] with l.nonEmpty}</code></pre>
+<div class="fragment">
+<p><strong>Short form</strong>, reusing a name already in scope:</p>
+<pre class="scala"><code>val x: (Int with x % 2 == 0) = 42
+// desugars to:
+val x: {v: Int with v % 2 == 0} = 42</code></pre>
+</div>
+</div><div class="column">
+<pre class="scala fragment"><code>def zip[A, B](
+  xs: List[A],
+  ys: List[B] with ys.size == xs.size
+): {zs: List[(A, B)] with zs.size == xs.size}</code></pre>
+<pre class="scala fragment"><code>def concat[T](
+  xs: List[T],
+  ys: List[T]
+): {zs: List[T] with zs.size ==
+                       xs.size + ys.size}</code></pre>
+<pre class="scala fragment"><code>val xs: List[Int] = …; val ys: List[Int] = …
+zip(concat(xs, ys), concat(ys, xs))
+zip(concat(xs, ys), concat(xs, xs)) // error</code></pre>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li><code>with</code> was a deprecated keyword in Scala 3, so it was
+free to reuse; <code>|</code> was already taken by union types.</li>
+<li><code>_</code> and <code>this</code> were considered as implicit
+binders and rejected: repeated <code>_</code> denotes distinct
+parameters, and <code>this</code> already means something else.</li>
+<li>Predicates reuse Scala’s <strong>expression</strong> syntax: two new
+grammar productions, no new term language.</li>
+<li>The base type is an <code>InfixType</code>, which excludes complex
+forms such as unparenthesized match types.</li>
+</ul>
+</aside>
+</section>
+<section id="why-first-class-1" class="slide level2">
+<h2>Why <em>first-class</em>? (§1)</h2>
+<div class="columns">
+<div class="column">
+<p>Liquid Haskell is a plugin that runs <strong>after</strong> type
+checking. The type of <code>x</code> is declared twice:</p>
+<pre class="haskell"><code>{-@ x :: {v:Int | v mod 2 == 0} @-}
+let x = 42 :: Int in ...</code></pre>
+<div class="fragment">
+<p>“It’s sort of like you’re doing two things at once […] you’re also
+talking to GHC, but you’re also talking to LiquidHaskell.” <small>– <a
+href="https://dl.acm.org/doi/10.1145/3729327">Usability Barriers for
+Liquid Types</a> (Gamboa et al., PLDI 2025)</small></p>
+</div>
+<div class="fragment">
+<p>Instead, we implement refinement as ordinary Scala types,
+participating in subtyping, inference, overloading and pattern
+matching.</p>
+</div>
+</div><div class="column">
+<div class="fragment">
+<pre class="scala"><code>// Example: Bounded polymorphism
+type Even = {v: Int with v % 2 == 0}
+def maximum[T: Ordering, U &lt;: T]
+  (xs: List[U]): U = xs.reduce(max)
+def example1: Even =
+  maximum(List(2, 4, 6))</code></pre>
+</div>
+<div class="fragment">
+<pre class="scala"><code>// Example: Overload resolution
+def min(l: List[Int] with l.isSorted) =
+  l.head // O(1)
+def min(l: List[Int]) = l.min // O(n)
+
+def ex2(l: List[Int] with l.isSorted) =
+  min(l) // calls the first overload</code></pre>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>Schmid and Kunčak’s Scala prototype was “largely independent of
+Scala’s own type checker”, so refinements could <strong>not</strong> be
+inferred as type arguments, and needed a separate qualifier inference
+algorithm that proved hard to scale.</li>
+<li>Honest history: our early prototypes also ran as a separate phase.
+More drawbacks than benefits.</li>
+<li>In <code>maximum</code>, <code>List(2, 4, 6)</code> is typed
+<code>List[2 | 4 | 6]</code>; inference instantiates
+<code>T := Int</code> (whose <code>Ordering</code> does the comparisons)
+and <code>U := 2 | 4 | 6</code>, and the result checks against
+<code>Even</code> since each literal satisfies the predicate. This is
+the case that motivated abstract refinements.</li>
+<li>Dafny and F* also treat refinements as first-class, but were
+designed around verification from the ground up; ours is the first
+integration into a pre-existing language where subtyping is central and
+pervasive.</li>
+</ul>
+</aside>
+</section>
+<section id="mixed-precision-type-inference-2.4" class="slide level2">
+<h2>Mixed-precision type inference (§2.4)</h2>
+<div class="columns">
+<div class="column">
+<p>Refinement types are <strong>not</strong> inferred from terms by
+default; the wider type is:</p>
+<pre class="scala"><code>val x = 42 // Int, not {v: Int with v == 42}</code></pre>
+<div class="fragment">
+<p>Why not always infer the precise type?</p>
+</div>
+<div class="fragment">
+<ol type="1">
+<li><strong>Backward compatibility:</strong> implicit and overload
+resolution depend on inferred types; a more precise type changes which
+instances are found.</li>
+<li><strong>Performance:</strong> bigger types, slower comparisons.</li>
+<li><strong>Usability:</strong> inferring most precise types everywhere
+would be unreadable.</li>
+</ol>
+</div>
+</div><div class="column">
+<div class="fragment">
+<p>Instead, precision is recovered <strong>on demand</strong>, by a
+standard mechanism called <em>selfification</em>, triggerd by the
+bidirectional type-inference algorithm:</p>
+</div>
+<div class="fragment">
+<pre class="scala"><code>val x: (Int with x == 42) = 42 // selfified</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="run-time-checks-2.5" class="slide level2">
+<h2>Run-time checks (§2.5)</h2>
+<div class="columns">
+<div class="column">
+<p><strong>Pattern matching</strong> branches on whether the predicate
+holds at run time:</p>
+<pre class="scala"><code>type ID = {s: String with s.matches(idRegex)}
+
+&quot;a2e7-e89b&quot; match
+  case id: ID =&gt; ... // holds, id has type ID
+  case _      =&gt; ... // does not hold</code></pre>
+</div><div class="column">
+<div class="fragment">
+<p><strong>Checked casts.</strong> <code>.runtimeChecked</code> (<a
+href="https://docs.scala-lang.org/sips/replace-nonsensical-unchecked-annotation.html">SIP-57</a>),
+when you expect the check to pass:</p>
+<pre class="scala"><code>val id: ID = &quot;a2e7-e89b&quot;.runtimeChecked</code></pre>
+</div>
+<div class="fragment">
+<pre class="scala"><code>// desugars to:
+val id: ID =
+  if (&quot;a2e7-e89b&quot;.matches(idRegex))
+    &quot;a2e7-e89b&quot;.asInstanceOf[ID]
+  else throw new IllegalArgumentException()</code></pre>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>The JVM erases type parameters, so <code>List[ID]</code> cannot be
+matched directly, but <code>xs.collect { case x: ID =&gt; x }</code>
+works.</li>
+<li>Both work only for first-order predicates: higher-order values
+cannot be checked eagerly, which sidesteps blame assignment for
+now.</li>
+</ul>
+</aside>
+</section>
+<section id="solver-4.3" class="slide level2">
+<h2>Solver (§4.3)</h2>
+<div class="columns">
+<div class="column">
+<p>How does the compiler check
+<code>{x: T with p(x)} &lt;: {y: S with q(y)}</code>?</p>
+<ol type="1">
+<li>Check <code>T &lt;: S</code></li>
+<li>Check <code>p(x)</code> implies <code>q(x)</code> for all
+<code>x</code></li>
+</ol>
+<div class="fragment">
+<p>Existing implementation lowers the problem to an SMT solver.</p>
+</div>
+<div class="fragment">
+<p>Due to publishing and performance concerns, we instead implemented
+our own <strong>lightweight e-graph-based solver</strong>.</p>
+</div>
+</div><div class="column">
+<p>Domain-specific rewrites during canonicalization:</p>
+<pre class="scala"><code>{v: Int with v == x + 3 * y}
+  &lt;: {v: Int with v == 2 * y + (x + y)}</code></pre>
+<pre class="scala fragment"><code>{v: Int with v == a &amp;&amp; a == b}
+  &lt;: {v: Int with v == b}
+{v: Int with a == b}
+  &lt;: {v: Int with f(a) == f(b)}</code></pre>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>Strictly stronger than substitution alone; intentionally weaker than
+equality saturation: one representative per class, so only one form is
+explored.</li>
+</ul>
+</aside>
+</section>
+<section id="evaluation-4.4" class="slide level2">
+<h2>Evaluation (§4.4)</h2>
+<div class="columns">
+<div class="column">
+<p><strong>Compilation overhead</strong>, against each system’s own
+unchecked baseline:</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Overhead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First-class (ours)</td>
+<td><strong>0–12%</strong></td>
+</tr>
+<tr>
+<td>Schmid and Kunčak</td>
+<td>20–38%</td>
+</tr>
+<tr>
+<td>Stainless</td>
+<td>≥ 56%</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<p><strong>When the feature is unused</strong>, the full Dotty CI passes
+unchanged: the compiler itself (≈200 000 LoC), ≈10 000 tests, a
+50-project community build. At most 4% slowdown on the official
+benchmark suite.</p>
+</div>
+</div><div class="column">
+<div class="fragment">
+<p><strong>Expressiveness.</strong> Because refinements are types, we
+get type-argument inference. We also compile unmodified Scala, so
+adoption is incremental.</p>
+</div>
+<div class="fragment">
+<p>Conversely, both alternatives have stronger solvers: SMT-backed and
+complete for linear integer arithmetic, ADTs and equality.</p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="part-2-metatheory" class="title-slide slide level1">
+<h1><small>Part 2</small><br />Metatheory</h1>
+
+</section>
+<section id="language-3.1" class="slide level2">
+<h2>Language (§3.1)</h2>
+<div class="columns">
+<div class="column">
+<p>Essentially System <span class="math inline">F_{&lt;:&gt;}</span>
+with refinements, dependent functions and pairs, sums, unions,
+intersections and equi-recursive types:</p>
+<p><span class="math display">
+\begin{aligned}
+A, B ::=\ &amp; X \mid \texttt{Unit} \mid \texttt{True} \mid
+\texttt{False} \mid \texttt{Int32} \mid \top \mid \bot \\
+&amp;\mid \Pi x{:}A.\, B \mid \forall (X {:&gt;} L {&lt;:} U).\, A \mid
+\Sigma x{:}A.\, B \\
+&amp;\mid A + B \mid \lbrace x : A \mid p \rbrace \mid A \lor B \mid A
+\land B \\
+&amp;\mid \mu X.\, A
+\end{aligned}
+</span></p>
+<div class="fragment">
+<p><span class="math display">
+\begin{aligned}
+a, b, f, p ::=\ &amp; c \mid x \mid \lambda x{:}A.\, b \mid f\; a \mid
+f\,[A] \\
+&amp;\mid \Lambda (X {:&gt;} L {&lt;:} U).\, b \mid \textsf{let}\; x{:}A
+= a \;\textsf{in}\; b \\
+&amp;\mid (a_1, a_2) \mid \textsf{inl}[A]\, a \mid \textsf{inr}[A]\, a
+\mid \textsf{match} \ldots \\
+&amp;\mid a \;\mathit{op}\; b \mid \textsf{if}\; a \;\textsf{then}\; b_1
+\;\textsf{else}\; b_2 \mid \textsf{loop}(a)\; x.\, b
+\end{aligned}
+</span></p>
+</div>
+</div><div class="column">
+<div class="fragment">
+<p><strong>Loops.</strong> <span class="math inline">\textsf{loop}(a)\;
+x.\, b</span> is a limited recursion that suffices to model loops and
+tail recursion. The body returns <span
+class="math inline">\textsf{inl}</span> to continue, <span
+class="math inline">\textsf{inr}</span> to exit.</p>
+</div>
+<div class="fragment">
+<p><strong>Contribution</strong>. To our knowledge, this is the first
+mechanized soundness proof combining refinements with <span
+class="math inline">\lor</span>/<span class="math inline">\land</span>,
+bounded polymorphism (both bounds), and positive equi-recursive
+types.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li><code>True</code> and <code>False</code> are singletons rather than
+one <code>Bool</code>: then <span class="math inline">v \in \lbrace x :
+A \mid p \rbrace</span> is exactly “<span class="math inline">v \in
+A</span> and <span class="math inline">p \in \mathcal{E}\llbracket
+\texttt{True} \rrbracket</span>”. <code>Bool</code> is recovered as
+<code>True</code> <span class="math inline">\lor</span>
+<code>False</code>.</li>
+</ul>
+</aside>
+</section>
+<section id="definitional-interpreter-3.2" class="slide level2">
+<h2>Definitional Interpreter (§3.2)</h2>
+<p>Operational semantic is defined using a <strong>fuel-bounded
+definitional interpreter</strong>:</p>
 <pre class="coq"><code>Fixpoint eval (fuel: nat) (env: list Value) (t: Term) : option (option Value) :=
   match fuel with
-  | 0 =&gt; None
+  | 0 =&gt; None              (* timeout *)
   | S fuel&#39; =&gt;
     match t with
-    …
+    | tabs _ b =&gt;
+        Some (Some (vabs env b))
     | tapp f a =&gt;
-        match (eval fuel&#39; env f) with
-        | None =&gt; None
+        match eval fuel&#39; env f with
         | Some (Some (vabs envf b)) =&gt;
-            match (eval fuel&#39; env a) with
-            | None =&gt; None
-            | Some None =&gt; Some None
-            | Some (Some va) =&gt; eval fuel&#39; (va::envf) b
-            end
-        | _ =&gt; Some None
+          … eval fuel&#39; (va :: envf) b
+        | None =&gt; None       (* timeout *)
+        | _ =&gt; Some None     (* stuck *)
     …</code></pre>
-</div>
 </section>
-<section id="definitional-interpreter-reference" class="slide level2">
-<h2>Definitional interpreter <small>(reference)</small></h2>
-<p><img src="./amin.png" class="paper"/></p>
-</section>
-<section id="semantic-types" class="slide level2">
-<h2>Semantic Types</h2>
+<section id="interpretation-3.3" class="slide level2">
+<h2>Interpretation (§3.3)</h2>
 <div class="columns">
-<div class="column" style="flex: 1 1 0">
+<div class="column">
+<p>A <em>semantic type</em> is a predicate <span
+class="math inline">\textsf{Value} \to \textsf{Prop}</span>.</p>
 <div class="fragment">
-<p>The <em>value interpretation</em> defines what it means for a value
-to have a syntactic type:</p>
-<div style="font-size: 0.9em;">
-<pre class="coq"><code>Fixpoint interp (T: Ty) (v: Value) : Prop :=
-  match T with
-  | TBool =&gt; exists b, v = vbool b
-  | TFun A B =&gt;
-      exists env body, v = vabs env body
-      /\ forall arg, interp A arg -&gt;
-           tinterp (arg::env) body (interp B)
-  end.</code></pre>
+<p>The <em>value interpretation</em> <span
+class="math inline">\mathcal{V}\llbracket A
+\rrbracket_{\delta}^{\rho}</span> maps a syntactic type to a semantic
+type, given a semantic type context <span
+class="math inline">\delta</span> and a value environement <span
+class="math inline">\rho</span>.</p>
 </div>
-</div>
-<p><!-- end fragment --></p>
-<div class="fragment">
-<p>The <em>term interpretation</em> defines what it means for a
-<em>term</em> to have a <em>semantic type</em>:</p>
-<pre class="coq small"><code>Definition tinterp (env: list Value) (t: Term)
-                   (T: Value -&gt; Prop) : Prop :=
-  exists v fuel,
-    eval fuel env t = Some (Some v) /\ T v.</code></pre>
-</div>
-<p><!-- end fragment --></p>
-</div><div class="column" style="flex: 1 1 0">
-<div class="fragment">
-<p>The <em>semantic typing judgement</em> is defined as:</p>
-<pre class="coq small"><code>Definition sem_typed (tenv: list Ty) (t: Term)
-                     (T: Ty) : Prop :=
-  forall env, Forall2 interp tenv env -&gt;
-    tinterp env t (interp T).</code></pre>
-</div>
-<!-- end fragment -->
-<div class="fragment">
-<p>It allows us to <em>prove</em> typing rules:</p>
-<pre class="coq small"><code>Lemma sem_typed_app: forall tenv f a A B,
-  sem_typed tenv f (TFun A B) -&gt;
-  sem_typed tenv a A -&gt;
-  sem_typed tenv (tapp f a) B.
-Proof.
-  …
-Qed.</code></pre>
 <p><span class="math display">
-\frac{
-    \Gamma \vDash f : A \to B \qquad \Gamma \vDash a : A
-}{
-    \Gamma \vDash f \; a : B
-}
+\begin{aligned}
+\mathcal{V}\llbracket \Pi x{:}A.\, B \rrbracket_{\delta}^{\rho}(v)
+\triangleq\ &amp; \exists \rho_f, b.\; v = \langle \rho_f, \lambda x.\,
+b \rangle\ \land \\
+  &amp; \forall v_a.\; \mathcal{V}\llbracket A
+\rrbracket_{\delta}^{\rho}(v_a) \implies \\
+  &amp;\quad \mathcal{E}\llbracket B \rrbracket_{\delta}^{\rho_f[x
+\mapsto v_a]}(b)
+\end{aligned}
 </span></p>
-</div>
-<!-- end fragment -->
-</div><!-- end column -->
-</div>
-<!-- end columns -->
-</section>
-<section id="semantic-types-reference" class="slide level2">
-<h2>Semantic Types <small>(reference)</small></h2>
-<p><img src="./timany.png" class="paper"/></p>
-</section>
-<section id="interpretation-of-recursive-types" class="slide level2">
-<h2>Interpretation of recursive types</h2>
-<div class="columns">
-<div class="column" style="flex: 1 1 0">
 <div class="fragment">
-<p>Recursive types have a body, and an implicit de Bruijn binder.
-<code>TVar i</code> refers to <code>i</code>-th bound type.</p>
-<pre class="coq small"><code>Inductive Ty : Type :=
-  …
-  | TVar : nat -&gt; Ty
-  | TMu : Ty -&gt; Ty.</code></pre>
+<p><span class="math display">\mathcal{V}\llbracket \lbrace x : A \mid p
+\rbrace \rrbracket_{\delta}^{\rho}(v) \triangleq \mathcal{V}\llbracket A
+\rrbracket_{\delta}^{\rho}(v) \land \mathcal{E}\llbracket \texttt{True}
+\rrbracket_{\delta}^{\rho[x \mapsto v]}(p)</span></p>
 </div>
 <div class="fragment">
-<p>Remember, we want <span class="math inline">\mu X. T \equiv T[X
-\mapsto \mu X. T]</span>.</p>
+<p><span class="math display">\mathcal{V}\llbracket \mu X.\, A
+\rrbracket_{\delta}^{\rho}(v) \triangleq \forall n.\; F^n(v)</span></p>
+<p><span class="math display">F^0(v) = \top,\quad F^{n+1}(v) =
+\mathcal{V}\llbracket A \rrbracket_{\delta[X \mapsto
+F^n]}^{\rho}(v)</span></p>
 </div>
-<div class="fragment">
-<p>Tentative <code>interp</code> using substitution:</p>
-<pre class="coq small"><code>Fixpoint interp_wrong (T: Ty) (v: Value) : Prop :=
-  match T with
-  …
-  | TVar i =&gt; False
-  | TMu B =&gt; interp (subst_ty 0 (TMu B) B)
-  end.</code></pre>
-</div>
-</div><div class="column" style="flex: 1 1 0">
-<div class="fragment">
-<p>We need <em>step-indexing</em> to break the circularity.</p>
-</div>
-<pre class="coq small fragment"><code>Equations? interp (T: Ty) (k: nat)
-                  (v: Value) : Prop
-  by wf (k, ty_size T)
-    (Equations.Prop.Subterm.lexprod _ _ lt lt) :=
-  …
-  interp (TMu B) 0 v := True;
-  interp (TMu B) (S k&#39;) v :=
-    interp (subst_ty 0 (TMu B) B) k&#39; v.</code></pre>
-<div class="fragment">
-<p>Semantic typing quantifies over all steps:</p>
-<pre class="coq small"><code>Definition sem_typed (tenv: TyEnv) (t: Term)
-                     (T: Ty) : Prop :=
-  forall env k,
-    Forall2 (fun T v =&gt; interp T k v) tenv env -&gt;
-    tinterp env t (fun v =&gt; interp T k v).</code></pre>
-</div>
-</div>
-</div>
-</section>
-<section id="later-types" class="slide level2">
-<h2>Later types</h2>
-<div class="columns">
-<div class="column" style="flex: 1 1 0">
-<div class="fragment">
-<p>Remember, we want <span class="math inline">\mu X. T \equiv T[X
-\mapsto \mu X. T]</span>.</p>
-</div>
-<div class="fragment">
-<p>But the well-founded version of <code>interp</code> gives us only
-<span class="math inline">\llbracket \mu X. T \rrbracket^k \equiv
-\llbracket T[X \mapsto\mu X. T] \rrbracket^{k-1}</span>.</p>
-</div>
-<div class="fragment">
-<p>We define a <em>later</em> type <span
-class="math inline">\triangleright \, T</span> to mean “<span
-class="math inline">T</span> but one step later”, so we have: <span
-class="math inline">\mu X. T \equiv \triangleright \, T[X \mapsto\mu X.
-T]</span>.</p>
-</div>
-<div class="fragment">
-<p>Interpretation of “later”:</p>
-<pre class="coq small"><code>interp (TLater T&#39;) 0 v := True;
-interp (TLater T&#39;) (S k&#39;) v := interp T&#39; k&#39; v;</code></pre>
-</div>
-</div><div class="column" style="flex: 1 1 0">
-<div class="fragment">
-<p>We can then prove the following typing rules for recursive types:</p>
+</div><div class="column">
+<p>The term interpretation lifts it to terms. This is where
+<strong>partial correctness</strong> lives:</p>
 <p><span class="math display">
-\frac{
-    \Gamma \vDash t : \triangleright \, T[X \mapsto \mu X. T]
-}{
-    \Gamma \vDash t : \mu X. T
-}
-\qquad
-\frac{
-    \Gamma \vDash t : \mu X. T
-}{
-    \Gamma \vDash t : \triangleright \, T[X \mapsto \mu X. T]
-}
+\begin{aligned}
+\mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(a) \triangleq\ &amp;
+\forall n, r.\; \texttt{eval}\; n\; \rho\; a = \texttt{Some}\; r
+\implies \\
+&amp;\quad \exists v.\; r = \texttt{Some}\; v \land
+\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v)
+\end{aligned}
 </span></p>
+<div class="fragment">
+<p>“<strong>If</strong> evaluation terminates, it produces a value, not
+a stuck state, and that value is in <span
+class="math inline">\mathcal{V}\llbracket A \rrbracket</span>.”
+Vacuously true for diverging terms.</p>
 </div>
 <div class="fragment">
-<p>Can we get rid of these spooky triangles?</p>
-</div>
-</div>
-</div>
-</section>
-<section id="downward-closure" class="slide level2">
-<h2>Downward closure</h2>
-<div class="columns">
-<div class="column" style="flex: 1 1 0">
-<div class="fragment">
-<p>We can avoid the later type in the folding rule if we require that
-semantic types are <em>downward closed</em>:</p>
-<p><span class="math display">T^{k} \subseteq T^{k&#39;} \text{ for all
-} k&#39; \le k</span></p>
-<p>where <span class="math inline">S \subseteq T</span> means <span
-class="math inline">\forall v, S \, v \implies T \, v</span>.</p>
-</div>
-<div class="fragment">
-<p>This is not true with our definition, due to function types
-contravariance.</p>
-</div>
-<div class="fragment">
-<p>Downward-close <code>interp</code> by quantifying over smaller steps
-in the interpretation of function types:</p>
-<pre class="coq small"><code>interp (TFun A B) k v :=
-  exists env body, v = vabs env body
-  /\ forall j (Hj: j &lt;= k) arg, interp A j arg -&gt;
-       tinterp (arg::env) body (interp B j);</code></pre>
-</div>
-</div><div class="column" style="flex: 1 1 0">
-<div class="fragment">
-<p>Thanks to downward closure of <code>interp</code>, we can now have
-<span class="math inline">\llbracket \mu X. T \rrbracket^k \subseteq
-\llbracket T[X \mapsto\mu X. T] \rrbracket^k</span>, so we can get rid
-of the later type in the folding rule:</p>
+<p>Well-formedness ties the assignments to the context:</p>
 <p><span class="math display">
-\frac{
-    \Gamma \vDash t : T[X \mapsto \mu X. T]
-}{
-    \Gamma \vDash t : \mu X. T
-}
-\qquad
-\frac{
-    \Gamma \vDash t : \mu X. T
-}{
-    \Gamma \vDash t : \triangleright \, T[X \mapsto \mu X. T]
-}
-</span></p>
-</div>
-<div class="fragment">
-<p>Later types in the wild:
-<img src="giarrusso.png" class="paper" style="width: 60%;"/>
-<small><em>Scala step-by-step: soundness for DOT with step-indexed
-logical relations in Iris</em><br/>Paolo G. Giarrusso, Léo Stefanesco,
-Amin Timany, Lars Birkedal, and Robbert Krebbers</small></p>
-</div>
-</div>
-</div>
-</section>
-<section id="indexed-judgements" class="slide level2">
-<h2>Indexed judgements</h2>
-<div class="columns">
-<div class="column" style="flex: 1">
-<div class="fragment">
-<p>Instead of using later types, can we move steps from the
-interpretation to the typing judgement?</p>
-</div>
-<div class="fragment">
-<p><span class="math display">
-\frac{
-    \Gamma \vDash_k t : \mu X. T
-}{
-    \Gamma \vDash_{k-1} t : \, T[X \mapsto \mu X. T]
-}
-</span></p>
-</div>
-<div class="fragment">
-<pre class="coq small"><code>Definition sem_typed (tenv: TyEnv) (n: nat)
-                     (t: Term) (T: Ty) : Prop :=
-  forall env k, n &lt; k -&gt;
-    Forall2 (fun T v =&gt; interp T k v) tenv env -&gt;
-    tinterp env t (fun v =&gt; interp T (k - n) v).</code></pre>
-</div>
-<div class="fragment">
-<p>It makes sense:</p>
-<pre class="coq small"><code>Lemma sem_typed_distribute: forall env tenv n e T,
-  sem_typed tenv n e T -&gt;
-  (forall k,
-     Forall2 (fun T v =&gt; interp T k v) tenv env) -&gt;
-  tinterp env e (fun v =&gt; forall j, interp T j v).</code></pre>
-</div>
-</div><div class="column" style="flex: 1">
-<div class="fragment">
-<p>For the application rule to go through, we also need to allow a gap
-inside the function interpretation:</p>
-<pre class="coq small"><code>Inductive Ty : Type :=
-  …
-  | TFun : nat -&gt; Ty -&gt; Ty -&gt; Ty
-  …</code></pre>
-<pre class="coq small"><code>interp (TFun g A B) k v :=
-  exists env body, v = vabs env body
-  /\ forall j (Hjlo: g &lt; j) (Hjhi: j &lt;= k) arg,
-       interp A j arg -&gt;
-       tinterp (arg::env) body (interp B (j - g));</code></pre>
-</div>
-<div class="fragment">
-<p>So we still have noise in the syntax,<br />
-<em>and</em> now also in the typing rules:</p>
-<p><span class="math display">
-\frac{
-    \Gamma \vDash_{i} f : A \to_j B \qquad \Gamma \vDash_{k} a : A
-}{
-    \Gamma \vDash_{i + j + k} f \; a : B
-}
+\begin{aligned}
+\mathrm{wf}(\delta, \Gamma, \rho) \triangleq\ &amp; \forall (x : A) \in
+\Gamma.\; \mathcal{V}\llbracket A \rrbracket(\rho(x)) \\
+\land\ &amp; \forall (X {:&gt;} L {&lt;:} U) \in \Gamma. \\
+&amp;\quad \mathcal{V}\llbracket L \rrbracket \subseteq \delta(X)
+\subseteq \mathcal{V}\llbracket U \rrbracket \\
+\land\ &amp; \forall (a_1 \sim a_2) \in \Gamma.\; \exists v, n_1, n_2.
+\\
+&amp;\quad \texttt{eval}\; n_1\; \rho\; a_1 = \texttt{eval}\; n_2\;
+\rho\; a_2 \\
+&amp;\quad\quad = \texttt{Some}\,(\texttt{Some}\; v)
+\end{aligned}
 </span></p>
 </div>
 </div>
 </div>
+<aside class="notes">
+<ul>
+<li>Step-index-<strong>free</strong>: the <span
+class="math inline">\forall n</span> is inside the definition, so no
+external step counter is threaded through.</li>
+</ul>
+</aside>
 </section>
-<section id="existential-gaps" class="slide level2">
-<h2>Existential gaps</h2>
+<section id="typing-3.4" class="slide level2">
+<h2>Typing (§3.4)</h2>
+<div class="columns">
+<div class="column">
+<p>Semantic typing is <strong>defined</strong>, not derived: it
+quantifies over every well-formed environment:</p>
+<p><span class="math display">\Gamma \vDash a : A \triangleq \forall
+\delta, \rho.\; \mathrm{wf}(\delta, \Gamma, \rho) \implies
+\mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(a)</span></p>
 <div class="fragment">
-<p>Can we existentially quantify over the gaps?</p>
+<p>So the usual typing rules are not definitions but
+<strong>lemmas</strong>: each of the 20 rules is proven individually,
+and any derivation built from them inherits safety. This is the
+fundamental theorem of the logical relation.</p>
 </div>
 <div class="fragment">
-<p>No.</p>
+<p>A syntactic judgment <span class="math inline">\Gamma \vdash a :
+A</span> mirrors the rules, with:</p>
+<p><strong>Theorem (Adequacy).</strong> If <span
+class="math inline">\Gamma \vdash a : A</span> then <span
+class="math inline">\Gamma \vDash a : A</span>.</p>
 </div>
 <div class="fragment">
-<p>More in the report.</p>
+
+</div>
+</div><div class="column">
+<p><span class="math display">\frac{\Gamma \vDash a : A \qquad \Gamma, x
+: A, x \sim a \vDash b : B}{\Gamma \vDash \textsf{let}\; x{:}A = a
+\;\textsf{in}\; b : \textsf{avoid}(B, x)}\;\text{(T-Let)}</span></p>
+<div class="fragment">
+<p><span class="math display">\frac{\Gamma \vDash a : A \qquad
+\textsf{firstorder}(A)}{\Gamma \vDash a : \lbrace x : A \mid x
+\mathbin{\texttt{==}} a \rbrace}\;\text{(T-Self)}</span></p>
+</div>
+<div class="fragment">
+<p><span class="math display">\frac{\Gamma \vDash a : A \qquad \Gamma, x
+: A \vDash b : A + B}{\Gamma \vDash \textsf{loop}(a)\; x.\, b :
+B}\;\text{(T-Loop)}</span></p>
+</div>
+<div class="fragment">
+
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>No preservation, no progress, no canonical-forms lemma.</li>
+<li><span class="math inline">\textsf{firstorder}</span> excludes
+closures and polymorphic values: no run-time equality.</li>
+<li>Recursion <strong>without</strong> typing a self-reference, which is
+what would normally force step-indexed reasoning for a fixpoint
+combinator.</li>
+<li><span class="math inline">\textsf{avoid}(B, x)</span> removes a
+variable going out of scope, guided by polarity: a predicate mentioning
+<span class="math inline">x</span> becomes <code>true</code> positively,
+<code>false</code> negatively.</li>
+</ul>
+</aside>
+</section>
+<section id="subtyping-3.5" class="slide level2">
+<h2>Subtyping (§3.5)</h2>
+<div class="columns">
+<div class="column">
+<p>Subtyping is semantic inclusion, again quantified over all
+well-formed environments:</p>
+<p><span class="math display">\Gamma \vDash A &lt;: B \triangleq \forall
+\delta, \rho.\; \mathrm{wf}(\delta, \Gamma, \rho) \implies
+\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho} \subseteq
+\mathcal{V}\llbracket B \rrbracket_{\delta}^{\rho}</span></p>
+<div class="fragment">
+<p>Every value satisfying <span class="math inline">A</span> also
+satisfies <span class="math inline">B</span>. The 20 subtyping rules
+are, again, lemmas.</p>
+</div>
+<div class="fragment">
+<p><span class="math display">\Gamma \vDash \lbrace x : A \mid p \rbrace
+&lt;: A \;\text{(S-RefineBase)}</span></p>
+<p><span class="math display">\frac{\Gamma \vDash A &lt;: B \qquad
+\Gamma, x : A \vDash p_1 \Rightarrow p_2}{\Gamma \vDash \lbrace x : A
+\mid p_1 \rbrace &lt;: \lbrace x : B \mid p_2
+\rbrace}\;\text{(S-Refine)}</span></p>
+</div>
+</div><div class="column">
+<p>Recursive types are <strong>equi</strong>-recursive: no fold/unfold
+terms, just subtyping.</p>
+<p><span class="math display">\frac{\textsf{spos}(X, A)}{\Gamma \vDash
+\mu X.\, A &lt;: A[X \mapsto \mu X.\,
+A]}\;\text{(S-Mu-Unfold)}</span></p>
+<p><span class="math display">\frac{\textsf{spos}(X, A)}{\Gamma \vDash
+A[X \mapsto \mu X.\, A] &lt;: \mu X.\, A}\;\text{(S-Mu-Fold)}</span></p>
+<div class="fragment">
+<p>Together they give <span class="math inline">\mu X.\, A \cong A[X
+\mapsto \mu X.\, A]</span>, proven by showing the two interpretations
+coincide. That is the ingredient that replaces step indexing.</p>
+</div>
+<div class="fragment">
+<p><strong>Strict positivity</strong> buys that: <span
+class="math inline">X</span> never occurs left of an arrow or in a <span
+class="math inline">\forall</span> bound. Two sharper edges:</p>
+<ul>
+<li>under a <strong>union</strong>, <span class="math inline">X</span>
+must be entirely absent;</li>
+<li>under a <strong>nested</strong> <span class="math inline">\mu Y.\,
+B</span>, we need <span class="math inline">\textsf{spos}(Y, B)</span>
+<em>and</em> <span class="math inline">X \notin B</span>.</li>
+</ul>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>The single case added to Dotty’s type comparer: check <span
+class="math inline">&lt;: A</span>, delegate the predicate to the
+solver.</li>
+</ul>
+</aside>
+</section>
+<section id="semantic-implication-and-termination-2.3-3.3"
+class="slide level2">
+<h2>Semantic implication and termination (§2.3, §3.3)</h2>
+<div class="columns">
+<div class="column">
+<p>Predicates are ordinary pure terms, so they <strong>may
+diverge</strong>. <span class="math inline">\lbrace x : A \mid p
+\rbrace</span> holds when <span class="math inline">p</span> evaluates
+to <code>true</code> <em>whenever it terminates</em>, exactly like a
+run-time assertion, which only fails if the check returns
+<code>false</code>.</p>
+<div class="fragment">
+<p>Termination is confined to <strong>one</strong> judgment, used only
+by <span class="smallcaps">S-Refine</span>:</p>
+<p><span class="math display">
+\begin{aligned}
+\Gamma \vDash p_1 \Rightarrow p_2 \triangleq\ &amp; \forall \delta,
+\rho.\; \mathrm{wf}(\delta, \Gamma, \rho) \implies \\
+&amp;\quad \mathcal{E}\llbracket \texttt{True} \rrbracket(p_1) \implies
+\mathcal{E}\llbracket \texttt{True} \rrbracket(p_2)
+\end{aligned}
+</span></p>
+</div>
+<div class="fragment">
+<p>No typing rule mentions termination, so soundness needs <strong>no
+termination assumption</strong>, unlike System FR (total correctness),
+Liquid Haskell (reflected functions), F* and Dafny (specification-level
+computation).</p>
+</div>
+</div><div class="column">
+<p>Some entailments need nothing:</p>
+<p><strong>Lemma (And-True).</strong> <span class="math inline">\Gamma
+\vDash (t \mathbin{\texttt{\&amp;\&amp;}} \texttt{true}) \Rightarrow
+t</span>.</p>
+<div class="fragment">
+<p>Others genuinely do:</p>
+<p><strong>Lemma (And-False).</strong> <span
+class="math inline">t</span> terminates <span
+class="math inline">\implies \Gamma \vDash (t
+\mathbin{\texttt{\&amp;\&amp;}} \texttt{false}) \Rightarrow
+\texttt{false}</span>.</p>
+</div>
+<div class="fragment">
+<p>Alarming? No: a diverging predicate is indistinguishable from
+<code>true</code>, not from <code>false</code>, and <code>true</code>
+proves nothing:</p>
+<p><strong>Lemma.</strong> <span class="math inline">\Gamma \vDash
+\lbrace x : A \mid \textsf{diverge} \rbrace \mathrel{&lt;:&gt;} \lbrace
+x : A \mid \texttt{true} \rbrace \mathrel{&lt;:&gt;} A</span>, and no
+<em>terminating</em> term has type <span class="math inline">\lbrace x :
+A \mid \texttt{false} \rbrace</span>.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<ul>
+<li>Necessary: <span class="math inline">\neg\,(\varnothing \vDash
+(\textsf{diverge} \mathbin{\texttt{\&amp;\&amp;}} \texttt{false})
+\Rightarrow \texttt{false})</span>.</li>
+</ul>
+</aside>
+</section>
+<section id="future-work" class="slide level2">
+<h2>Future work</h2>
+<div class="columns">
+<div class="column">
+<p><strong>Implementation</strong></p>
+<ul>
+<li><strong>Flow-sensitive typing.</strong> Works for patterns today;
+<code>if</code> conditions should narrow too:</li>
+</ul>
+<pre class="scala"><code>if x &gt; 0 then x: {v: Int with v &gt; 0}</code></pre>
+<ul>
+<li><strong>External checks</strong> for what our lightweight solver
+cannot do. For example, it cannot yet prove
+<code>{v: Int with v &gt; 2} &lt;: {v: Int with v &gt; 0}</code>:</li>
+</ul>
+<pre class="scala"><code>x.externallyChecked: {v: Int with v &gt; 0}</code></pre>
+<ul>
+<li><strong>Term-parameterized types</strong>, to modularize
+predicates:</li>
+</ul>
+<pre class="scala"><code>type Range(from: Int, to: Int) = {v: Int with v &gt;= from &amp;&amp; v &lt; to}</code></pre>
+</div><div class="column">
+<p><strong>Theory</strong></p>
+<ul>
+<li><p><strong>Enforcing purity.</strong> Today a function called in a
+predicate is <em>assumed</em> pure; an impure one is a silent logical
+error. Capture checking tracks exactly this, and separation checking
+would make invalidating facts on writes sound.</p></li>
+<li><p><strong>A syntactic proof system for entailment.</strong> We
+leave implication purely semantic; the solver’s normalization rules are
+not yet verified against it.</p></li>
+<li><p><strong>A termination checker</strong>, needed only for the
+termination-sensitive entailment rules, never systematically for every
+function in a predicate.</p></li>
+<li><p><strong>Classes and objects</strong>, absent from the core
+calculus.</p></li>
+</ul>
+</div>
 </div>
 </section>
-<section id="science-to-the-rescue" class="slide level2">
-<h2>Science to the rescue</h2>
-<p><img src="./science2.png" class="paper" style="position: absolute; right: -2%; top: 5%; width: 20%;"/></p>
-<p><img src="./science.png" class="paper"/></p>
+<section id="summary" class="slide level2">
+<h2>Summary</h2>
+<div class="columns">
+<div class="column">
+<p>Refinement types can be <strong>first-class types</strong> in a
+mainstream language.</p>
+<ul>
+<li><p><strong>Design:</strong> refinements are ordinary Scala types, so
+subtyping, inference, bounded polymorphism, overloading and pattern
+matching work by construction.</p></li>
+<li><p><strong>Partial correctness:</strong> predicates may diverge; a
+diverging predicate is vacuous, and soundness needs no termination
+assumption.</p></li>
+<li><p><strong>Metatheory:</strong> the first mechanized proof combining
+refinements with unions, intersections, bounded polymorphism with both
+bounds, and positive equi-recursive types.</p></li>
+<li><p><strong>Implementation:</strong> ≈2 500 lines in Dotty, a
+≈600-line e-graph solver, 0–12% overhead, Dotty CI green.</p></li>
+</ul>
+</div><div class="column">
+<p><strong>Try it.</strong> Published on Maven, usable from any SBT
+project:</p>
+<pre class="scala"><code>scalaOrganization := &quot;ch.epfl.lara&quot;
+scalaVersion := &quot;3.10.0-RC1-bin-...-NIGHTLY&quot;
+scalacOptions ++= Seq(
+  &quot;-language:experimental.qualifiedTypes&quot;)</code></pre>
+<pre class="scala fragment"><code>type Even = {v: Int with v % 2 == 0}
+val x: Even = 42</code></pre>
+<div class="fragment">
+<p><strong>Artifact:</strong> Rocq mechanization, the Dotty extension,
+and the JMH benchmark suites.</p>
+<p><small><a
+href="https://github.com/mbovel/first-class-refinement-types-in-scala"
+class="uri">https://github.com/mbovel/first-class-refinement-types-in-scala</a></small></p>
+</div>
+<div class="fragment">
+<p>Thank you. Questions welcome.</p>
+</div>
+</div>
+</div>
 </section>
-<section id="insight-1.-global-steps" class="slide level2">
-<h2>Insight 1. Global steps</h2>
-<p>In the definitional interpreter, count global evaluation steps
-instead of depth of recursive calls (🥲).</p>
-<pre class="coq small"><code>Equations? eval_sig (fuel: nat) (env: ValueEnv) (t: Term) :
-  option ({fuel&#39; : nat | fuel&#39; &lt; fuel} * option Value) by wf fuel lt :=
-eval_sig 0 _ _ := None;
-…
-eval_sig (S fuel) env (tapp f a) with eval_sig fuel env f =&gt; {
-  | None =&gt; None;
-  | Some (exist _ fuel1 _, None) =&gt; Some (exist _ fuel1 _, None);
-  | Some (exist _ fuel1 _, Some (vbool _)) =&gt; Some (exist _ fuel1 _, None);
-  | Some (exist _ fuel1 _, Some (vabs envf body)) with eval_sig fuel1 env a =&gt; {
-    | None =&gt; None;
-    | Some (exist _ fuel2 _, None) =&gt; Some (exist _ fuel2 _, None);
-    | Some (exist _ fuel2 _, Some va) with eval_sig fuel2 (va::envf) body =&gt; {
-      | None =&gt; None;
-      | Some (exist _ fuel3 _, r) =&gt; Some (exist _ fuel3 _, r)
-    }
+<section id="backup-lh-usability-barriers" class="slide level2">
+<h2><span class="chapter">Backup:</span> LH Usability Barriers</h2>
+<p>From <a href="https://dl.acm.org/doi/10.1145/3729327">“Usability
+Barriers for Liquid Types”</a> [1]:</p>
+<ul>
+<li>4.2 Unclear Divide between Haskell and LiquidHaskell:
+<ul>
+<li><small>“comments are usually seen as just optional information in
+the code and not something that is directly used by the
+compiler”</small></li>
+<li><small>“It’s sort of like you’re doing two things at once because
+you’re implementing in Haskell. But you’re also talking to GHC, but
+you’re also talking to LiquidHaskell.”</small></li>
+</ul></li>
+<li>4.7 Unhelpful Error Messages
+<ul>
+<li><small>“[…] error messages produced from typing errors inside the
+predicates, seemed indistinguishable from those produced by verification
+errors.”</small></li>
+</ul></li>
+<li>4.8 Limited IDE Support
+<ul>
+<li><small>“[user] tried to use the function <code>length</code>, but
+since it was not imported, it was impossible to use in this
+case.”</small></li>
+</ul></li>
+</ul>
+<p><small>[1] Catarina Gamboa, Abigail Reese, Alcides Fonseca, and
+Jonathan Aldrich. 2025. Usability Barriers for Liquid Types. Proc. ACM
+Program. Lang. 9, PLDI, Article 224 (June 2025), 26 pages.
+<a href="https://dl.acm.org/doi/10.1145/3729327">doi:10.1145/3729327</a></small></p>
+</section>
+<section id="backup-list.collect" class="slide level2">
+<h2><span class="chapter">Backup:</span> <code>List.collect</code></h2>
+<p>Scala type parameters are <em>erased</em> at runtime, so we cannot
+match on a <code>List[T]</code>.</p>
+<div class="fragment">
+<p>However, we can use <code>.collect</code> to filter and convert a
+list:</p>
+<pre class="scala"><code>type Pos = { v: Int with v &gt;= 0 }
+
+val xs = List(-1,2,-2,1)
+xs.collect { case x: Pos =&gt; x } : List[Pos]</code></pre>
+</div>
+</section>
+<section id="backup-specify-using-assertions" class="slide level2">
+<h2><span class="chapter">Backup:</span> Specify using assertions
+😕</h2>
+<div class="columns">
+<div class="column">
+<p>We can use assertions:</p>
+<pre class="scala"><code>def zip[A, B](
+  xs: List[A],
+  ys: List[B]
+) : List[(A, B)] = {
+  require(xs.size == ys.size)
+  ...
+}.ensuring(_.size == xs.size)</code></pre>
+</div><div class="column fragment">
+<p>Limitations:</p>
+<ul>
+<li><em>Runtime overhead</em>: checked at runtime, not compile
+time,</li>
+<li><em>No static guarantees</em>: only checked for specific
+inputs,</li>
+<li><em>Not part of the API</em>: not visible in function type,</li>
+<li><em>Hard to compose</em>: cannot be passed as type argument.</li>
+</ul>
+</div><p><!-- .column --></p>
+</div>
+<p><!-- .columns --></p>
+<aside class="notes">
+<p>We can use assertions, but they have limitations. The check happens
+at runtime, so there’s overhead. The compiler can’t verify the
+precondition is always satisfied. The precondition is not visible in the
+function type. And assertions don’t compose well—imagine passing a list
+of values that all satisfy some property.</p>
+</aside>
+</section>
+<section id="backup-specify-using-dependent-types" class="slide level2">
+<h2><span class="chapter">Backup:</span> Specify using dependent types
+😕</h2>
+<div class="columns">
+<div class="column">
+<p>Can we use path-dependent types?</p>
+<pre class="scala"><code>def zip[A, B](
+  xs: List[A],
+  ys: List[B] {
+    val size: xs.size.type
   }
-}.</code></pre>
+): List[(A, B)] {
+  val size: xs.size.type
+} = ...</code></pre>
+</div><div class="column fragment">
+<p>Limitations:</p>
+<ul>
+<li><em>Limited reasoning</em>: only fields, literals and constant
+folding,</li>
+<li><em>Not inferred</em>: need manual type annotations, or not typable
+at all,</li>
+<li><em>Different languages</em>: term-level vs type-level.</li>
+</ul>
+</div><p><!-- .column --></p>
+</div>
+<p><!-- .columns --></p>
 </section>
-<section id="insight-2.-make-steps-arithmetic-work"
-class="slide level2">
-<h2>Insight 2. Make steps arithmetic work</h2>
-<div class="columns">
-<div class="column" style="flex: 1 1 0">
-<ol type="1">
-<li>Tie type steps to evaluation steps.</li>
-<li>Decrease steps in the interpretation of <em>all</em>
-types<br/><em>but</em> recursive types.</li>
-<li>Interp recursive types as function power.</li>
-</ol>
-<pre class="coq small fragment"><code>Definition SemTy : Type := nat -&gt; Value -&gt; Prop.
-
-Definition tinterp (env: list Value) (k: nat)
-                   (t: Term) (T: SemTy) : Prop :=
-  forall k&#39; r, eval k env t = Some (k&#39;, r) -&gt;
-    exists v, r = Some v /\ T k&#39; v.
-
-Fixpoint fun_pow {A: Type} (k: nat)
-                 (f: A -&gt; A) (z: A) : A :=
-  match k with
-  | 0 =&gt; z
-  | S k =&gt; f (fun_pow k f z)
-  end</code></pre>
-</div><div class="column" style="flex: 1 1 0">
-<pre class="coq small fragment"><code>Definition mu_F (F: SemTy -&gt; SemTy) : SemTy :=
-  fun k v =&gt; fun_pow (S k) F Bot k v.
-
-Fixpoint interp (tenv: list SemTy) (T: Ty)
-                (k: nat) (v: Value) : Prop :=
-  match T with
-  | TVar i =&gt;
-      match nth_error tenv i with
-      | Some A =&gt; A k v
-      | None =&gt; False
-      end
-  | TBool =&gt; exists b, v = vbool b
-  | TFun A B =&gt;
-      exists env body, v = vabs env body /\
-        forall j (Hj: j &lt; k) arg,
-          interp tenv A j arg -&gt;
-          tinterp (arg::env) j body (interp tenv B)
-  | TMu B =&gt;
-    mu_F (fun Self =&gt; interp (Self :: tenv) B) k v
-  end.</code></pre>
-</div>
-</div>
-</section>
-<section id="insight-3.-contractive-magic" class="slide level2">
-<h2>Insight 3. Contractive magic</h2>
-<div class="columns">
-<div class="column" style="flex: 1 1 0">
+<section id="future-work-term-parameterized-types" class="slide level2">
+<h2><span class="chapter">Future work:</span> term-parameterized
+types</h2>
+<pre class="scala"><code>extension [T](list: List[T])
+  def get(index: Int with index &gt;= 0 &amp;&amp; index &lt; list.size): T = ...</code></pre>
 <div class="fragment">
-<p><img src="./science5.png" class="paper" style="width: 80%; margin-top: 0;"/></p>
-<pre class="coq small"><code>Definition approx (k: nat) (F: SemTy): SemTy :=
-  fun j v =&gt; j &lt; k /\ F j v.</code></pre>
+<p>To modularize the “range” concept, we could introduce
+term-parameterized types:</p>
+<pre class="scala"><code>type Range(from: Int, to: Int) = {v: Int with v &gt;= from &amp;&amp; v &lt; to}
+extension [T](list: List[T])
+  def get(index: Range(0, list.size)): T = ...</code></pre>
 </div>
-<div class="fragment">
-<p><img src="./science6.png" class="paper" style="width: 80%; margin-top: 0;"/></p>
-<pre class="coq small"><code>Definition wf (F: SemTy -&gt; SemTy) : Prop :=
-  forall k Z,
-    approx (S k) (F Z)
-    = approx (S k) (F (approx k Z)).</code></pre>
-</div>
-</div><div class="column" style="flex: 1 1 0">
-<div class="fragment">
-<p><img src="./science9.png" class="paper" style="width: 85%; margin-top: 0;"/></p>
-</div>
-<div class="fragment">
-<pre class="coq small"><code>Lemma F_well_founded: forall tenv B,
-  contractive B -&gt;
-  wf (fun X =&gt; interp (X :: tenv) B).</code></pre>
-</div>
-<div class="fragment">
-<pre class="coq small"><code>Definition contractive (T: Ty) : Prop :=
-  match T with
-  | TVar _ =&gt; False
-  | TBool =&gt; True
-  | TFun _ _ =&gt; True
-  | TMu _ =&gt; False
-  end.</code></pre>
-<p>Means the binder only occurs under other types.<br />
-<span class="math inline">\mu X. X</span> is not contractive, but <span
-class="math inline">\mu X. X \to X</span> is.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="insight-3.-contractive-magic-continued"
-class="slide level2">
-<h2>Insight 3. Contractive magic (continued)</h2>
-<div class="fragment">
-<p>This allows us to prove the following rule:</p>
-<p><span class="math display">
-\frac{
-    \Gamma \vDash t : T[X \mapsto \mu X. T] \qquad X \text{ contractive
-in } T
-}{
-    \Gamma \vDash t : \mu X. T
-}\qquad \frac{
-    \Gamma \vDash t : \mu X. T \qquad X \text{ contractive in } T
-}{
-    \Gamma \vDash t : T[X \mapsto \mu X. T]
-}
-</span></p>
-</div>
-<div class="fragment">
-<p>Maybe we can have the contractiveness condition by construction.</p>
-<pre class="scala"><code>enum List[A]:
-  case Nil()
-  case Cons(head: A, tail: List[A]) // okay</code></pre>
-<pre class="scala"><code>type A = A // not okay</code></pre>
-</div>
-</section>
-<section id="conclusion" class="slide level2">
-<h2>Conclusion</h2>
-<p>We mechanized soundness of 3 different semantics for recursive
-types:</p>
-<ol type="1">
-<li>Depth-bounded + later types</li>
-<li>Depth-bounded + indexed judgements</li>
-<li>Global steps + contractiveness</li>
-</ol>
-<p>This allowed us to better understand the tradeoffs between these
-approaches.</p>
-<p>Approach 3. seems better than what I previously had (positivity
-restriction).</p>
-<p>We also investigated the existential gap approach, and found it
-doesn’t work.</p>
-<p>Equations is a bit annoying to work with.</p>
-</section>
+</section></section>
     </div>
   </div>
 
-  <script src="https://unpkg.com/reveal.js@^5/dist/reveal.js"></script>
+  <script src="lib/reveal.js/dist/reveal.js"></script>
 
   <!-- reveal.js plugins -->
-  <script src="https://unpkg.com/reveal.js@^5/plugin/notes/notes.js"></script>
-  <script src="https://unpkg.com/reveal.js@^5/plugin/search/search.js"></script>
-  <script src="https://unpkg.com/reveal.js@^5/plugin/zoom/zoom.js"></script>
+  <script src="lib/reveal.js/plugin/notes/notes.js"></script>
+  <script src="lib/reveal.js/plugin/search/search.js"></script>
+  <script src="lib/reveal.js/plugin/zoom/zoom.js"></script>
 
   <script>
 
@@ -668,7 +942,7 @@ doesn’t work.</p>
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: true,
+        slideNumber: 'c/t',
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',
@@ -808,6 +1082,6 @@ doesn’t work.</p>
         ]
       });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/scala.min.js"></script><script src="highlightjs-coq.js"></script><script>hljs.highlightAll();</script>
+    <script src="lib/highlight.js/highlight.min.js"></script><script src="lib/highlight.js/languages/scala.min.js"></script><script src="highlightjs-coq.js"></script><script>hljs.highlightAll();</script>
     </body>
 </html>

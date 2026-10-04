@@ -1,23 +1,28 @@
 :root {
     /* Configurable variables: https://github.com/hakimel/reveal.js/blob/master/css/theme/template/exposer.scss */
     /* --r-main-font: Helvetica; */
-    --primary-color: rgb(182, 125, 0);
-    --selection-color: rgb(182, 125, 0);
+    --primary-color: rgb(106, 0, 182);
+    --selection-color: rgb(106, 0, 182);
     --r-main-font-size: 26px;
     --r-link-color: var(--primary-color);
-    --r-link-color-hover: rgb(214, 146, 0);
-    --r-block-margin: 1em 0;
+    --r-link-color-hover: rgb(129, 0, 221);
+    --r-block-margin: 1.3em 0;
     --r-heading-margin: .5em 0 1em;
 }
 
 .reveal {
     font-weight: 300;
     color: #444;
-    line-height: 1.5;
 }
 
 .reveal .slides {
     text-align:left;
+}
+
+.reveal .slides section,
+.reveal .slides section > section,
+.reveal p {
+  line-height: 1.4;
 }
 
 #title-slide {
@@ -127,7 +132,7 @@ code {
 
 .reveal ul, .reveal ol {
     display: block;
-    margin: 1em 0em;
+    margin: var(--r-block-margin);
     padding-left: 1em;
 }
 
@@ -213,9 +218,19 @@ code {
 }
 
 .fragment.visible.current-fragment {
-    outline: 1px solid #982f96;
+    outline: 1px solid rgb(106, 0, 182);
 }
 
 .column, .columns {
     overflow: visible !important;
+}
+
+div.column {
+    flex: 1 0 0;
+}
+
+/* Dense slides: scale the whole slide down a notch, for code- and math-heavy
+   content that cannot be trimmed further. Apply with `## Title {.dense}`. */
+.reveal section.dense {
+    font-size: 0.85em;
 }
