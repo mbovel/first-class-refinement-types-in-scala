@@ -53,16 +53,6 @@ jobs:
           name: website
           path: website
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-24.04
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
-
   # The canonical URL advertised in the paper and on the talk's QR code is
   # matt.bovel.net/scala-refinement-types/, which is served over FTP rather
   # than from GitHub Pages. A separate job rather than a step of `build`:
