@@ -32,6 +32,24 @@
     height: 100%;
 }
 
+h1.title {
+    margin-top: 0;
+}
+
+/* QR code to the slides and paper, in the free space right of the title. */
+#title-slide::after {
+    content: "";
+    background-image: url('qr-code.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    display: block;
+    top: 13.5em;
+    right: 0rem;
+    width: 8em;
+    height: 8em;
+}
+
 .reveal pre {
     box-shadow: none;
     line-height: 1.5;
@@ -168,6 +186,12 @@ code {
     margin: 0;
 }
 
+/* Display math that is narrower than its column, such as the value grammar,
+   sits flush left instead of centered. Apply with `<div class="math-left">`. */
+.math-left .katex-display > .katex {
+    text-align: left;
+}
+
 .hljs {
     background-color: transparent !important;
 }
@@ -196,7 +220,13 @@ code {
 }
 
 .hljs-keyword, .hljs-built_in  {
-    color: #982f96;
+    color: var(--primary-color);
+}
+
+/* highlight.js tags Haskell's `let` as a title, which the theme paints like a
+   function name. Show it as a keyword instead. */
+.language-haskell .hljs-title {
+    color: var(--primary-color);
 }
 
 .hljs-function .hljs-title {

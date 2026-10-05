@@ -1,6 +1,6 @@
 ---
 title: First-class Refinement Types<br/>in Scala
-author: "<u>Matt Bovel</u>, Viktor Kunčak and Martin Odersky"
+author: "<u>Matt Bovel</u>, Viktor Kunčak and Martin Odersky<br/>EPFL <small>(Swiss Federal Institute of Technology in Lausanne, Switzerland)</small>"
 ---
 
 ## Introduction
@@ -9,15 +9,34 @@ author: "<u>Matt Bovel</u>, Viktor Kunčak and Martin Odersky"
 
 <div class="column">
 
-Refinement types are types qualified with logical predicates. For example,
+Slides and paper:
+
+<img src="./qr-code.svg" style="margin: -4.25%; width: 108.5%;" />
+<small><a href="https://matt.bovel.net/scala-refinement-types/">matt.bovel.net/scala-refinement-types/</a></small>
+
+</div>
+
+<div class="column">
+
+<div class="fragment">
+
+Refinement types are types qualified with logical predicates.
+
+</div>
+
+<div class="fragment">
+
+For example,
 
 $$\{ x: \text{Int} \mid x > 0 \}$$
 
 denotes the type of all integers `x` such that `x > 0`.
 
+</div>
+
 <div class="fragment">
 
-Implemented in many languages: [Liquid Haskell](https://ucsd-progsys.github.io/liquidhaskell/), [Boolean refinement types in F\*](https://fstar-lang.org/tutorial/book/part1/part1_getting_off_the_ground.html#boolean-refinement-types), [Subset types in Dafny](https://dafny.org/latest/DafnyRef/DafnyRef#sec-subset-types), etc.
+In other languages: [Liquid Haskell](https://ucsd-progsys.github.io/liquidhaskell/), [Boolean refinement types in F\*](https://fstar-lang.org/tutorial/book/part1/part1_getting_off_the_ground.html#boolean-refinement-types), [Subset types in Dafny](https://dafny.org/latest/DafnyRef/DafnyRef#sec-subset-types), etc.
 
 </div>
 
@@ -33,13 +52,13 @@ This talk presents:
 
 <div class="fragment">
 
-1. A prototype **implementation** of refinement types in the Scala 3 compiler as _first-class_ types (§2, §4).
+1. A **prototype implementation** of refinement types in Scala 3 as _first-class_ types (§2, §4).
 
 </div>
 
 <div class="fragment">
 
-2. A core **calculus** proven sound in Rocq by semantic typing, where both programs and predicates may diverge.
+2. A core **calculus** proven sound in Rocq by semantic typing, with subtyping and bounded polymorphism, under a _partial-correctness_ semantics (§2.3, §3).
 
 </div>
 
@@ -214,7 +233,7 @@ Why not always infer the precise type?
 
 <div class="fragment">
 
-Instead, precision is recovered **on demand**, by a standard mechanism called _selfification_, triggerd by the bidirectional type-inference algorithm:
+Instead, precision is recovered **on demand**, by a standard mechanism called _selfification_, triggered by the bidirectional type-inference algorithm:
 
 </div>
 
@@ -296,13 +315,13 @@ How does the compiler check `{x: T with p(x)} <: {y: S with q(y)}`?
 
 <div class="fragment">
 
-Existing implementation lowers the problem to an SMT solver.
+Existing implementations lower to SMT.
 
 </div>
 
 <div class="fragment">
 
-Due to publishing and performance concerns, we instead implemented our own **lightweight e-graph-based solver**.
+Due to packaging and performance concerns, we instead implemented our own **lightweight e-graph-based solver**.
 
 </div>
 
@@ -310,19 +329,29 @@ Due to publishing and performance concerns, we instead implemented our own **lig
 
 <div class="column">
 
-Domain-specific rewrites during canonicalization:
+<div class="fragment">
+
+```scala
+{v: Int with v == a && a == b}
+  <: {v: Int with v == b}
+{v: Int with a == b}
+  <: {v: Int with f(a) == f(b)}
+```
+
+</div>
+
+<div class="fragment">
+
+And domain-specific normalizations such as:
 
 ```scala
 {v: Int with v == x + 3 * y}
   <: {v: Int with v == 2 * y + (x + y)}
 ```
 
-```scala {.fragment}
-{v: Int with v == a && a == b}
-  <: {v: Int with v == b}
-{v: Int with a == b}
-  <: {v: Int with f(a) == f(b)}
-```
+Also beta-reduction, ADT constructors and limited reasoning for linear integer arithmetic.
+</div>
+
 </div>
 
 </div>
@@ -349,7 +378,9 @@ Domain-specific rewrites during canonicalization:
 
 <div class="fragment">
 
-**When the feature is unused**, the full Dotty CI passes unchanged: the compiler itself (≈200 000 LoC), ≈10 000 tests, a 50-project community build. At most 4% slowdown on the official benchmark suite.
+**When the feature is unused**, the full Dotty CI passes unchanged: the compiler itself (≈200 000 LoC),<br/>≈10 000 tests, a 50-project community build.
+
+≤ 4% slowdown on the official benchmark suite.
 
 </div>
 
@@ -380,7 +411,7 @@ Conversely, both alternatives have stronger solvers: SMT-backed and complete for
 
 <div class="columns">
 
-<div class="column">
+<div class="column math-left">
 
 Essentially System $F_{<:>}$ with refinements, dependent functions and pairs, sums, unions, intersections and equi-recursive types:
 
@@ -393,7 +424,7 @@ A, B ::=\ & X \mid \texttt{Unit} \mid \texttt{True} \mid \texttt{False} \mid \te
 \end{aligned}
 $$
 
-<div class="fragment">
+<div class="fragment math-left">
 
 $$
 \begin{aligned}
@@ -406,11 +437,19 @@ $$
 
 </div>
 
+<div class="fragment math-left">
+
+$$
+\begin{aligned}
+v ::=\ & c \mid (v_1, v_2) \mid \textsf{inl}(v) \mid \textsf{inr}(v) \mid \langle \rho, \lambda x.\, b \rangle \mid \langle \rho, \Lambda X.\, b \rangle
+\end{aligned}
+$$
+
+</div>
+
 </div>
 
 <div class="column">
-
-
 
 <div class="fragment">
 
@@ -462,41 +501,22 @@ Fixpoint eval (fuel: nat) (env: list Value) (t: Term) : option (option Value) :=
 
 <div class="column">
 
-A *semantic type* is a predicate $\textsf{Value} \to \textsf{Prop}$.
+The **value interpretation** $\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v)$ defines what it means for a value $v$ to satisfy a type $A$, given a semantic type context $\delta$ and a value environement $\rho$.
+
 
 <div class="fragment">
 
-The _value interpretation_ $\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}$ maps a syntactic type to a semantic type, given a semantic type context $\delta$ and a value environement $\rho$.
-
-</div>
-
-$$
-\begin{aligned}
-\mathcal{V}\llbracket \Pi x{:}A.\, B \rrbracket_{\delta}^{\rho}(v) \triangleq\ & \exists \rho_f, b.\; v = \langle \rho_f, \lambda x.\, b \rangle\ \land \\
-  & \forall v_a.\; \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v_a) \implies \\
-  &\quad \mathcal{E}\llbracket B \rrbracket_{\delta}^{\rho_f[x \mapsto v_a]}(b)
-\end{aligned}
-$$
-
-<div class="fragment">
-
-$$\mathcal{V}\llbracket \lbrace x : A \mid p \rbrace \rrbracket_{\delta}^{\rho}(v) \triangleq \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \land \mathcal{E}\llbracket \texttt{True} \rrbracket_{\delta}^{\rho[x \mapsto v]}(p)$$
+$\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}$ is a predicate `Value -> Prop`, also known as a **semantic type**.
 
 </div>
 
 <div class="fragment">
 
-$$\mathcal{V}\llbracket \mu X.\, A \rrbracket_{\delta}^{\rho}(v) \triangleq \forall n.\; F^n(v)$$
-
-$$F^0(v) = \top,\quad F^{n+1}(v) = \mathcal{V}\llbracket A \rrbracket_{\delta[X \mapsto F^n]}^{\rho}(v)$$
+The **term interpretation** $\mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(t)$ lifts it to terms:
 
 </div>
 
-</div>
-
-<div class="column">
-
-The term interpretation lifts it to terms. This is where **partial correctness** lives:
+<div class="fragment">
 
 $$
 \begin{aligned}
@@ -505,26 +525,46 @@ $$
 \end{aligned}
 $$
 
+</div>
+
 <div class="fragment">
 
-“**If** evaluation terminates, it produces a value, not a stuck state, and that value is in $\mathcal{V}\llbracket A \rrbracket$.” Vacuously true for diverging terms.
+“**If** evaluation terminates, it produces a value (not stuck), and that value is in $\mathcal{V}\llbracket A \rrbracket$.” Vacuously true for diverging terms; this is _partial correctness_.
+
+</div>
+
+</div>
+
+<div class="column">
+
+<div class="fragment">
+
+Value interpretation of **function types**:
+
+$$
+\begin{aligned}
+\mathcal{V}\llbracket \Pi x{:}A.\, B \rrbracket_{\delta}^{\rho}(v) \triangleq\ & \exists \rho_f, b.\; v = \langle \rho_f, \lambda x.\, b \rangle\ \land \\
+  & \forall v_a.\; \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v_a) \implies \mathcal{E}\llbracket B \rrbracket_{\delta}^{\rho_f[x \mapsto v_a]}(b)
+\end{aligned}
+$$
 
 </div>
 
 <div class="fragment">
 
-Well-formedness ties the assignments to the context:
+Value interpretation of **refinement types**:
 
-$$
-\begin{aligned}
-\mathrm{wf}(\delta, \Gamma, \rho) \triangleq\ & \forall (x : A) \in \Gamma.\; \mathcal{V}\llbracket A \rrbracket(\rho(x)) \\
- \land\ & \forall (X {:>} L {<:} U) \in \Gamma. \\
- &\quad \mathcal{V}\llbracket L \rrbracket \subseteq \delta(X) \subseteq \mathcal{V}\llbracket U \rrbracket \\
- \land\ & \forall (a_1 \sim a_2) \in \Gamma.\; \exists v, n_1, n_2. \\
- &\quad \texttt{eval}\; n_1\; \rho\; a_1 = \texttt{eval}\; n_2\; \rho\; a_2 \\
- &\quad\quad = \texttt{Some}\,(\texttt{Some}\; v)
-\end{aligned}
-$$
+$$\mathcal{V}\llbracket \lbrace x : A \mid p \rbrace \rrbracket_{\delta}^{\rho}(v) \triangleq \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \land \mathcal{E}\llbracket \texttt{True} \rrbracket_{\delta}^{\rho[x \mapsto v]}(p)$$
+
+</div>
+
+<div class="fragment">
+
+Value interpretation of **recursive types**:
+
+$$\mathcal{V}\llbracket \mu X.\, A \rrbracket_{\delta}^{\rho}(v) \triangleq \forall n.\; F^n(v)$$
+
+$$F^0(v) = \top,\quad F^{n+1}(v) = \mathcal{V}\llbracket A \rrbracket_{\delta[X \mapsto F^n]}^{\rho}(v)$$
 
 </div>
 
@@ -544,25 +584,23 @@ $$
 
 <div class="column">
 
-Semantic typing is **defined**, not derived: it quantifies over every well-formed environment:
+Semantic typing is **defined**. It quantifies over every well-formed context:
 
 $$\Gamma \vDash a : A \triangleq \forall \delta, \rho.\; \mathrm{wf}(\delta, \Gamma, \rho) \implies \mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(a)$$
 
 <div class="fragment">
 
-So the usual typing rules are not definitions but **lemmas**: each of the 20 rules is proven individually, and any derivation built from them inherits safety. This is the fundamental theorem of the logical relation.
+A context $\Gamma$ is made of:
+
+1. Term bindings: $x : A$
+2. Type variable bindings: $X >: A <: B$
+3. Equality facts: $s \sim t$
 
 </div>
 
 <div class="fragment">
 
-A syntactic judgment $\Gamma \vdash a : A$ mirrors the rules, with:
-
-**Theorem (Adequacy).** If $\Gamma \vdash a : A$ then $\Gamma \vDash a : A$.
-
-</div>
-
-<div class="fragment">
+The usual typing rules are not definitions but **lemmas**: each rule is proven individually.
 
 </div>
 
@@ -570,21 +608,19 @@ A syntactic judgment $\Gamma \vdash a : A$ mirrors the rules, with:
 
 <div class="column">
 
+<div class="fragment">
+
+Rule for let-bindings:
+
 $$\frac{\Gamma \vDash a : A \qquad \Gamma, x : A, x \sim a \vDash b : B}{\Gamma \vDash \textsf{let}\; x{:}A = a \;\textsf{in}\; b : \textsf{avoid}(B, x)}\;\text{(T-Let)}$$
 
+</div>
+
 <div class="fragment">
+
+Selfification rule:
 
 $$\frac{\Gamma \vDash a : A \qquad \textsf{firstorder}(A)}{\Gamma \vDash a : \lbrace x : A \mid x \mathbin{\texttt{==}} a \rbrace}\;\text{(T-Self)}$$
-
-</div>
-
-<div class="fragment">
-
-$$\frac{\Gamma \vDash a : A \qquad \Gamma, x : A \vDash b : A + B}{\Gamma \vDash \textsf{loop}(a)\; x.\, b : B}\;\text{(T-Loop)}$$
-
-</div>
-
-<div class="fragment">
 
 </div>
 
@@ -596,7 +632,6 @@ $$\frac{\Gamma \vDash a : A \qquad \Gamma, x : A \vDash b : A + B}{\Gamma \vDash
 
 - No preservation, no progress, no canonical-forms lemma.
 - $\textsf{firstorder}$ excludes closures and polymorphic values: no run-time equality.
-- Recursion **without** typing a self-reference, which is what would normally force step-indexed reasoning for a fixpoint combinator.
 - $\textsf{avoid}(B, x)$ removes a variable going out of scope, guided by polarity: a predicate mentioning $x$ becomes `true` positively, `false` negatively.
 
 </div>
@@ -613,15 +648,7 @@ $$\Gamma \vDash A <: B \triangleq \forall \delta, \rho.\; \mathrm{wf}(\delta, \G
 
 <div class="fragment">
 
-Every value satisfying $A$ also satisfies $B$. The 20 subtyping rules are, again, lemmas.
-
-</div>
-
-<div class="fragment">
-
-$$\Gamma \vDash \lbrace x : A \mid p \rbrace <: A \;\text{(S-RefineBase)}$$
-
-$$\frac{\Gamma \vDash A <: B \qquad \Gamma, x : A \vDash p_1 \Rightarrow p_2}{\Gamma \vDash \lbrace x : A \mid p_1 \rbrace <: \lbrace x : B \mid p_2 \rbrace}\;\text{(S-Refine)}$$
+Every value satisfying $A$ also satisfies $B$.
 
 </div>
 
@@ -629,24 +656,19 @@ $$\frac{\Gamma \vDash A <: B \qquad \Gamma, x : A \vDash p_1 \Rightarrow p_2}{\G
 
 <div class="column">
 
-Recursive types are **equi**-recursive: no fold/unfold terms, just subtyping.
+<div class="fragment">
+
+Recursive types are equi-recursive:
 
 $$\frac{\textsf{spos}(X, A)}{\Gamma \vDash \mu X.\, A <: A[X \mapsto \mu X.\, A]}\;\text{(S-Mu-Unfold)}$$
 
 $$\frac{\textsf{spos}(X, A)}{\Gamma \vDash A[X \mapsto \mu X.\, A] <: \mu X.\, A}\;\text{(S-Mu-Fold)}$$
 
-<div class="fragment">
-
-Together they give $\mu X.\, A \cong A[X \mapsto \mu X.\, A]$, proven by showing the two interpretations coincide. That is the ingredient that replaces step indexing.
-
 </div>
 
 <div class="fragment">
 
-**Strict positivity** buys that: $X$ never occurs left of an arrow or in a $\forall$ bound. Two sharper edges:
-
-- under a **union**, $X$ must be entirely absent;
-- under a **nested** $\mu Y.\, B$, we need $\textsf{spos}(Y, B)$ *and* $X \notin B$.
+Together they give $\mu X.\, A <:> A[X \mapsto \mu X.\, A]$, provided $X$ occurs only **strictly positively** in $A$: never left of an arrow, nor in a $\forall$ bound.
 
 </div>
 
@@ -660,17 +682,35 @@ Together they give $\mu X.\, A \cong A[X \mapsto \mu X.\, A]$, proven by showing
 
 </div>
 
-## Semantic implication and termination (§2.3, §3.3)
+## Refinements Subtyping and Semantic Implication (§3.5)
 
 <div class="columns">
 
 <div class="column">
 
-Predicates are ordinary pure terms, so they **may diverge**. $\lbrace x : A \mid p \rbrace$ holds when $p$ evaluates to `true` *whenever it terminates*, exactly like a run-time assertion, which only fails if the check returns `false`.
+Last but not the least, rules for refinement types:
+
+$$\Gamma \vDash \lbrace x : A \mid p \rbrace <: A \;\text{(S-RefineBase)}$$
 
 <div class="fragment">
 
-Termination is confined to **one** judgment, used only by <span class="smallcaps">S-Refine</span>:
+Subtyping between refinements is semantic implication, a.k.a. entailment:
+
+$$\frac{\Gamma \vDash A <: B \qquad \Gamma, x : A \vDash p_1 \Rightarrow p_2}{\Gamma \vDash \lbrace x : A \mid p_1 \rbrace <: \lbrace x : B \mid p_2 \rbrace}\;\text{(S-Refine)}$$
+
+</div>
+
+</div>
+
+<div class="column">
+
+<div class="fragment">
+
+A refinement $\lbrace x : A \mid p \rbrace$ holds when $p$ evaluates to `true` *whenever it terminates*. Implication reads both predicates that way:
+
+</div>
+
+<div class="fragment">
 
 $$
 \begin{aligned}
@@ -681,43 +721,16 @@ $$
 
 </div>
 
-<div class="fragment">
-
-No typing rule mentions termination, so soundness needs **no termination assumption**, unlike System FR (total correctness), Liquid Haskell (reflected functions), F\* and Dafny (specification-level computation).
-
-</div>
-
-</div>
-
-<div class="column">
-
-Some entailments need nothing:
-
-**Lemma (And-True).** $\Gamma \vDash (t \mathbin{\texttt{\&\&}} \texttt{true}) \Rightarrow t$.
 
 <div class="fragment">
 
-Others genuinely do:
+**Lemma:**
 
-**Lemma (And-False).** $t$ terminates $\implies \Gamma \vDash (t \mathbin{\texttt{\&\&}} \texttt{false}) \Rightarrow \texttt{false}$.
-
-</div>
-
-<div class="fragment">
-
-Alarming? No: a diverging predicate is indistinguishable from `true`, not from `false`, and `true` proves nothing:
-
-**Lemma.** $\Gamma \vDash \lbrace x : A \mid \textsf{diverge} \rbrace \mathrel{<:>} \lbrace x : A \mid \texttt{true} \rbrace \mathrel{<:>} A$, and no *terminating* term has type $\lbrace x : A \mid \texttt{false} \rbrace$.
+$$\Gamma \vDash \lbrace x : A \mid \textsf{diverge} \rbrace \mathrel{<:>} \lbrace x : A \mid \texttt{true} \rbrace \mathrel{<:>} A$$
 
 </div>
 
 </div>
-
-</div>
-
-<div class="notes">
-
-- Necessary: $\neg\,(\varnothing \vDash (\textsf{diverge} \mathbin{\texttt{\&\&}} \texttt{false}) \Rightarrow \texttt{false})$.
 
 </div>
 
@@ -727,97 +740,72 @@ Alarming? No: a diverging predicate is indistinguishable from `true`, not from `
 
 <div class="column">
 
-**Implementation**
+Implementation:
 
-- **Flow-sensitive typing.** Works for patterns today; `if` conditions should narrow too:
-
-```scala
-if x > 0 then x: {v: Int with v > 0}
-```
-
-- **External checks** for what our lightweight solver cannot do. For example, it cannot yet prove `{v: Int with v > 2} <: {v: Int with v > 0}`:
-
-```scala
-x.externallyChecked: {v: Int with v > 0}
-```
+- **Better Solver** for what our lightweight solver cannot do.
 
 - **Term-parameterized types**, to modularize predicates:
 
 ```scala
-type Range(from: Int, to: Int) = {v: Int with v >= from && v < to}
+    type Range(from: Int, to: Int) =
+      {v: Int with v >= from && v < to}
 ```
-
-</div>
-
-<div class="column">
-
-**Theory**
-
-- **Enforcing purity.** Today a function called in a predicate is *assumed* pure; an impure one is a silent logical error. Capture checking tracks exactly this, and separation checking would make invalidating facts on writes sound.
-
-- **A syntactic proof system for entailment.** We leave implication purely semantic; the solver's normalization rules are not yet verified against it.
 
 - **A termination checker**, needed only for the termination-sensitive entailment rules, never systematically for every function in a predicate.
 
-- **Classes and objects**, absent from the core calculus.
+</div>
+
+<div class="column">
+
+Theory:
+
+- **Rules for semantic implication.** We leave implication purely semantic; the solver's normalization rules are not yet verified against it.
+
+- **Enforcing purity.** Today a function called in a predicate is *assumed* pure. Capture and separation checking can ensure that predicates are pure.
+
+- **Classes and objects**, absent from the presented core calculus.
 
 </div>
 
 </div>
 
-## Summary
+## Conclusion
 
 <div class="columns">
 
-<div class="column">
+<div class="column" style="flex: 1.5;">
 
-Refinement types can be **first-class types** in a mainstream language.
+We showed:
 
-- **Design:** refinements are ordinary Scala types, so subtyping, inference, bounded polymorphism, overloading and pattern matching work by construction.
+1. A **prototype implementation** of refinement types in Scala 3 as _first-class_ types; normal Scala types that participate in subtyping, inference, overloading and pattern matching.
 
-- **Partial correctness:** predicates may diverge; a diverging predicate is vacuous, and soundness needs no termination assumption.
-
-- **Metatheory:** the first mechanized proof combining refinements with unions, intersections, bounded polymorphism with both bounds, and positive equi-recursive types.
-
-- **Implementation:** ≈2 500 lines in Dotty, a ≈600-line e-graph solver, 0–12% overhead, Dotty CI green.
+2. A core **calculus** proven sound in Rocq by semantic typing. It includes refinements, dependent functions and pairs, sums, unions, intersections and equi-recursive positive types, and allows predicates to diverge.
 
 </div>
 
-<div class="column">
+<div class="column" style="margin-left: 2em;">
 
-**Try it.** Published on Maven, usable from any SBT project:
+Slides and paper:
 
-```scala
-scalaOrganization := "ch.epfl.lara"
-scalaVersion := "3.10.0-RC1-bin-...-NIGHTLY"
-scalacOptions ++= Seq(
-  "-language:experimental.qualifiedTypes")
-```
-
-```scala {.fragment}
-type Even = {v: Int with v % 2 == 0}
-val x: Even = 42
-```
-
-<div class="fragment">
-
-**Artifact:** Rocq mechanization, the Dotty extension, and the JMH benchmark suites.
-
-<small><https://github.com/mbovel/first-class-refinement-types-in-scala></small>
+<div style="width: 100%;">
+<img src="./qr-code.svg" style="margin: -4.25%; width: 108.5%;" />
+<small><a href="https://matt.bovel.net/scala-refinement-types/">matt.bovel.net/scala-refinement-types/</a></small>
+</div>
 
 </div>
 
-<div class="fragment">
+<div class="column" style="flex: 0 0 auto;">
 
-Thank you. Questions welcome.
+<figure style="text-align: center; margin: -1.2em 0 0 0;">
+<img src="./refined_type.png" style="height: 450px; width: auto;" />
+<figcaption><small><em>Un type raffiné</em>,<br/>by Marina Granados Castro</small></figcaption>
+</figure>
 
 </div>
 
 </div>
 
-</div>
-
-## <span class="chapter">Backup:</span> LH Usability Barriers
+## Backup: LH Usability Barriers
 
 From [“Usability Barriers for Liquid Types”](https://dl.acm.org/doi/10.1145/3729327) [1]:
 
@@ -831,7 +819,7 @@ From [“Usability Barriers for Liquid Types”](https://dl.acm.org/doi/10.1145/
 
 <small>[1] Catarina Gamboa, Abigail Reese, Alcides Fonseca, and Jonathan Aldrich. 2025. Usability Barriers for Liquid Types. Proc. ACM Program. Lang. 9, PLDI, Article 224 (June 2025), 26 pages. <a href="https://dl.acm.org/doi/10.1145/3729327">doi:10.1145/3729327</a></small>
 
-## <span class="chapter">Backup:</span> `List.collect`
+## Backup: `List.collect`
 
 Scala type parameters are _erased_ at runtime, so we cannot match on a `List[T]`.
 
@@ -848,7 +836,7 @@ xs.collect { case x: Pos => x } : List[Pos]
 
 </div>
 
-## <span class="chapter">Backup:</span> Specify using assertions 😕
+## Backup: Specify using assertions 😕
 
 <div class="columns">
 <div class="column">
@@ -885,7 +873,7 @@ We can use assertions, but they have limitations. The check happens at runtime, 
 
 </div>
 
-## <span class="chapter">Backup:</span> Specify using dependent types 😕
+## Backup: Specify using dependent types 😕
 
 <div class="columns">
 <div class="column">
@@ -916,7 +904,7 @@ Limitations:
 
 </div> <!-- .columns -->
 
-## <span class="chapter">Future work:</span> term-parameterized types
+## Future work: term-parameterized types
 
 ```scala
 extension [T](list: List[T])

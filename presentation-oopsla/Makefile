@@ -23,7 +23,7 @@ all: presentation.html presentation.pdf
 		-V margin="0.1" \
 		-V transition="none" \
 		-V header-includes='<link rel="stylesheet" href="custom.css" />' \
-		-V include-after='<script src="lib/highlight.js/highlight.min.js"></script><script src="lib/highlight.js/languages/scala.min.js"></script><script src="highlightjs-coq.js"></script><script>hljs.highlightAll();</script>' \
+		-V include-after='<script src="lib/highlight.js/highlight.min.js"></script><script src="lib/highlight.js/languages/scala.min.js"></script><script src="lib/highlight.js/languages/haskell.min.js"></script><script src="highlightjs-coq.js"></script><script>hljs.highlightAll();</script>' \
 		-V history="true" \
 		-V navigationMode="linear" \
 		`# "c/t" numbers slides linearly (current/total) rather than "h.v" per section.` \
