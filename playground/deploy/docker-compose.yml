@@ -32,6 +32,7 @@ services:
       - VIRTUAL_HOST=icvm0175.epfl.ch
       - VIRTUAL_PORT=8080
       - ENABLE_ACME=true
+      - PLAYGROUND_STORE=/store
     # A snippet cannot call macros it defines itself, and inline expansion is depth-capped,
     # so this is not arbitrary code execution. What a snippet can do is make the compiler
     # hang or exhaust memory, and a compiler bug could do worse, so the container is held to
@@ -41,6 +42,11 @@ services:
     read_only: true
     tmpfs:
       - /tmp:size=512m,mode=1777
+    # Submitted programs and their output, outliving the container. A bind mount rather
+    # than a named volume so the corpus can be read and copied off the host directly. The
+    # root filesystem stays read-only; this is the one place the service can write.
+    volumes:
+      - ./store:/store
     cap_drop:
       - ALL
     security_opt:

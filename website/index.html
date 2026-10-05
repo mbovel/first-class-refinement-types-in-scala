@@ -163,8 +163,9 @@ We present the design of first-class refinement types for Scala 3, where refine
       The <a href="playground/">playground</a> type-checks Scala against the
       prototype in the browser, with no installation. Programs are compiled by a
       service running the implementation with
-      <code>-language:experimental.qualifiedTypes</code>, then discarded; they
-      are never stored or executed.
+      <code>-language:experimental.qualifiedTypes</code> and are never run. They
+      are kept along with the compiler's answer, so that an identical program
+      needs no recompiling and so we can see what people try.
     </p>
 
     <h2>Artifact</h2>

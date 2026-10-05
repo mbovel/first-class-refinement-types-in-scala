@@ -71,9 +71,11 @@
     <p>
       Type-check Scala against the prototype without installing anything. The program is
       sent to a compiler service running the implementation with
-      <code>-language:experimental.qualifiedTypes</code>; it is compiled and discarded,
-      never stored or executed. Empty output means the program type-checks. Compile with
-      the button or with <kbd>Ctrl</kbd>/<kbd>Cmd</kbd>+<kbd>Enter</kbd>.
+      <code>-language:experimental.qualifiedTypes</code>. It is compiled but never run, and
+      it is kept, together with the compiler's answer: that way an identical program needs
+      no recompiling, and we get to see what people try. Empty output means the program
+      type-checks. Compile with the button or with
+      <kbd>Ctrl</kbd>/<kbd>Cmd</kbd>+<kbd>Enter</kbd>.
     </p>
 
     <div id="editor" data-endpoint="https://icvm0175.epfl.ch/"></div>

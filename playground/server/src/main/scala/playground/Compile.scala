@@ -37,6 +37,18 @@ object Compile:
   @volatile private var current: Child | Null = null
 
   def apply(code: String): Result =
+    Store.get(code) match
+      case Some(output) => Result.Output(output)
+      case None =>
+        val result = compile(code)
+        // A timeout says nothing durable about the program, only about the worker that was
+        // running when it fired, so it is not worth remembering.
+        result match
+          case Result.Output(text) => Store.put(code, text)
+          case Result.TimedOut => ()
+        result
+
+  private def compile(code: String): Result =
     val task: Callable[String] = () => exchange(code)
     val pending = exchanges.submit(task)
     try Result.Output(pending.get(timeout.toSeconds, TimeUnit.SECONDS))

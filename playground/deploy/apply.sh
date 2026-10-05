@@ -20,6 +20,10 @@ for d in certs acme conf.d stream.d dhparam; do
     if [ -d $OLD/proxy/\$d ]; then cp -an $OLD/proxy/\$d/. $REMOTE/deploy/proxy/\$d/ 2>/dev/null || true; fi
 done"
 
+# The store outlives deployments and belongs to the unprivileged user the container runs
+# as. Only the directory itself: what is inside it is already owned correctly.
+ssh "$H" "mkdir -p $REMOTE/deploy/store && chown 10001:10001 $REMOTE/deploy/store"
+
 # No -o/-g: the local uid means nothing on the VM. No --delete under proxy/ either, or we
 # would remove the runtime directories above out from under the proxy's bind mounts.
 rsync -rlptz ./docker-compose.yml "$H:$REMOTE/deploy/"

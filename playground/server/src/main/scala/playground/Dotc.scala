@@ -25,7 +25,8 @@ object Dotc:
       .filter(p => p.contains("scala3-library") || p.contains("scala-library"))
       .mkString(File.pathSeparator)
 
-  private val options =
+  /** Package-private: [[Store]] keys cached output on these as well as on the source. */
+  private[playground] val options =
     Seq("-language:experimental.qualifiedTypes", "-color:never", "-encoding", "UTF-8")
 
   /** The name diagnostics refer to. The real file lives in a throwaway directory whose path
