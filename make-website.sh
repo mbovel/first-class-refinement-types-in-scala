@@ -2,7 +2,8 @@
 # Copy the paper and the slides into public/website, the site published to
 # GitHub Pages by .github/workflows/website.yml:
 #
-#   index.html, style.css   checked in
+#   index.html              checked in; it styles itself from ../style.css,
+#                           which matt.bovel.net serves at the site root
 #   paper.pdf               our own build, from paper/paper.pdf
 #   paper-acm.pdf           the ACM version of record, from paper/paper-acm.pdf
 #   presentation/           copied here from presentation-oopsla/
