@@ -24,6 +24,22 @@
       #editor .cm-editor {
         max-height: 70vh;
       }
+      /* The GitHub theme sets 12px, sized for a dense diff view. This page is one editor
+         on an otherwise empty page, so it can afford to be easier to read. An id selector
+         to outrank the theme's generated class, which is why this is not in src/. */
+      #editor .cm-scroller {
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      /* Safari on iOS zooms the page in when you focus an editable whose text is smaller
+         than 16px, which is what makes tapping into an editor on a phone so jarring. Sizing
+         up on touch devices avoids that, and unlike user-scalable=no it does not take pinch
+         zoom away from people who need it. */
+      @media (pointer: coarse) {
+        #editor .cm-scroller {
+          font-size: 16px;
+        }
+      }
       .bar {
         display: flex;
         align-items: baseline;
