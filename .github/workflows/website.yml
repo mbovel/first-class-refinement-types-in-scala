@@ -36,11 +36,21 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git submodule update --init mechanization/coqdocjs
 
+      - name: Copy the paper and the slides
+        run: ./make-website.sh
+
       - name: Generate coqdoc
         run: opam exec -- mechanization/gendoc.sh
 
       - uses: actions/upload-pages-artifact@v3
         with:
+          path: website
+
+      # Plain artifact as well: the GitHub Pages one is a tarball meant for
+      # actions/deploy-pages, which the FTP job cannot consume.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: website
           path: website
 
   deploy:
@@ -52,3 +62,46 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # The canonical URL advertised in the paper and on the talk's QR code is
+  # matt.bovel.net/scala-refinement-types/, which is served over FTP rather
+  # than from GitHub Pages. A separate job rather than a step of `build`:
+  # lftp is not in the Rocq image.
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: website
+          path: website
+
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Upload to matt.bovel.net
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          FTP_REMOTE_DIR: /scala-refinement-types
+        run: |
+          set -euo pipefail
+          : "${FTP_HOST:?Set the FTP_HOST repository secret}"
+          : "${FTP_USER:?Set the FTP_USER repository secret}"
+          : "${FTP_PASS:?Set the FTP_PASS repository secret}"
+          # The mirror below deletes whatever it does not upload, so refuse to
+          # run against an incomplete build.
+          for f in index.html style.css paper.pdf presentation/index.html \
+                   presentation/presentation.pdf mechanization/toc.html; do
+            test -f "website/$f" || { echo "missing website/$f"; exit 1; }
+          done
+          # Commands on stdin rather than `lftp -c`, which would put the
+          # password in the process list.
+          lftp <<EOF
+          set cmd:fail-exit yes
+          set ftp:ssl-allow no
+          open -u "$FTP_USER","$FTP_PASS" ftp://$FTP_HOST
+          mirror --reverse --delete --verbose --parallel=4 website/ "$FTP_REMOTE_DIR/"
+          bye
+          EOF

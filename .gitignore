@@ -11,5 +11,7 @@ evaluation/results/
 artifact/
 mechanization/refinement_types/html/
 website/mechanization/
+website/paper.pdf
+website/presentation/
 .metals
 .vscode
