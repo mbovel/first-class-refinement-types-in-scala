@@ -7,11 +7,10 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
+# Serialize: two overlapping runs would race in the same FTP directory.
 concurrency:
-  group: pages
+  group: website
   cancel-in-progress: false
 
 jobs:
@@ -42,21 +41,15 @@ jobs:
       - name: Generate coqdoc
         run: opam exec -- mechanization/gendoc.sh
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: website
-
-      # Plain artifact as well: the GitHub Pages one is a tarball meant for
-      # actions/deploy-pages, which the FTP job cannot consume.
+      # Handed to the publish job, which runs outside the Rocq container.
       - uses: actions/upload-artifact@v4
         with:
           name: website
           path: website
 
   # The canonical URL advertised in the paper and on the talk's QR code is
-  # matt.bovel.net/scala-refinement-types/, which is served over FTP rather
-  # than from GitHub Pages. A separate job rather than a step of `build`:
-  # lftp is not in the Rocq image.
+  # matt.bovel.net/scala-refinement-types/, served over FTP. A separate job
+  # rather than a step of `build`: lftp is not in the Rocq image.
   publish:
     needs: build
     runs-on: ubuntu-24.04
@@ -82,7 +75,8 @@ jobs:
           : "${FTP_PASS:?Set the FTP_PASS repository secret}"
           # The mirror below deletes whatever it does not upload, so refuse to
           # run against an incomplete build.
-          for f in index.html style.css paper.pdf presentation/index.html \
+          for f in index.html style.css paper.pdf paper-acm.pdf \
+                   presentation/index.html \
                    presentation/presentation.pdf mechanization/toc.html; do
             test -f "website/$f" || { echo "missing website/$f"; exit 1; }
           done

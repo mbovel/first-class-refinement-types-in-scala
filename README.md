@@ -12,7 +12,10 @@
 > reusability; running them is not expected.
 
 This repository is the artifact for the paper *First-Class Refinement Types
-in Scala*. It contains:
+in Scala*. The project page, with the paper, the slides and the rendered
+proofs, is at
+[matt.bovel.net/scala-refinement-types](https://matt.bovel.net/scala-refinement-types/).
+This repository contains:
 
 - [implementation/](implementation/): our fork of the Scala 3 compiler
   implementing first-class refinement types (called *qualified types* in the
@@ -23,7 +26,7 @@ in Scala*. It contains:
   for an overview and how to run the compiler and its test suites. PR: [scala/scala3#21586](https://github.com/scala/scala3/pull/21586).
 - [mechanization/](mechanization/): the Rocq mechanization (see
   [mechanization/README.md](mechanization/README.md), or browse the proofs in
-  the [rendered Rocq doc](https://mbovel.github.io/first-class-refinement-types-in-scala/mechanization/toc.html)).
+  the [rendered Rocq doc](https://matt.bovel.net/scala-refinement-types/mechanization/toc.html)).
 - [evaluation/](evaluation/): compilation-time benchmarks comparing our
   implementation with Stainless and with [Georg Schmid's 2016
   LiquidTyper](https://dl.acm.org/doi/10.1145/2998392.2998398), plus the script

@@ -12,6 +12,7 @@ artifact/
 mechanization/refinement_types/html/
 website/mechanization/
 website/paper.pdf
+website/paper-acm.pdf
 website/presentation/
 .metals
 .vscode
