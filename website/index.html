@@ -30,48 +30,29 @@
     <p class="job kind">OOPSLA 2026</p>
 
     <p class="top-links">
+      <a href="https://github.com/mbovel/first-class-refinement-types-in-scala">Repo</a>
       <a href="paper.pdf">Paper (PDF)</a>
       <a href="https://dl.acm.org/doi/10.1145/3839541">DOI</a>
       <a href="https://arxiv.org/abs/2605.08369">arXiv</a>
       <a href="presentation/">Slides</a>
       <a href="presentation/presentation.pdf">Slides (PDF)</a>
       <a href="mechanization/toc.html">Mechanization</a>
-      <a href="https://github.com/mbovel/first-class-refinement-types-in-scala">Repo</a>
     </p>
 
     <h2>Abstract</h2>
 
     <p>
-      Refinement types (types qualified with logical predicates) have proven
-      effective for lightweight verification in languages like Liquid Haskell,
-      F*, and Dafny. However, in these systems refinements are either written in
-      a separate specification language or treated as second-class annotations,
-      disconnected from the host language's type system. This disconnect creates
-      usability barriers: programmers must maintain two mental models, and
-      refinements cannot interact with features like type inference, subtyping,
-      or overloading.
+     Refinement types—types qualified with logical predicates—have proven effective for lightweight verification in languages like Liquid Haskell, F*, and Dafny. However, in these systems refinements are either written in a separate specification language or treated as second-class annotations, disconnected from the host language's type system. This disconnect creates usability barriers: programmers must maintain two mental models, and refinements cannot interact with features like type inference, subtyping, or overloading.
     </p>
-
     <p>
-      We present the design of first-class refinement types for Scala 3, where
-      refinements are ordinary types that participate in subtyping, inference,
-      and pattern matching alongside existing language features. We prove type
-      soundness of a core, pure calculus mechanized in Rocq, combining dependent
-      function types, bounded polymorphism, positive equi-recursive types, union
-      and intersection types, and refinement types, using a fuel-bounded
-      definitional interpreter and semantic typing. A distinctive design choice
-      is our partial-correctness semantics: predicates are arbitrary terms that
-      may diverge, and type soundness requires no termination assumptions.
-      Finally, we implement our design as a prototype extension of the Scala 3
-      compiler with a lightweight e-graph-based solver for predicate entailment.
+We present the design of first-class refinement types for Scala 3, where refinements are ordinary types that participate in subtyping, inference, and pattern matching alongside existing language features. We prove type soundness of a core, pure calculus mechanized in Rocq, combining dependent function types, bounded polymorphism, positive equi-recursive types, union and intersection types, and refinement types, using a fuel-bounded definitional interpreter and semantic typing. A distinctive design choice is our partial-correctness semantics: predicates are arbitrary terms that may diverge, and type soundness requires no termination assumptions. Finally, we implement our design as a prototype extension of the Scala 3 compiler with a lightweight e-graph-based solver for predicate entailment.
     </p>
 
     <h2>Talk</h2>
 
     <p>
       Slides for the OOPSLA 2026 talk, as
-      <a href="presentation/">reveal.js slides</a> (press <kbd>?</kbd> for the
-      keyboard shortcuts, <kbd>s</kbd> for the speaker notes) or as a
+      <a href="presentation/">reveal.js slides</a> or as a
       <a href="presentation/presentation.pdf">PDF</a>.
     </p>
 
