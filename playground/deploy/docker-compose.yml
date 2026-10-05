@@ -32,8 +32,10 @@ services:
       - VIRTUAL_HOST=icvm0175.epfl.ch
       - VIRTUAL_PORT=8080
       - ENABLE_ACME=true
-    # Compiling a snippet runs its macros and inline bodies, so every request is untrusted
-    # code execution. `backend` is internal, so that code has no route off the host.
+    # A snippet cannot call macros it defines itself, and inline expansion is depth-capped,
+    # so this is not arbitrary code execution. What a snippet can do is make the compiler
+    # hang or exhaust memory, and a compiler bug could do worse, so the container is held to
+    # the least it needs: `backend` is internal, leaving it no route off the host.
     networks:
       - backend
     read_only: true
@@ -43,8 +45,9 @@ services:
       - ALL
     security_opt:
       - no-new-privileges:true
-    mem_limit: 3g
-    pids_limit: 256
+    mem_limit: 4g
+    # Two JVMs now: the server and the compiler worker it spawns.
+    pids_limit: 512
     # Nothing restarts an unhealthy container on its own; this is for `docker compose ps`.
     healthcheck:
       test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8080"]

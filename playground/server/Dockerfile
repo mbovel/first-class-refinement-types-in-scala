@@ -19,7 +19,7 @@ RUN sbt -batch stage
 
 FROM eclipse-temurin:25-jdk-noble
 
-# Compiling a snippet runs its macros, so the process gets no more rights than it needs.
+# This compiles untrusted input, so the process gets no more rights than it needs.
 RUN useradd --system --no-create-home --uid 10001 playground
 WORKDIR /app
 COPY --from=build /src/target/universal/stage/ ./
@@ -30,5 +30,6 @@ USER playground
 EXPOSE 8080
 # The root filesystem is read-only at runtime; /tmp is the one writable mount.
 ENV HOME=/tmp
-ENV JAVA_OPTS="-Xmx2g"
+# The server process holds almost nothing. Compile.spawn gives the worker its own heap.
+ENV JAVA_OPTS="-Xmx512m"
 ENTRYPOINT ["/app/bin/playground-server"]

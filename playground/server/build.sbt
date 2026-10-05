@@ -20,8 +20,13 @@ lazy val server = project
     // ch.epfl.lara:scala3-library_3 (different groupId, so no eviction). Without this, two
     // standard libraries end up on the classpath.
     excludeDependencies += ExclusionRule("org.scala-lang", "scala3-library_3"),
-    // Fork so that java.class.path contains the full classpath, as Compile expects.
+    // playground.Worker is a second main class, which Compile starts as a child process.
+    // Without this, native-packager generates a launcher for each one.
+    Compile / mainClass := Some("playground.Server"),
+    // Fork so that java.class.path contains the full classpath, which both the server and
+    // the worker it spawns rely on.
     fork := true,
     Compile / run / connectInput := true,
-    javaOptions ++= Seq("-Xmx2g"),
+    // The server itself holds almost nothing; the heap is needed in the worker.
+    javaOptions ++= Seq("-Xmx512m"),
   )
