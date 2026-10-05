@@ -1,5 +1,6 @@
 target
 out
+node_modules
 .bsp
 .scala-build
 .stainless-cache
@@ -14,5 +15,6 @@ website/mechanization/
 website/paper.pdf
 website/paper-acm.pdf
 website/presentation/
+website/playground/
 .metals
 .vscode

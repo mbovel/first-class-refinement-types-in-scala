@@ -47,17 +47,49 @@ jobs:
           name: website
           path: website
 
+  # The playground editor, built on its own because Node is not in the Rocq image and
+  # the editor needs nothing the mechanization produces. Merged into the site by
+  # `publish`, which downloads both artifacts into the same tree.
+  editor:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: playground/editor/package-lock.json
+
+      # --ignore-scripts: tree-sitter-scala's install hook builds native Node bindings
+      # that nothing here uses. Only its .wasm and its highlight queries get bundled.
+      - name: Build the editor
+        working-directory: playground/editor
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: playground
+          path: website/playground
+
   # The canonical URL advertised in the paper and on the talk's QR code is
   # matt.bovel.net/scala-refinement-types/, served over FTP. A separate job
   # rather than a step of `build`: lftp is not in the Rocq image.
   publish:
-    needs: build
+    needs: [build, editor]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: website
           path: website
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: playground
+          path: website/playground
 
       - name: Install lftp
         run: sudo apt-get update && sudo apt-get install -y lftp
@@ -77,7 +109,8 @@ jobs:
           # run against an incomplete build.
           for f in index.html paper.pdf paper-acm.pdf \
                    presentation/index.html \
-                   presentation/presentation.pdf mechanization/toc.html; do
+                   presentation/presentation.pdf mechanization/toc.html \
+                   playground/index.html; do
             test -f "website/$f" || { echo "missing website/$f"; exit 1; }
           done
           # Commands on stdin rather than `lftp -c`, which would put the
