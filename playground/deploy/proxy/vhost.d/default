@@ -1,0 +1,2 @@
+# Included by nginx-proxy in every server block. Intentionally empty: host-specific
+# directives live in the file named after the vhost.

@@ -1,0 +1,59 @@
+# The playground backend and the TLS proxy in front of it, as deployed on
+# icvm0175.epfl.ch. The backend is the only thing on that host: nginx-proxy routes the
+# whole vhost to it, and it answers POST / with the compiler's output.
+name: refinement-types
+
+services:
+  letsproxy:
+    image: neilpang/letsproxy
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    # On `default` to reach Let's Encrypt, on `backend` to reach the playground.
+    networks:
+      - default
+      - backend
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./proxy/certs:/etc/nginx/certs
+      - ./proxy/acme:/acmecerts
+      - ./proxy/conf.d:/etc/nginx/conf.d
+      - ./proxy/vhost.d:/etc/nginx/vhost.d
+      - ./proxy/stream.d:/etc/nginx/stream.d
+      - ./proxy/dhparam:/etc/nginx/dhparam
+
+  playground:
+    build:
+      context: ../server
+    image: refinement-types-playground
+    restart: unless-stopped
+    environment:
+      - VIRTUAL_HOST=icvm0175.epfl.ch
+      - VIRTUAL_PORT=8080
+      - ENABLE_ACME=true
+    # Compiling a snippet runs its macros and inline bodies, so every request is untrusted
+    # code execution. `backend` is internal, so that code has no route off the host.
+    networks:
+      - backend
+    read_only: true
+    tmpfs:
+      - /tmp:size=512m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 3g
+    pids_limit: 256
+    # Nothing restarts an unhealthy container on its own; this is for `docker compose ps`.
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8080"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+networks:
+  default:
+  backend:
+    internal: true
