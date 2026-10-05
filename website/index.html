@@ -18,6 +18,91 @@
       property="og:description"
       content="OOPSLA 2026 paper by Matt Bovel, Viktor Kunčak and Martin Odersky: paper, slides, Rocq mechanization and artifact."
     />
+    <!-- Highwire Press tags: these, not the JSON-LD below, are what Google
+         Scholar reads. They describe the version of record, so citation_pdf_url
+         points at paper-acm.pdf rather than at our own build. -->
+    <meta name="citation_title" content="First-Class Refinement Types for Scala" />
+    <meta name="citation_author" content="Bovel, Matt" />
+    <meta name="citation_author" content="Kunčak, Viktor" />
+    <meta name="citation_author" content="Odersky, Martin" />
+    <meta name="citation_publication_date" content="2026/10" />
+    <meta
+      name="citation_journal_title"
+      content="Proceedings of the ACM on Programming Languages"
+    />
+    <meta name="citation_volume" content="10" />
+    <meta name="citation_issue" content="OOPSLA2" />
+    <meta name="citation_issn" content="2475-1421" />
+    <meta name="citation_doi" content="10.1145/3839541" />
+    <meta name="citation_publisher" content="Association for Computing Machinery" />
+    <meta
+      name="citation_pdf_url"
+      content="https://matt.bovel.net/scala-refinement-types/paper-acm.pdf"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ScholarlyArticle",
+        "@id": "https://matt.bovel.net/scala-refinement-types/#article",
+        "url": "https://matt.bovel.net/scala-refinement-types/",
+        "name": "First-Class Refinement Types for Scala",
+        "headline": "First-Class Refinement Types for Scala",
+        "author": [
+          {
+            "@type": "Person",
+            "@id": "https://matt.bovel.net/#me",
+            "name": "Matt Bovel",
+            "url": "https://matt.bovel.net/"
+          },
+          {
+            "@type": "Person",
+            "name": "Viktor Kunčak",
+            "url": "https://lara.epfl.ch/~kuncak/"
+          },
+          {
+            "@type": "Person",
+            "name": "Martin Odersky",
+            "url": "https://chara.epfl.ch/~odersky/"
+          }
+        ],
+        "datePublished": "2026-10",
+        "inLanguage": "en",
+        "abstract": "Refinement types—types qualified with logical predicates—have proven effective for lightweight verification in languages like Liquid Haskell, F*, and Dafny. However, in these systems refinements are either written in a separate specification language or treated as second-class annotations, disconnected from the host language's type system. This disconnect creates usability barriers: programmers must maintain two mental models, and refinements cannot interact with features like type inference, subtyping, or overloading. We present the design of first-class refinement types for Scala 3, where refinements are ordinary types that participate in subtyping, inference, and pattern matching alongside existing language features. We prove type soundness of a core, pure calculus mechanized in Rocq, combining dependent function types, bounded polymorphism, positive equi-recursive types, union and intersection types, and refinement types, using a fuel-bounded definitional interpreter and semantic typing. A distinctive design choice is our partial-correctness semantics: predicates are arbitrary terms that may diverge, and type soundness requires no termination assumptions. Finally, we implement our design as a prototype extension of the Scala 3 compiler with a lightweight e-graph-based solver for predicate entailment.",
+        "isPartOf": {
+          "@type": "PublicationIssue",
+          "issueNumber": "OOPSLA2",
+          "datePublished": "2026-10",
+          "isPartOf": {
+            "@type": "PublicationVolume",
+            "volumeNumber": "10",
+            "isPartOf": {
+              "@type": "Periodical",
+              "name": "Proceedings of the ACM on Programming Languages",
+              "issn": "2475-1421"
+            }
+          }
+        },
+        "pagination": "409:1-409:28",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Association for Computing Machinery"
+        },
+        "identifier": {
+          "@type": "PropertyValue",
+          "propertyID": "DOI",
+          "value": "10.1145/3839541"
+        },
+        "sameAs": [
+          "https://doi.org/10.1145/3839541",
+          "https://arxiv.org/abs/2605.08369"
+        ],
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "copyrightYear": 2026,
+        "keywords": "refinement types, Scala, type systems, semantic typing, definitional interpreters",
+        "codeRepository": "https://github.com/mbovel/first-class-refinement-types-in-scala"
+      }
+    </script>
   </head>
   <body>
     <h1>First-Class Refinement Types for Scala</h1>
