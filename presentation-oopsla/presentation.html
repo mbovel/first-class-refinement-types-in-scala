@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Matt Bovel, Viktor Kunčak and Martin Odersky EPFL (Swiss Federal Institute of Technology in Lausanne, Switzerland)">
-  <meta name="dcterms.date" content="2026-10-04">
+  <meta name="dcterms.date" content="2026-10-05">
   <title>First-class Refinement Types in Scala</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -62,7 +62,7 @@
   <p class="author"><u>Matt Bovel</u>, Viktor Kunčak and Martin
 Odersky<br/>EPFL <small>(Swiss Federal Institute of Technology in
 Lausanne, Switzerland)</small></p>
-  <p class="date">October 4, 2026</p>
+  <p class="date">October 5, 2026</p>
 </section>
 
 <section id="introduction" class="slide level2">
@@ -74,13 +74,13 @@ Lausanne, Switzerland)</small></p>
 <small><a href="https://matt.bovel.net/scala-refinement-types/">matt.bovel.net/scala-refinement-types/</a></small></p>
 </div><div class="column">
 <div class="fragment">
-<p>Refinement types are types qualified with logical predicates.</p>
+<p>A <em>refinement type</em> is a type refined with a predicate.</p>
 </div>
 <div class="fragment">
 <p>For example,</p>
 <p><span class="math display">\{ x: \text{Int} \mid x &gt; 0
 \}</span></p>
-<p>denotes the type of all integers <code>x</code> such that
+<p>denotes the type of integers <code>x</code> such that
 <code>x &gt; 0</code>.</p>
 </div>
 <div class="fragment">
@@ -95,8 +95,6 @@ types in Dafny</a>, etc.</p>
 </div><div class="column">
 <div class="fragment">
 <p>This talk presents:</p>
-</div>
-<div class="fragment">
 <ol type="1">
 <li>A <strong>prototype implementation</strong> of refinement types in
 Scala 3 as <em>first-class</em> types (§2, §4).</li>
@@ -104,9 +102,10 @@ Scala 3 as <em>first-class</em> types (§2, §4).</li>
 </div>
 <div class="fragment">
 <ol start="2" type="1">
-<li>A core <strong>calculus</strong> proven sound in Rocq by semantic
-typing, with subtyping and bounded polymorphism, under a
-<em>partial-correctness</em> semantics (§2.3, §3).</li>
+<li>A core <strong>calculus</strong> proven sound in Rocq for a pure
+subset of Scala; System <span class="math inline">F_{&lt;:&gt;}</span>
+with refinements, dependent functions and positive equi-recursive types,
+under a partial correctness semantics (§3).</li>
 </ol>
 </div>
 </div>
@@ -115,13 +114,15 @@ typing, with subtyping and bounded polymorphism, under a
 <section>
 <section id="part-1-implementation" class="title-slide slide level1">
 <h1><small>Part 1</small><br/>Implementation</h1>
-
+<aside class="notes">
+<p>Let’s start with the implementation.</p>
+</aside>
 </section>
 <section id="syntax-2.1" class="slide level2">
 <h2>Syntax (§2.1)</h2>
 <div class="columns">
 <div class="column">
-<p><strong>Long form</strong>, mirroring set-builder notation:</p>
+<p><strong>Long form</strong>, mirroring the set-builder notation:</p>
 <pre class="scala"><code>type NonEmpty[A] =
   {l: List[A] with l.nonEmpty}</code></pre>
 <div class="fragment">
@@ -129,6 +130,10 @@ typing, with subtyping and bounded polymorphism, under a
 <pre class="scala"><code>val x: (Int with x % 2 == 0) = 42
 // desugars to:
 val x: {v: Int with v % 2 == 0} = 42</code></pre>
+</div>
+<div class="fragment">
+<p><small>Investigated and implemented by Quentin Bernet for his Master
+thesis.</small></p>
 </div>
 </div><div class="column">
 <pre class="scala fragment"><code>def zip[A, B](
@@ -141,83 +146,54 @@ val x: {v: Int with v % 2 == 0} = 42</code></pre>
 ): {zs: List[T] with zs.size ==
                        xs.size + ys.size}</code></pre>
 <pre class="scala fragment"><code>val xs: List[Int] = …; val ys: List[Int] = …
-zip(concat(xs, ys), concat(ys, xs))
-zip(concat(xs, ys), concat(xs, xs)) // error</code></pre>
+zip(concat(xs, ys), concat(ys, xs))</code></pre>
 </div>
 </div>
-<aside class="notes">
-<ul>
-<li><code>with</code> was a deprecated keyword in Scala 3, so it was
-free to reuse; <code>|</code> was already taken by union types.</li>
-<li><code>_</code> and <code>this</code> were considered as implicit
-binders and rejected: repeated <code>_</code> denotes distinct
-parameters, and <code>this</code> already means something else.</li>
-<li>Predicates reuse Scala’s <strong>expression</strong> syntax: two new
-grammar productions, no new term language.</li>
-<li>The base type is an <code>InfixType</code>, which excludes complex
-forms such as unparenthesized match types.</li>
-</ul>
-</aside>
 </section>
 <section id="why-first-class-1" class="slide level2">
 <h2>Why <em>first-class</em>? (§1)</h2>
 <div class="columns">
 <div class="column">
-<p>Liquid Haskell is a plugin that runs <strong>after</strong> type
-checking. The type of <code>x</code> is declared twice:</p>
-<pre class="haskell"><code>{-@ x :: {v:Int | v mod 2 == 0} @-}
-let x = 42 :: Int in ...</code></pre>
-<div class="fragment">
-<p>“It’s sort of like you’re doing two things at once […] you’re also
-talking to GHC, but you’re also talking to LiquidHaskell.” <small>– <a
+<ol type="1">
+<li>It’s easier for us.</li>
+<li>It’s probably easier for users. <small>See <a
 href="https://dl.acm.org/doi/10.1145/3729327">Usability Barriers for
-Liquid Types</a> (Gamboa et al., PLDI 2025)</small></p>
-</div>
+Liquid Types</a> (Gamboa et al., PLDI 2025)</small></li>
+<li>It’s more expressive: refinement tyes are ordinary Scala types,
+participating in inference, <strong>overload resolution</strong> (1),
+<strong>subtyping</strong> (2), etc.</li>
+</ol>
 <div class="fragment">
-<p>Instead, we implement refinement as ordinary Scala types,
-participating in subtyping, inference, overloading and pattern
-matching.</p>
+<pre class="scala"><code>// Example 1: Overload resolution
+def min(l: List[Int] with l.isSorted) =
+  l.head // O(1)
+
+def min(l: List[Int]) =
+  l.min // O(n)
+
+def ex1(l: List[Int] with l.isSorted) =
+  min(l) // calls the first overload</code></pre>
 </div>
 </div><div class="column">
 <div class="fragment">
-<pre class="scala"><code>// Example: Bounded polymorphism
-type Even = {v: Int with v % 2 == 0}
-def maximum[T: Ordering, U &lt;: T]
-  (xs: List[U]): U = xs.reduce(max)
-def example1: Even =
-  maximum(List(2, 4, 6))</code></pre>
-</div>
-<div class="fragment">
-<pre class="scala"><code>// Example: Overload resolution
-def min(l: List[Int] with l.isSorted) =
-  l.head // O(1)
-def min(l: List[Int]) = l.min // O(n)
+<pre class="scala"><code>// Example 2: Bounded polymorphism
+given Ord[Int] = ...
 
-def ex2(l: List[Int] with l.isSorted) =
-  min(l) // calls the first overload</code></pre>
+type Even = {v: Int with v % 2 == 0}
+
+def ex2: Even =
+  maximum(List(2, 4, 6))
+
+def maximum[T: Ord, U &lt;: T](xs: List[U]): U =
+  xs.reduce(max)</code></pre>
+<p style="margin-top: 0">
+<small>Inspired by <a
+href="https://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">Abstract
+Refinement Types</a> (Vazou et al., ESOP 2013).</small>
+</p>
 </div>
 </div>
 </div>
-<aside class="notes">
-<ul>
-<li>Schmid and Kunčak’s Scala prototype was “largely independent of
-Scala’s own type checker”, so refinements could <strong>not</strong> be
-inferred as type arguments, and needed a separate qualifier inference
-algorithm that proved hard to scale.</li>
-<li>Honest history: our early prototypes also ran as a separate phase.
-More drawbacks than benefits.</li>
-<li>In <code>maximum</code>, <code>List(2, 4, 6)</code> is typed
-<code>List[2 | 4 | 6]</code>; inference instantiates
-<code>T := Int</code> (whose <code>Ordering</code> does the comparisons)
-and <code>U := 2 | 4 | 6</code>, and the result checks against
-<code>Even</code> since each literal satisfies the predicate. This is
-the case that motivated abstract refinements.</li>
-<li>Dafny and F* also treat refinements as first-class, but were
-designed around verification from the ground up; ours is the first
-integration into a pre-existing language where subtyping is central and
-pervasive.</li>
-</ul>
-</aside>
 </section>
 <section id="mixed-precision-type-inference-2.4" class="slide level2">
 <h2>Mixed-precision type inference (§2.4)</h2>
@@ -264,7 +240,7 @@ holds at run time:</p>
   case _      =&gt; ... // does not hold</code></pre>
 </div><div class="column">
 <div class="fragment">
-<p><strong>Checked casts.</strong> <code>.runtimeChecked</code> (<a
+<p><strong>Checked casts:</strong> <code>.runtimeChecked</code> (<a
 href="https://docs.scala-lang.org/sips/replace-nonsensical-unchecked-annotation.html">SIP-57</a>),
 when you expect the check to pass:</p>
 <pre class="scala"><code>val id: ID = &quot;a2e7-e89b&quot;.runtimeChecked</code></pre>
@@ -275,6 +251,10 @@ val id: ID =
   if (&quot;a2e7-e89b&quot;.matches(idRegex))
     &quot;a2e7-e89b&quot;.asInstanceOf[ID]
   else throw new IllegalArgumentException()</code></pre>
+</div>
+<div class="fragment">
+<p><small>Investigated and implemented by Valentin Schneeberger for his
+Master thesis.</small></p>
 </div>
 </div>
 </div>
@@ -471,6 +451,12 @@ definitional interpreter</strong>:</p>
         | None =&gt; None       (* timeout *)
         | _ =&gt; Some None     (* stuck *)
     …</code></pre>
+<div class="fragment">
+<p><small>Inspired by <a
+href="https://dl.acm.org/doi/10.1145/3093333.3009866">Type soundness
+proofs with definitional interpreters</a> (Amin et al., POPL
+2017).</small></p>
+</div>
 </section>
 <section id="interpretation-3.3" class="slide level2">
 <h2>Interpretation (§3.3)</h2>
@@ -482,12 +468,13 @@ class="math inline">\mathcal{V}\llbracket A
 <span class="math inline">v</span> to satisfy a type <span
 class="math inline">A</span>, given a semantic type context <span
 class="math inline">\delta</span> and a value environement <span
-class="math inline">\rho</span>.</p>
+class="math inline">\rho</span>. <small>See <a
+href="https://dl.acm.org/doi/10.1145/3676954">A Logical Approach to Type
+Soundness</a> (Timany et al., JACM 2024).</small></p>
 <div class="fragment">
 <p><span class="math inline">\mathcal{V}\llbracket A
-\rrbracket_{\delta}^{\rho}</span> is a predicate
-<code>Value -&gt; Prop</code>, also known as a <strong>semantic
-type</strong>.</p>
+\rrbracket_{\delta}^{\rho}</span> is a <strong>semantic type</strong>
+(<code>Value -&gt; Prop</code>).</p>
 </div>
 <div class="fragment">
 <p>The <strong>term interpretation</strong> <span
@@ -497,8 +484,8 @@ class="math inline">\mathcal{E}\llbracket A
 <div class="fragment">
 <p><span class="math display">
 \begin{aligned}
-\mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(a) \triangleq\ &amp;
-\forall n, r.\; \texttt{eval}\; n\; \rho\; a = \texttt{Some}\; r
+\mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(t) \triangleq\ &amp;
+\forall n, r.\; \texttt{eval}\; n\; \rho\; t = \texttt{Some}\; r
 \implies \\
 &amp;\quad \exists v.\; r = \texttt{Some}\; v \land
 \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v)
@@ -506,11 +493,10 @@ class="math inline">\mathcal{E}\llbracket A
 </span></p>
 </div>
 <div class="fragment">
-<p>“<strong>If</strong> evaluation terminates, it produces a value (not
-stuck), and that value is in <span
-class="math inline">\mathcal{V}\llbracket A \rrbracket</span>.”
-Vacuously true for diverging terms; this is <em>partial
-correctness</em>.</p>
+<p>“<strong>If</strong> evaluation terminates, it produces a value, and
+that value is in <span class="math inline">\mathcal{V}\llbracket A
+\rrbracket</span>.” Vacuously true for diverging terms; this is
+<em>partial correctness</em>.</p>
 </div>
 </div><div class="column">
 <div class="fragment">
@@ -570,21 +556,21 @@ B</span></li>
 </ol>
 </div>
 <div class="fragment">
-<p>The usual typing rules are not definitions but
-<strong>lemmas</strong>: each rule is proven individually.</p>
+<p>The typing rules are not definitions but <strong>lemmas</strong>:
+each rule is proven individually.</p>
 </div>
 </div><div class="column">
-<div class="fragment">
-<p>Rule for let-bindings:</p>
-<p><span class="math display">\frac{\Gamma \vDash a : A \qquad \Gamma, x
-: A, x \sim a \vDash b : B}{\Gamma \vDash \textsf{let}\; x{:}A = a
-\;\textsf{in}\; b : \textsf{avoid}(B, x)}\;\text{(T-Let)}</span></p>
-</div>
 <div class="fragment">
 <p>Selfification rule:</p>
 <p><span class="math display">\frac{\Gamma \vDash a : A \qquad
 \textsf{firstorder}(A)}{\Gamma \vDash a : \lbrace x : A \mid x
 \mathbin{\texttt{==}} a \rbrace}\;\text{(T-Self)}</span></p>
+</div>
+<div class="fragment">
+<p>Rule for let-bindings:</p>
+<p><span class="math display">\frac{\Gamma \vDash a : A \qquad \Gamma, x
+: A, x \sim a \vDash b : B}{\Gamma \vDash \textsf{let}\; x{:}A = a
+\;\textsf{in}\; b : \textsf{avoid}(B, x)}\;\text{(T-Let)}</span></p>
 </div>
 </div>
 </div>
@@ -627,8 +613,7 @@ A[X \mapsto \mu X.\, A] &lt;: \mu X.\, A}\;\text{(S-Mu-Fold)}</span></p>
 <p>Together they give <span class="math inline">\mu X.\, A &lt;:&gt; A[X
 \mapsto \mu X.\, A]</span>, provided <span class="math inline">X</span>
 occurs only <strong>strictly positively</strong> in <span
-class="math inline">A</span>: never left of an arrow, nor in a <span
-class="math inline">\forall</span> bound.</p>
+class="math inline">A</span>.</p>
 </div>
 </div>
 </div>
@@ -681,6 +666,11 @@ both predicates that way:</p>
 </div>
 </div>
 </div>
+</section></section>
+<section>
+<section id="wrap-up" class="title-slide slide level1">
+<h1>Wrap-up</h1>
+
 </section>
 <section id="future-work" class="slide level2">
 <h2>Future work</h2>
@@ -690,16 +680,14 @@ both predicates that way:</p>
 <ul>
 <li><p><strong>Better Solver</strong> for what our lightweight solver
 cannot do.</p></li>
+<li><p><strong>A termination checker</strong>, needed only for the
+termination-sensitive entailment rules, never systematically for every
+function in a predicate.</p></li>
 <li><p><strong>Term-parameterized types</strong>, to modularize
 predicates:</p></li>
 </ul>
 <pre class="scala"><code>    type Range(from: Int, to: Int) =
       {v: Int with v &gt;= from &amp;&amp; v &lt; to}</code></pre>
-<ul>
-<li><strong>A termination checker</strong>, needed only for the
-termination-sensitive entailment rules, never systematically for every
-function in a predicate.</li>
-</ul>
 </div><div class="column">
 <p>Theory:</p>
 <ul>
@@ -723,14 +711,14 @@ core calculus.</p></li>
 <ol type="1">
 <li><p>A <strong>prototype implementation</strong> of refinement types
 in Scala 3 as <em>first-class</em> types; normal Scala types that
-participate in subtyping, inference, overloading and pattern
+participate in subtyping, inference, overloads resolution and pattern
 matching.</p></li>
 <li><p>A core <strong>calculus</strong> proven sound in Rocq by semantic
 typing. It includes refinements, dependent functions and pairs, sums,
 unions, intersections and equi-recursive positive types, and allows
 predicates to diverge.</p></li>
 </ol>
-</div><div class="column" style="margin-left: 2em;">
+</div><div class="column" style="margin-left: 1.2em;">
 <p>Slides and paper:</p>
 <div style="width: 100%;">
 <p><img src="./qr-code.svg" style="margin: -4.25%; width: 108.5%;" />
@@ -745,6 +733,11 @@ predicates to diverge.</p></li>
 </figure>
 </div>
 </div>
+</section></section>
+<section>
+<section id="bonus-slides" class="title-slide slide level1">
+<h1>Bonus slides</h1>
+
 </section>
 <section id="backup-lh-usability-barriers" class="slide level2">
 <h2>Backup: LH Usability Barriers</h2>
@@ -790,77 +783,6 @@ list:</p>
 val xs = List(-1,2,-2,1)
 xs.collect { case x: Pos =&gt; x } : List[Pos]</code></pre>
 </div>
-</section>
-<section id="backup-specify-using-assertions" class="slide level2">
-<h2>Backup: Specify using assertions 😕</h2>
-<div class="columns">
-<div class="column">
-<p>We can use assertions:</p>
-<pre class="scala"><code>def zip[A, B](
-  xs: List[A],
-  ys: List[B]
-) : List[(A, B)] = {
-  require(xs.size == ys.size)
-  ...
-}.ensuring(_.size == xs.size)</code></pre>
-</div><div class="column fragment">
-<p>Limitations:</p>
-<ul>
-<li><em>Runtime overhead</em>: checked at runtime, not compile
-time,</li>
-<li><em>No static guarantees</em>: only checked for specific
-inputs,</li>
-<li><em>Not part of the API</em>: not visible in function type,</li>
-<li><em>Hard to compose</em>: cannot be passed as type argument.</li>
-</ul>
-</div><p><!-- .column --></p>
-</div>
-<p><!-- .columns --></p>
-<aside class="notes">
-<p>We can use assertions, but they have limitations. The check happens
-at runtime, so there’s overhead. The compiler can’t verify the
-precondition is always satisfied. The precondition is not visible in the
-function type. And assertions don’t compose well—imagine passing a list
-of values that all satisfy some property.</p>
-</aside>
-</section>
-<section id="backup-specify-using-dependent-types" class="slide level2">
-<h2>Backup: Specify using dependent types 😕</h2>
-<div class="columns">
-<div class="column">
-<p>Can we use path-dependent types?</p>
-<pre class="scala"><code>def zip[A, B](
-  xs: List[A],
-  ys: List[B] {
-    val size: xs.size.type
-  }
-): List[(A, B)] {
-  val size: xs.size.type
-} = ...</code></pre>
-</div><div class="column fragment">
-<p>Limitations:</p>
-<ul>
-<li><em>Limited reasoning</em>: only fields, literals and constant
-folding,</li>
-<li><em>Not inferred</em>: need manual type annotations, or not typable
-at all,</li>
-<li><em>Different languages</em>: term-level vs type-level.</li>
-</ul>
-</div><p><!-- .column --></p>
-</div>
-<p><!-- .columns --></p>
-</section>
-<section id="future-work-term-parameterized-types" class="slide level2">
-<h2>Future work: term-parameterized types</h2>
-<pre class="scala"><code>extension [T](list: List[T])
-  def get(index: Int with index &gt;= 0 &amp;&amp; index &lt; list.size): T = ...</code></pre>
-<div class="fragment">
-<p>To modularize the “range” concept, we could introduce
-term-parameterized types:</p>
-<pre class="scala"><code>type Range(from: Int, to: Int) = {v: Int with v &gt;= from &amp;&amp; v &lt; to}
-extension [T](list: List[T])
-  def get(index: Range(0, list.size)): T = ...</code></pre>
-</div>
 </section></section>
     </div>
   </div>
@@ -895,7 +817,7 @@ extension [T](list: List[T])
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: 'c/t',
+        slideNumber: 'c',
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',

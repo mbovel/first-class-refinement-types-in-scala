@@ -20,7 +20,7 @@ Slides and paper:
 
 <div class="fragment">
 
-Refinement types are types qualified with logical predicates.
+A *refinement type* is a type refined with a predicate.
 
 </div>
 
@@ -30,7 +30,7 @@ For example,
 
 $$\{ x: \text{Int} \mid x > 0 \}$$
 
-denotes the type of all integers `x` such that `x > 0`.
+denotes the type of integers `x` such that `x > 0`.
 
 </div>
 
@@ -48,17 +48,13 @@ In other languages: [Liquid Haskell](https://ucsd-progsys.github.io/liquidhaskel
 
 This talk presents:
 
-</div>
-
-<div class="fragment">
-
 1. A **prototype implementation** of refinement types in Scala 3 as _first-class_ types (§2, §4).
 
 </div>
 
 <div class="fragment">
 
-2. A core **calculus** proven sound in Rocq by semantic typing, with subtyping and bounded polymorphism, under a _partial-correctness_ semantics (§2.3, §3).
+2. A core **calculus** proven sound in Rocq for a pure subset of Scala; System $F_{<:>}$ with refinements, dependent functions and positive equi-recursive types, under a partial correctness semantics (§3).
 
 </div>
 
@@ -68,13 +64,19 @@ This talk presents:
 
 # <small>Part 1</small><br/>Implementation
 
+<div class="notes">
+
+Let's start with the implementation.
+
+</div>
+
 ## Syntax (§2.1)
 
 <div class="columns">
 
 <div class="column">
 
-**Long form**, mirroring set-builder notation:
+**Long form**, mirroring the set-builder notation:
 
 ```scala
 type NonEmpty[A] =
@@ -90,6 +92,12 @@ val x: (Int with x % 2 == 0) = 42
 // desugars to:
 val x: {v: Int with v % 2 == 0} = 42
 ```
+
+</div>
+
+<div class="fragment">
+
+<small>Investigated and implemented by Quentin Bernet for his Master thesis.</small>
 
 </div>
 
@@ -115,19 +123,9 @@ def concat[T](
 ```scala {.fragment}
 val xs: List[Int] = …; val ys: List[Int] = …
 zip(concat(xs, ys), concat(ys, xs))
-zip(concat(xs, ys), concat(xs, xs)) // error
 ```
 
 </div>
-
-</div>
-
-<div class="notes">
-
-- `with` was a deprecated keyword in Scala 3, so it was free to reuse; `|` was already taken by union types.
-- `_` and `this` were considered as implicit binders and rejected: repeated `_` denotes distinct parameters, and `this` already means something else.
-- Predicates reuse Scala's **expression** syntax: two new grammar productions, no new term language.
-- The base type is an `InfixType`, which excludes complex forms such as unparenthesized match types.
 
 </div>
 
@@ -137,23 +135,24 @@ zip(concat(xs, ys), concat(xs, xs)) // error
 
 <div class="column">
 
-Liquid Haskell is a plugin that runs **after** type checking. The type of `x` is declared twice:
+1. It's easier for us.
+2. It's probably easier for users. <small>See [Usability Barriers for Liquid Types](https://dl.acm.org/doi/10.1145/3729327) (Gamboa et al., PLDI 2025)</small>
+3. It's more expressive: refinement tyes are ordinary Scala types, participating in inference, **overload resolution** (1), **subtyping** (2), etc.
 
-```haskell
-{-@ x :: {v:Int | v mod 2 == 0} @-}
-let x = 42 :: Int in ...
+<div class="fragment">
+
+
+```scala
+// Example 1: Overload resolution
+def min(l: List[Int] with l.isSorted) =
+  l.head // O(1)
+
+def min(l: List[Int]) =
+  l.min // O(n)
+
+def ex1(l: List[Int] with l.isSorted) =
+  min(l) // calls the first overload
 ```
-
-<div class="fragment">
-
-“It's sort of like you're doing two things at once […] you're also talking to GHC, but you're also talking to LiquidHaskell.”
-<small>– [Usability Barriers for Liquid Types](https://dl.acm.org/doi/10.1145/3729327) (Gamboa et al., PLDI 2025)</small>
-
-</div>
-
-<div class="fragment">
-
-Instead, we implement refinement as ordinary Scala types, participating in subtyping, inference, overloading and pattern matching.
 
 </div>
 
@@ -164,40 +163,23 @@ Instead, we implement refinement as ordinary Scala types, participating in subty
 <div class="fragment">
 
 ```scala
-// Example: Bounded polymorphism
+// Example 2: Bounded polymorphism
+given Ord[Int] = ...
+
 type Even = {v: Int with v % 2 == 0}
-def maximum[T: Ordering, U <: T]
-  (xs: List[U]): U = xs.reduce(max)
-def example1: Even =
+
+def ex2: Even =
   maximum(List(2, 4, 6))
+
+def maximum[T: Ord, U <: T](xs: List[U]): U =
+  xs.reduce(max)
 ```
+<p style="margin-top: 0"><small>Inspired by [Abstract Refinement Types](https://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf) (Vazou et al., ESOP 2013).</small></p>
 
-</div>
-
-<div class="fragment">
-
-```scala
-// Example: Overload resolution
-def min(l: List[Int] with l.isSorted) =
-  l.head // O(1)
-def min(l: List[Int]) = l.min // O(n)
-
-def ex2(l: List[Int] with l.isSorted) =
-  min(l) // calls the first overload
-```
 
 </div>
 
 </div>
-
-</div>
-
-<div class="notes">
-
-- Schmid and Kunčak's Scala prototype was “largely independent of Scala's own type checker”, so refinements could **not** be inferred as type arguments, and needed a separate qualifier inference algorithm that proved hard to scale.
-- Honest history: our early prototypes also ran as a separate phase. More drawbacks than benefits.
-- In `maximum`, `List(2, 4, 6)` is typed `List[2 | 4 | 6]`; inference instantiates `T := Int` (whose `Ordering` does the comparisons) and `U := 2 | 4 | 6`, and the result checks against `Even` since each literal satisfies the predicate. This is the case that motivated abstract refinements.
-- Dafny and F\* also treat refinements as first-class, but were designed around verification from the ground up; ours is the first integration into a pre-existing language where subtyping is central and pervasive.
 
 </div>
 
@@ -271,7 +253,7 @@ type ID = {s: String with s.matches(idRegex)}
 
 <div class="fragment">
 
-**Checked casts.** `.runtimeChecked` ([SIP-57](https://docs.scala-lang.org/sips/replace-nonsensical-unchecked-annotation.html)), when you expect the check to pass:
+**Checked casts:** `.runtimeChecked` ([SIP-57](https://docs.scala-lang.org/sips/replace-nonsensical-unchecked-annotation.html)), when you expect the check to pass:
 
 ```scala
 val id: ID = "a2e7-e89b".runtimeChecked
@@ -288,6 +270,12 @@ val id: ID =
     "a2e7-e89b".asInstanceOf[ID]
   else throw new IllegalArgumentException()
 ```
+
+</div>
+
+<div class="fragment">
+
+<small>Investigated and implemented by Valentin Schneeberger for his Master thesis.</small>
 
 </div>
 
@@ -372,9 +360,9 @@ Also beta-reduction, ADT constructors and limited reasoning for linear integer a
 
 | System | Overhead |
 |---|---|
-| First-class (ours) | **0–12%** |
-| Schmid and Kunčak | 20–38% |
-| Stainless | ≥ 56% |
+| First-class (ours) | **0–13%** |
+| Schmid and Kunčak | 20–41% |
+| Stainless | ≥ 53% |
 
 <div class="fragment">
 
@@ -495,18 +483,25 @@ Fixpoint eval (fuel: nat) (env: list Value) (t: Term) : option (option Value) :=
     …
 ```
 
+<div class="fragment">
+
+<small>Inspired by [Type soundness proofs with definitional interpreters](https://dl.acm.org/doi/10.1145/3093333.3009866) (Amin et al., POPL 2017).</small>
+
+</div>
+
+
 ## Interpretation (§3.3)
 
 <div class="columns">
 
 <div class="column">
 
-The **value interpretation** $\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v)$ defines what it means for a value $v$ to satisfy a type $A$, given a semantic type context $\delta$ and a value environement $\rho$.
+The **value interpretation** $\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v)$ defines what it means for a value $v$ to satisfy a type $A$, given a semantic type context $\delta$ and a value environement $\rho$. <small>See [A Logical Approach to Type Soundness](https://dl.acm.org/doi/10.1145/3676954) (Timany et al., JACM 2024).</small>
 
 
 <div class="fragment">
 
-$\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}$ is a predicate `Value -> Prop`, also known as a **semantic type**.
+$\mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}$ is a **semantic type** (`Value -> Prop`).
 
 </div>
 
@@ -520,7 +515,7 @@ The **term interpretation** $\mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(
 
 $$
 \begin{aligned}
-\mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(a) \triangleq\ & \forall n, r.\; \texttt{eval}\; n\; \rho\; a = \texttt{Some}\; r \implies \\
+\mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(t) \triangleq\ & \forall n, r.\; \texttt{eval}\; n\; \rho\; t = \texttt{Some}\; r \implies \\
  &\quad \exists v.\; r = \texttt{Some}\; v \land \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v)
 \end{aligned}
 $$
@@ -529,7 +524,7 @@ $$
 
 <div class="fragment">
 
-“**If** evaluation terminates, it produces a value (not stuck), and that value is in $\mathcal{V}\llbracket A \rrbracket$.” Vacuously true for diverging terms; this is _partial correctness_.
+“**If** evaluation terminates, it produces a value, and that value is in $\mathcal{V}\llbracket A \rrbracket$.” Vacuously true for diverging terms; this is _partial correctness_.
 
 </div>
 
@@ -600,7 +595,7 @@ A context $\Gamma$ is made of:
 
 <div class="fragment">
 
-The usual typing rules are not definitions but **lemmas**: each rule is proven individually.
+The typing rules are not definitions but **lemmas**: each rule is proven individually.
 
 </div>
 
@@ -610,17 +605,17 @@ The usual typing rules are not definitions but **lemmas**: each rule is proven i
 
 <div class="fragment">
 
-Rule for let-bindings:
+Selfification rule:
 
-$$\frac{\Gamma \vDash a : A \qquad \Gamma, x : A, x \sim a \vDash b : B}{\Gamma \vDash \textsf{let}\; x{:}A = a \;\textsf{in}\; b : \textsf{avoid}(B, x)}\;\text{(T-Let)}$$
+$$\frac{\Gamma \vDash a : A \qquad \textsf{firstorder}(A)}{\Gamma \vDash a : \lbrace x : A \mid x \mathbin{\texttt{==}} a \rbrace}\;\text{(T-Self)}$$
 
 </div>
 
 <div class="fragment">
 
-Selfification rule:
+Rule for let-bindings:
 
-$$\frac{\Gamma \vDash a : A \qquad \textsf{firstorder}(A)}{\Gamma \vDash a : \lbrace x : A \mid x \mathbin{\texttt{==}} a \rbrace}\;\text{(T-Self)}$$
+$$\frac{\Gamma \vDash a : A \qquad \Gamma, x : A, x \sim a \vDash b : B}{\Gamma \vDash \textsf{let}\; x{:}A = a \;\textsf{in}\; b : \textsf{avoid}(B, x)}\;\text{(T-Let)}$$
 
 </div>
 
@@ -668,7 +663,7 @@ $$\frac{\textsf{spos}(X, A)}{\Gamma \vDash A[X \mapsto \mu X.\, A] <: \mu X.\, A
 
 <div class="fragment">
 
-Together they give $\mu X.\, A <:> A[X \mapsto \mu X.\, A]$, provided $X$ occurs only **strictly positively** in $A$: never left of an arrow, nor in a $\forall$ bound.
+Together they give $\mu X.\, A <:> A[X \mapsto \mu X.\, A]$, provided $X$ occurs only **strictly positively** in $A$.
 
 </div>
 
@@ -734,6 +729,8 @@ $$\Gamma \vDash \lbrace x : A \mid \textsf{diverge} \rbrace \mathrel{<:>} \lbrac
 
 </div>
 
+# Wrap-up
+
 ## Future work
 
 <div class="columns">
@@ -744,14 +741,14 @@ Implementation:
 
 - **Better Solver** for what our lightweight solver cannot do.
 
+- **A termination checker**, needed only for the termination-sensitive entailment rules, never systematically for every function in a predicate.
+
 - **Term-parameterized types**, to modularize predicates:
 
 ```scala
     type Range(from: Int, to: Int) =
       {v: Int with v >= from && v < to}
 ```
-
-- **A termination checker**, needed only for the termination-sensitive entailment rules, never systematically for every function in a predicate.
 
 </div>
 
@@ -777,13 +774,13 @@ Theory:
 
 We showed:
 
-1. A **prototype implementation** of refinement types in Scala 3 as _first-class_ types; normal Scala types that participate in subtyping, inference, overloading and pattern matching.
+1. A **prototype implementation** of refinement types in Scala 3 as _first-class_ types; normal Scala types that participate in subtyping, inference, overloads resolution and pattern matching.
 
 2. A core **calculus** proven sound in Rocq by semantic typing. It includes refinements, dependent functions and pairs, sums, unions, intersections and equi-recursive positive types, and allows predicates to diverge.
 
 </div>
 
-<div class="column" style="margin-left: 2em;">
+<div class="column" style="margin-left: 1.2em;">
 
 Slides and paper:
 
@@ -805,6 +802,8 @@ Slides and paper:
 
 </div>
 
+# Bonus slides
+
 ## Backup: LH Usability Barriers
 
 From [“Usability Barriers for Liquid Types”](https://dl.acm.org/doi/10.1145/3729327) [1]:
@@ -818,6 +817,7 @@ From [“Usability Barriers for Liquid Types”](https://dl.acm.org/doi/10.1145/
   - <small>“[user] tried to use the function <code>length</code>, but since it was not imported, it was impossible to use in this case.”</small>
 
 <small>[1] Catarina Gamboa, Abigail Reese, Alcides Fonseca, and Jonathan Aldrich. 2025. Usability Barriers for Liquid Types. Proc. ACM Program. Lang. 9, PLDI, Article 224 (June 2025), 26 pages. <a href="https://dl.acm.org/doi/10.1145/3729327">doi:10.1145/3729327</a></small>
+
 
 ## Backup: `List.collect`
 
@@ -835,91 +835,3 @@ xs.collect { case x: Pos => x } : List[Pos]
 ```
 
 </div>
-
-## Backup: Specify using assertions 😕
-
-<div class="columns">
-<div class="column">
-
-We can use assertions:
-
-```scala
-def zip[A, B](
-  xs: List[A],
-  ys: List[B]
-) : List[(A, B)] = {
-  require(xs.size == ys.size)
-  ...
-}.ensuring(_.size == xs.size)
-```
-
-</div>
-<div class="column fragment">
-
-Limitations:
-
-- _Runtime overhead_: checked at runtime, not compile time,
-- _No static guarantees_: only checked for specific inputs,
-- _Not part of the API_: not visible in function type,
-- _Hard to compose_: cannot be passed as type argument.
-
-</div> <!-- .column -->
-
-</div> <!-- .columns -->
-
-<div class="notes">
-
-We can use assertions, but they have limitations. The check happens at runtime, so there's overhead. The compiler can't verify the precondition is always satisfied. The precondition is not visible in the function type. And assertions don't compose well—imagine passing a list of values that all satisfy some property.
-
-</div>
-
-## Backup: Specify using dependent types 😕
-
-<div class="columns">
-<div class="column">
-
-Can we use path-dependent types?
-
-```scala
-def zip[A, B](
-  xs: List[A],
-  ys: List[B] {
-    val size: xs.size.type
-  }
-): List[(A, B)] {
-  val size: xs.size.type
-} = ...
-```
-
-</div>
-<div class="column fragment">
-
-Limitations:
-
-- _Limited reasoning_: only fields, literals and constant folding,
-- _Not inferred_: need manual type annotations, or not typable at all,
-- _Different languages_: term-level vs type-level.
-
-</div> <!-- .column -->
-
-</div> <!-- .columns -->
-
-## Future work: term-parameterized types
-
-```scala
-extension [T](list: List[T])
-  def get(index: Int with index >= 0 && index < list.size): T = ...
-```
-
-<div class="fragment">
-
-To modularize the “range” concept, we could introduce term-parameterized types:
-
-```scala
-type Range(from: Int, to: Int) = {v: Int with v >= from && v < to}
-extension [T](list: List[T])
-  def get(index: Range(0, list.size)): T = ...
-```
-
-</div>
-

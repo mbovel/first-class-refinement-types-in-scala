@@ -255,6 +255,10 @@ code {
     overflow: visible !important;
 }
 
+div.columns {
+    gap: 3.5rem;
+}
+
 div.column {
     flex: 1 0 0;
 }
