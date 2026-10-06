@@ -132,7 +132,7 @@ under a partial correctness semantics (§3).</li>
 val x: {v: Int with v % 2 == 0} = 42</code></pre>
 </div>
 <div class="fragment">
-<p><small>Investigated and implemented by Quentin Bernet for his Master
+<p><small>Surveyed and implemented by Quentin Bernet for his Master
 thesis.</small></p>
 </div>
 </div><div class="column">
@@ -450,38 +450,11 @@ that value is in <span class="math inline">\mathcal{V}\llbracket A
 </div>
 </div><div class="column">
 <div class="fragment">
-<p>Value interpretation of <strong>function types</strong>:</p>
-<p><span class="math display">
-\begin{aligned}
-\mathcal{V}\llbracket \Pi x{:}A.\, B \rrbracket_{\delta}^{\rho}(v)
-\triangleq\ &amp; \exists \rho_f, b.\; v = \langle \rho_f, \lambda x.\,
-b \rangle\ \land \\
-  &amp; \forall v_a.\; \mathcal{V}\llbracket A
-\rrbracket_{\delta}^{\rho}(v_a) \implies \mathcal{E}\llbracket B
-\rrbracket_{\delta}^{\rho_f[x \mapsto v_a]}(b)
-\end{aligned}
-</span></p>
-</div>
-<div class="fragment">
 <p>Value interpretation of <strong>refinement types</strong>:</p>
 <p><span class="math display">\mathcal{V}\llbracket \lbrace x : A \mid p
 \rbrace \rrbracket_{\delta}^{\rho}(v) \triangleq \mathcal{V}\llbracket A
 \rrbracket_{\delta}^{\rho}(v) \land \mathcal{E}\llbracket \texttt{True}
 \rrbracket_{\delta}^{\rho[x \mapsto v]}(p)</span></p>
-</div>
-<div class="fragment">
-<p>Value interpretation of <strong>recursive types</strong>?</p>
-<p><span class="math display">\textcolor{red}{\mathcal{V}\llbracket \mu
-X.\, A \rrbracket_{\delta}^{\rho}(v) \triangleq \mathcal{V}\llbracket A
-\rrbracket_{\delta[X \mapsto \mathcal{V}\llbracket \mu X.\, A
-\rrbracket_{\delta}^{\rho}]}^{\rho}(v)}</span></p>
-</div>
-<div class="fragment">
-<p><span class="math display">\mathcal{V}\llbracket \mu X.\, A
-\rrbracket_{\delta}^{\rho}(v) \triangleq \forall n.\; F^n(v)</span></p>
-<p><span class="math display">F^0(v) = \top,\quad F^{n+1}(v) =
-\mathcal{V}\llbracket A \rrbracket_{\delta[X \mapsto
-F^n]}^{\rho}(v)</span></p>
 </div>
 </div>
 </div>
@@ -515,7 +488,8 @@ of the recursive type, not evaluation steps.</li>
 \delta, \rho.\; \mathrm{wf}(\delta, \Gamma, \rho) \implies
 \mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(a)</span></p>
 <div class="fragment">
-<p>The typing rules are not definitions but <strong>lemmas</strong>.</p>
+<p>The typing rules are not declared, they are
+<strong>lemmas</strong>.</p>
 </div>
 <div class="fragment">
 <p>A context <span class="math inline">\Gamma</span> is made of:</p>
@@ -748,6 +722,36 @@ list:</p>
 
 val xs = List(-1,2,-2,1)
 xs.collect { case x: Pos =&gt; x } : List[Pos]</code></pre>
+</div>
+</section>
+<section id="backup-value-interpretation-more" class="slide level2">
+<h2>Backup: Value interpretation (more)</h2>
+<div class="fragment">
+<p>Value interpretation of <strong>function types</strong>:</p>
+<p><span class="math display">
+\begin{aligned}
+\mathcal{V}\llbracket \Pi x{:}A.\, B \rrbracket_{\delta}^{\rho}(v)
+\triangleq\ &amp; \exists \rho_f, b.\; v = \langle \rho_f, \lambda x.\,
+b \rangle\ \land \\
+  &amp; \forall v_a.\; \mathcal{V}\llbracket A
+\rrbracket_{\delta}^{\rho}(v_a) \implies \mathcal{E}\llbracket B
+\rrbracket_{\delta}^{\rho_f[x \mapsto v_a]}(b)
+\end{aligned}
+</span></p>
+</div>
+<div class="fragment">
+<p>Value interpretation of <strong>recursive types</strong>?</p>
+<p><span class="math display">\textcolor{red}{\mathcal{V}\llbracket \mu
+X.\, A \rrbracket_{\delta}^{\rho}(v) \triangleq \mathcal{V}\llbracket A
+\rrbracket_{\delta[X \mapsto \mathcal{V}\llbracket \mu X.\, A
+\rrbracket_{\delta}^{\rho}]}^{\rho}(v)}</span></p>
+</div>
+<div class="fragment">
+<p><span class="math display">\mathcal{V}\llbracket \mu X.\, A
+\rrbracket_{\delta}^{\rho}(v) \triangleq \forall n.\; F^n(v)</span></p>
+<p><span class="math display">F^0(v) = \top,\quad F^{n+1}(v) =
+\mathcal{V}\llbracket A \rrbracket_{\delta[X \mapsto
+F^n]}^{\rho}(v)</span></p>
 </div>
 </section></section>
     </div>

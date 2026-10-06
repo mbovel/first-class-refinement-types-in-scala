@@ -97,7 +97,7 @@ val x: {v: Int with v % 2 == 0} = 42
 
 <div class="fragment">
 
-<small>Investigated and implemented by Quentin Bernet for his Master thesis.</small>
+<small>Surveyed and implemented by Quentin Bernet for his Master thesis.</small>
 
 </div>
 
@@ -467,38 +467,9 @@ $$
 
 <div class="fragment">
 
-Value interpretation of **function types**:
-
-$$
-\begin{aligned}
-\mathcal{V}\llbracket \Pi x{:}A.\, B \rrbracket_{\delta}^{\rho}(v) \triangleq\ & \exists \rho_f, b.\; v = \langle \rho_f, \lambda x.\, b \rangle\ \land \\
-  & \forall v_a.\; \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v_a) \implies \mathcal{E}\llbracket B \rrbracket_{\delta}^{\rho_f[x \mapsto v_a]}(b)
-\end{aligned}
-$$
-
-</div>
-
-<div class="fragment">
-
 Value interpretation of **refinement types**:
 
 $$\mathcal{V}\llbracket \lbrace x : A \mid p \rbrace \rrbracket_{\delta}^{\rho}(v) \triangleq \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v) \land \mathcal{E}\llbracket \texttt{True} \rrbracket_{\delta}^{\rho[x \mapsto v]}(p)$$
-
-</div>
-
-<div class="fragment">
-
-Value interpretation of **recursive types**?
-
-$$\textcolor{red}{\mathcal{V}\llbracket \mu X.\, A \rrbracket_{\delta}^{\rho}(v) \triangleq \mathcal{V}\llbracket A \rrbracket_{\delta[X \mapsto \mathcal{V}\llbracket \mu X.\, A \rrbracket_{\delta}^{\rho}]}^{\rho}(v)}$$
-
-</div>
-
-<div class="fragment">
-
-$$\mathcal{V}\llbracket \mu X.\, A \rrbracket_{\delta}^{\rho}(v) \triangleq \forall n.\; F^n(v)$$
-
-$$F^0(v) = \top,\quad F^{n+1}(v) = \mathcal{V}\llbracket A \rrbracket_{\delta[X \mapsto F^n]}^{\rho}(v)$$
 
 </div>
 
@@ -526,7 +497,7 @@ $$\Gamma \vDash a : A \triangleq \forall \delta, \rho.\; \mathrm{wf}(\delta, \Ga
 
 <div class="fragment">
 
-The typing rules are not definitions but **lemmas**.
+The typing rules are not declared, they are **lemmas**.
 
 </div>
 
@@ -774,5 +745,38 @@ type Pos = { v: Int with v >= 0 }
 val xs = List(-1,2,-2,1)
 xs.collect { case x: Pos => x } : List[Pos]
 ```
+
+</div>
+
+
+## Backup: Value interpretation (more)
+
+<div class="fragment">
+
+Value interpretation of **function types**:
+
+$$
+\begin{aligned}
+\mathcal{V}\llbracket \Pi x{:}A.\, B \rrbracket_{\delta}^{\rho}(v) \triangleq\ & \exists \rho_f, b.\; v = \langle \rho_f, \lambda x.\, b \rangle\ \land \\
+  & \forall v_a.\; \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v_a) \implies \mathcal{E}\llbracket B \rrbracket_{\delta}^{\rho_f[x \mapsto v_a]}(b)
+\end{aligned}
+$$
+
+</div>
+
+
+<div class="fragment">
+
+Value interpretation of **recursive types**?
+
+$$\textcolor{red}{\mathcal{V}\llbracket \mu X.\, A \rrbracket_{\delta}^{\rho}(v) \triangleq \mathcal{V}\llbracket A \rrbracket_{\delta[X \mapsto \mathcal{V}\llbracket \mu X.\, A \rrbracket_{\delta}^{\rho}]}^{\rho}(v)}$$
+
+</div>
+
+<div class="fragment">
+
+$$\mathcal{V}\llbracket \mu X.\, A \rrbracket_{\delta}^{\rho}(v) \triangleq \forall n.\; F^n(v)$$
+
+$$F^0(v) = \top,\quad F^{n+1}(v) = \mathcal{V}\llbracket A \rrbracket_{\delta[X \mapsto F^n]}^{\rho}(v)$$
 
 </div>
