@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Matt Bovel, Viktor Kunčak and Martin Odersky EPFL (Swiss Federal Institute of Technology in Lausanne, Switzerland)">
-  <meta name="dcterms.date" content="2026-10-05">
+  <meta name="dcterms.date" content="2026-10-06">
   <title>First-class Refinement Types in Scala</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -62,7 +62,7 @@
   <p class="author"><u>Matt Bovel</u>, Viktor Kunčak and Martin
 Odersky<br/>EPFL <small>(Swiss Federal Institute of Technology in
 Lausanne, Switzerland)</small></p>
-  <p class="date">October 5, 2026</p>
+  <p class="date">October 6, 2026</p>
 </section>
 
 <section id="introduction" class="slide level2">
@@ -204,8 +204,6 @@ default; the wider type is:</p>
 <pre class="scala"><code>val x = 42 // Int, not {v: Int with v == 42}</code></pre>
 <div class="fragment">
 <p>Why not always infer the precise type?</p>
-</div>
-<div class="fragment">
 <ol type="1">
 <li><strong>Backward compatibility:</strong> implicit and overload
 resolution depend on inferred types; a more precise type changes which
@@ -220,66 +218,21 @@ would be unreadable.</li>
 <p>Instead, precision is recovered <strong>on demand</strong>, by a
 standard mechanism called <em>selfification</em>, triggered by the
 bidirectional type-inference algorithm:</p>
-</div>
-<div class="fragment">
 <pre class="scala"><code>val x: (Int with x == 42) = 42 // selfified</code></pre>
 </div>
 </div>
 </div>
-</section>
-<section id="run-time-checks-2.5" class="slide level2">
-<h2>Run-time checks (§2.5)</h2>
-<div class="columns">
-<div class="column">
-<p><strong>Pattern matching</strong> branches on whether the predicate
-holds at run time:</p>
-<pre class="scala"><code>type ID = {s: String with s.matches(idRegex)}
-
-&quot;a2e7-e89b&quot; match
-  case id: ID =&gt; ... // holds, id has type ID
-  case _      =&gt; ... // does not hold</code></pre>
-</div><div class="column">
-<div class="fragment">
-<p><strong>Checked casts:</strong> <code>.runtimeChecked</code> (<a
-href="https://docs.scala-lang.org/sips/replace-nonsensical-unchecked-annotation.html">SIP-57</a>),
-when you expect the check to pass:</p>
-<pre class="scala"><code>val id: ID = &quot;a2e7-e89b&quot;.runtimeChecked</code></pre>
-</div>
-<div class="fragment">
-<pre class="scala"><code>// desugars to:
-val id: ID =
-  if (&quot;a2e7-e89b&quot;.matches(idRegex))
-    &quot;a2e7-e89b&quot;.asInstanceOf[ID]
-  else throw new IllegalArgumentException()</code></pre>
-</div>
-<div class="fragment">
-<p><small>Investigated and implemented by Valentin Schneeberger for his
-Master thesis.</small></p>
-</div>
-</div>
-</div>
-<aside class="notes">
-<ul>
-<li>The JVM erases type parameters, so <code>List[ID]</code> cannot be
-matched directly, but <code>xs.collect { case x: ID =&gt; x }</code>
-works.</li>
-<li>Both work only for first-order predicates: higher-order values
-cannot be checked eagerly, which sidesteps blame assignment for
-now.</li>
-</ul>
-</aside>
 </section>
 <section id="solver-4.3" class="slide level2">
 <h2>Solver (§4.3)</h2>
 <div class="columns">
 <div class="column">
 <p>How does the compiler check
-<code>{x: T with p(x)} &lt;: {y: S with q(y)}</code>?</p>
-<ol type="1">
-<li>Check <code>T &lt;: S</code></li>
-<li>Check <code>p(x)</code> implies <code>q(x)</code> for all
-<code>x</code></li>
-</ol>
+<code>{x: T with p(x)} &lt;: {x: T with q(x)}</code>?</p>
+<div class="fragment">
+<p>Need to check that <code>p(x)</code> implies <code>q(x)</code> for
+all <code>x: T</code>.</p>
+</div>
 <div class="fragment">
 <p>Existing implementations lower to SMT.</p>
 </div>
@@ -298,8 +251,8 @@ own <strong>lightweight e-graph-based solver</strong>.</p>
 <p>And domain-specific normalizations such as:</p>
 <pre class="scala"><code>{v: Int with v == x + 3 * y}
   &lt;: {v: Int with v == 2 * y + (x + y)}</code></pre>
-<p>Also beta-reduction, ADT constructors and limited reasoning for
-linear integer arithmetic.</p>
+<p>Also beta-reduction, ADT selections reductions and limited reasoning
+on LIA inequalities.</p>
 </div>
 </div>
 </div>
@@ -310,6 +263,22 @@ equality saturation: one representative per class, so only one form is
 explored.</li>
 </ul>
 </aside>
+</section>
+<section id="run-time-checks-2.5" class="slide level2">
+<h2>Run-time checks (§2.5)</h2>
+<div class="columns">
+<div class="column">
+<p><strong>Pattern matching</strong> branches on whether the predicate
+holds at run time:</p>
+<pre class="scala"><code>type ID = {s: String with s.matches(idRegex)}
+
+&quot;a2e7-e89b&quot; match
+  case id: ID =&gt; ... // holds, id has type ID
+  case _      =&gt; ... // does not hold</code></pre>
+</div><div class="column">
+
+</div>
+</div>
 </section>
 <section id="evaluation-4.4" class="slide level2">
 <h2>Evaluation (§4.4)</h2>
@@ -327,15 +296,15 @@ unchecked baseline:</p>
 <tbody>
 <tr>
 <td>First-class (ours)</td>
-<td><strong>0–12%</strong></td>
+<td><strong>0–13%</strong></td>
 </tr>
 <tr>
 <td>Schmid and Kunčak</td>
-<td>20–38%</td>
+<td>20–41%</td>
 </tr>
 <tr>
 <td>Stainless</td>
-<td>≥ 56%</td>
+<td>≥ 53%</td>
 </tr>
 </tbody>
 </table>
@@ -346,15 +315,7 @@ unchanged: the compiler itself (≈200 000 LoC),<br/>≈10 000 tests, a
 <p>≤ 4% slowdown on the official benchmark suite.</p>
 </div>
 </div><div class="column">
-<div class="fragment">
-<p><strong>Expressiveness.</strong> Because refinements are types, we
-get type-argument inference. We also compile unmodified Scala, so
-adoption is incremental.</p>
-</div>
-<div class="fragment">
-<p>Conversely, both alternatives have stronger solvers: SMT-backed and
-complete for linear integer arithmetic, ADTs and equality.</p>
-</div>
+
 </div>
 </div>
 </section></section>
@@ -381,6 +342,7 @@ A, B ::=\ &amp; X \mid \texttt{Unit} \mid \texttt{True} \mid
 &amp;\mid \mu X.\, A
 \end{aligned}
 </span></p>
+</div><div class="column">
 <div class="fragment math-left">
 <p><span class="math display">
 \begin{aligned}
@@ -395,7 +357,14 @@ f\,[A] \\
 \end{aligned}
 </span></p>
 </div>
+<div class="fragment">
+<p><span class="math inline">\textsf{loop}(a)\; x.\, b</span> suffices
+to model loops and tail recursion. The body returns <span
+class="math inline">\textsf{inl}</span> to continue, <span
+class="math inline">\textsf{inr}</span> to exit.</p>
+</div>
 <div class="fragment math-left">
+<p>Values are a separate category:</p>
 <p><span class="math display">
 \begin{aligned}
 v ::=\ &amp; c \mid (v_1, v_2) \mid \textsf{inl}(v) \mid \textsf{inr}(v)
@@ -403,21 +372,6 @@ v ::=\ &amp; c \mid (v_1, v_2) \mid \textsf{inl}(v) \mid \textsf{inr}(v)
 X.\, b \rangle
 \end{aligned}
 </span></p>
-</div>
-</div><div class="column">
-<div class="fragment">
-<p><strong>Loops.</strong> <span class="math inline">\textsf{loop}(a)\;
-x.\, b</span> is a limited recursion that suffices to model loops and
-tail recursion. The body returns <span
-class="math inline">\textsf{inl}</span> to continue, <span
-class="math inline">\textsf{inr}</span> to exit.</p>
-</div>
-<div class="fragment">
-<p><strong>Contribution</strong>. To our knowledge, this is the first
-mechanized soundness proof combining refinements with <span
-class="math inline">\lor</span>/<span class="math inline">\land</span>,
-bounded polymorphism (both bounds), and positive equi-recursive
-types.</p>
 </div>
 </div>
 </div>
@@ -437,6 +391,12 @@ A</span> and <span class="math inline">p \in \mathcal{E}\llbracket
 <h2>Definitional Interpreter (§3.2)</h2>
 <p>Operational semantic is defined using a <strong>fuel-bounded
 definitional interpreter</strong>:</p>
+<p style="margin-top: 0">
+<small>Inspired by <a
+href="https://dl.acm.org/doi/10.1145/3093333.3009866">Type soundness
+proofs with definitional interpreters</a> (Amin et al., POPL
+2017).</small>
+</p>
 <pre class="coq"><code>Fixpoint eval (fuel: nat) (env: list Value) (t: Term) : option (option Value) :=
   match fuel with
   | 0 =&gt; None              (* timeout *)
@@ -451,12 +411,6 @@ definitional interpreter</strong>:</p>
         | None =&gt; None       (* timeout *)
         | _ =&gt; Some None     (* stuck *)
     …</code></pre>
-<div class="fragment">
-<p><small>Inspired by <a
-href="https://dl.acm.org/doi/10.1145/3093333.3009866">Type soundness
-proofs with definitional interpreters</a> (Amin et al., POPL
-2017).</small></p>
-</div>
 </section>
 <section id="interpretation-3.3" class="slide level2">
 <h2>Interpretation (§3.3)</h2>
@@ -480,8 +434,6 @@ Soundness</a> (Timany et al., JACM 2024).</small></p>
 <p>The <strong>term interpretation</strong> <span
 class="math inline">\mathcal{E}\llbracket A
 \rrbracket_{\delta}^{\rho}(t)</span> lifts it to terms:</p>
-</div>
-<div class="fragment">
 <p><span class="math display">
 \begin{aligned}
 \mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(t) \triangleq\ &amp;
@@ -491,8 +443,6 @@ class="math inline">\mathcal{E}\llbracket A
 \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho}(v)
 \end{aligned}
 </span></p>
-</div>
-<div class="fragment">
 <p>“<strong>If</strong> evaluation terminates, it produces a value, and
 that value is in <span class="math inline">\mathcal{V}\llbracket A
 \rrbracket</span>.” Vacuously true for diverging terms; this is
@@ -520,7 +470,13 @@ b \rangle\ \land \\
 \rrbracket_{\delta}^{\rho[x \mapsto v]}(p)</span></p>
 </div>
 <div class="fragment">
-<p>Value interpretation of <strong>recursive types</strong>:</p>
+<p>Value interpretation of <strong>recursive types</strong>?</p>
+<p><span class="math display">\textcolor{red}{\mathcal{V}\llbracket \mu
+X.\, A \rrbracket_{\delta}^{\rho}(v) \triangleq \mathcal{V}\llbracket A
+\rrbracket_{\delta[X \mapsto \mathcal{V}\llbracket \mu X.\, A
+\rrbracket_{\delta}^{\rho}]}^{\rho}(v)}</span></p>
+</div>
+<div class="fragment">
 <p><span class="math display">\mathcal{V}\llbracket \mu X.\, A
 \rrbracket_{\delta}^{\rho}(v) \triangleq \forall n.\; F^n(v)</span></p>
 <p><span class="math display">F^0(v) = \top,\quad F^{n+1}(v) =
@@ -531,9 +487,22 @@ F^n]}^{\rho}(v)</span></p>
 </div>
 <aside class="notes">
 <ul>
+<li>The cyclic definition in other clothing: <span
+class="math inline">\mathcal{V}\llbracket \mu X.\, A \rrbracket
+\triangleq \mathcal{V}\llbracket A[X \mapsto \mu X.\, A]
+\rrbracket</span>. The unfolding is not a structural subterm of <span
+class="math inline">\mu X.\, A</span>, so Rocq rejects the fixpoint.
+Only the binding of <span class="math inline">X</span> changes in the
+nested occurrence.</li>
+<li>Strict positivity makes <span class="math inline">F</span> monotone,
+so the approximations decrease from <span
+class="math inline">\top</span> and reach the greatest fixpoint at <span
+class="math inline">\omega</span>. Fold and unfold are then lemmas, not
+definitions.</li>
 <li>Step-index-<strong>free</strong>: the <span
 class="math inline">\forall n</span> is inside the definition, so no
-external step counter is threaded through.</li>
+external step counter is threaded through. The index counts unfoldings
+of the recursive type, not evaluation steps.</li>
 </ul>
 </aside>
 </section>
@@ -541,11 +510,13 @@ external step counter is threaded through.</li>
 <h2>Typing (§3.4)</h2>
 <div class="columns">
 <div class="column">
-<p>Semantic typing is <strong>defined</strong>. It quantifies over every
-well-formed context:</p>
+<p>Semantic typing is <strong>defined</strong>:</p>
 <p><span class="math display">\Gamma \vDash a : A \triangleq \forall
 \delta, \rho.\; \mathrm{wf}(\delta, \Gamma, \rho) \implies
 \mathcal{E}\llbracket A \rrbracket_{\delta}^{\rho}(a)</span></p>
+<div class="fragment">
+<p>The typing rules are not definitions but <strong>lemmas</strong>.</p>
+</div>
 <div class="fragment">
 <p>A context <span class="math inline">\Gamma</span> is made of:</p>
 <ol type="1">
@@ -555,22 +526,18 @@ B</span></li>
 <li>Equality facts: <span class="math inline">s \sim t</span></li>
 </ol>
 </div>
-<div class="fragment">
-<p>The typing rules are not definitions but <strong>lemmas</strong>:
-each rule is proven individually.</p>
-</div>
 </div><div class="column">
-<div class="fragment">
-<p>Selfification rule:</p>
-<p><span class="math display">\frac{\Gamma \vDash a : A \qquad
-\textsf{firstorder}(A)}{\Gamma \vDash a : \lbrace x : A \mid x
-\mathbin{\texttt{==}} a \rbrace}\;\text{(T-Self)}</span></p>
-</div>
 <div class="fragment">
 <p>Rule for let-bindings:</p>
 <p><span class="math display">\frac{\Gamma \vDash a : A \qquad \Gamma, x
 : A, x \sim a \vDash b : B}{\Gamma \vDash \textsf{let}\; x{:}A = a
 \;\textsf{in}\; b : \textsf{avoid}(B, x)}\;\text{(T-Let)}</span></p>
+</div>
+<div class="fragment">
+<p>Selfification rule:</p>
+<p><span class="math display">\frac{\Gamma \vDash a : A \qquad
+\textsf{firstorder}(A)}{\Gamma \vDash a : \lbrace x : A \mid x
+\mathbin{\texttt{==}} a \rbrace}\;\text{(T-Self)}</span></p>
 </div>
 </div>
 </div>
@@ -590,8 +557,7 @@ variable going out of scope, guided by polarity: a predicate mentioning
 <h2>Subtyping (§3.5)</h2>
 <div class="columns">
 <div class="column">
-<p>Subtyping is semantic inclusion, again quantified over all
-well-formed environments:</p>
+<p>Subtyping is semantic inclusion:</p>
 <p><span class="math display">\Gamma \vDash A &lt;: B \triangleq \forall
 \delta, \rho.\; \mathrm{wf}(\delta, \Gamma, \rho) \implies
 \mathcal{V}\llbracket A \rrbracket_{\delta}^{\rho} \subseteq
