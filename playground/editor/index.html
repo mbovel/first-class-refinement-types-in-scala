@@ -24,6 +24,11 @@
       #editor .cm-editor {
         max-height: 70vh;
       }
+      /* Before CodeMirror mounts there is nothing inside, and a bordered box with no
+         height reads as a stray horizontal rule. */
+      #editor:empty {
+        min-height: 9rem;
+      }
       /* The GitHub theme sets 12px, sized for a dense diff view. This page is one editor
          on an otherwise empty page, so it can afford to be easier to read. An id selector
          to outrank the theme's generated class, which is why this is not in src/. */
@@ -86,7 +91,7 @@
 
     <p class="examples">
       <label for="example">Example</label>
-      <select id="example"></select>
+      <select id="example" disabled></select>
     </p>
 
     <div id="editor" data-endpoint="https://icvm0175.epfl.ch/"></div>

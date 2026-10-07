@@ -27,6 +27,13 @@ const status = document.getElementById("status")
 const output = document.getElementById("output")
 const endpoint = mount.dataset.endpoint
 
+// Before the grammar is awaited: the examples are bundled, so there is no reason to show
+// an empty dropdown for as long as the WebAssembly takes to arrive. It stays disabled
+// until there is an editor for it to act on.
+for (const [index, { label }] of examples.entries()) {
+  chooser.add(new Option(label, String(index)))
+}
+
 const prefersDark = matchMedia("(prefers-color-scheme: dark)")
 const themeFor = isDark => (isDark ? githubDark : githubLight)
 const theme = new Compartment()
@@ -83,10 +90,6 @@ prefersDark.addEventListener("change", event =>
   view.dispatch({ effects: theme.reconfigure(themeFor(event.matches)) }),
 )
 
-for (const [index, { label }] of examples.entries()) {
-  chooser.add(new Option(label, String(index)))
-}
-
 chooser.addEventListener("change", event => {
   view.dispatch({
     changes: { from: 0, to: view.state.doc.length, insert: examples[event.target.value].text },
@@ -100,4 +103,5 @@ chooser.addEventListener("change", event => {
 
 button.addEventListener("click", compile)
 button.disabled = false
+chooser.disabled = false
 status.textContent = ""
