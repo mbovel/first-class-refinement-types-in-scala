@@ -176,21 +176,22 @@ def ex1(l: List[Int] with l.isSorted) =
 </div>
 </div><div class="column">
 <div class="fragment">
+<p style="margin-bottom: -1em">
+<small>Inspired by <a
+href="https://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">Abstract
+Refinement Types</a> (Vazou et al., ESOP 2013).</small>
+</p>
 <pre class="scala"><code>// Example 2: Bounded polymorphism
 given Ord[Int] = ...
 
 type Even = {v: Int with v % 2 == 0}
 
 def ex2: Even =
-  maximum(List(2, 4, 6))
-
-def maximum[T: Ord, U &lt;: T](xs: List[U]): U =
+  maximum(List(2, 4, 6))</code></pre>
+</div>
+<div class="fragment">
+<pre class="scala"><code>def maximum[T: Ord, U &lt;: T](xs: List[U]): U =
   xs.reduce(max)</code></pre>
-<p style="margin-top: 0">
-<small>Inspired by <a
-href="https://goto.ucsd.edu/~rjhala/liquid/abstract_refinement_types.pdf">Abstract
-Refinement Types</a> (Vazou et al., ESOP 2013).</small>
-</p>
 </div>
 </div>
 </div>
