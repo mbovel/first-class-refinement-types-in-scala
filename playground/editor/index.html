@@ -40,6 +40,12 @@
           font-size: 16px;
         }
       }
+      .examples {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        margin: 0.75rem 0;
+      }
       .bar {
         display: flex;
         align-items: baseline;
@@ -76,6 +82,11 @@
       Submitted programs are stored, together with the compiler's answer. That way an
       identical program needs no recompiling, and we get to see what people try. By
       submitting a program you agree to it being kept and used by the authors.
+    </p>
+
+    <p class="examples">
+      <label for="example">Example</label>
+      <select id="example"></select>
     </p>
 
     <div id="editor" data-endpoint="https://icvm0175.epfl.ch/"></div>

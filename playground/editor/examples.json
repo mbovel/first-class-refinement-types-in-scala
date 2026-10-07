@@ -1,0 +1,16 @@
+[
+  {
+    "label": "Maximum",
+    "file": "maximum.scala"
+  },
+  {
+    "label": "Merge Sort Bounds",
+    "file": "merge-sort-bounds.scala",
+    "source": "implementation/tests/run-custom-args/qualified-types/mergeSortBounds2.scala"
+  },
+  {
+    "label": "Fibonacci Memoized",
+    "file": "fibonacci-memoized.scala",
+    "source": "implementation/tests/pos-custom-args/qualified-types/fib_memoized2.scala"
+  }
+]

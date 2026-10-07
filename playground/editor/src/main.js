@@ -5,13 +5,22 @@ import { indentWithTab } from "@codemirror/commands"
 import { scalaTreeSitter } from "./treesitter.js"
 import { githubLight, githubDark } from "./github.js"
 
-const example = `def max(x: Int, y: Int): { v: Int with v >= x && v >= y } =
-  if (x > y) x else y
+import catalogue from "../examples.json"
 
-// Try swapping the branches above, then compile again.
-val m: { v: Int with v >= 3 } = max(3, 7)
-`
+// Bundled at build time, so the page needs nothing but itself once loaded. The catalogue
+// gives the order and the labels; this gives the text.
+const sources = import.meta.glob("../examples/*.scala", {
+  query: "?raw",
+  eager: true,
+  import: "default",
+})
 
+const examples = catalogue.map(({ label, file }) => ({
+  label,
+  text: sources[`../examples/${file}`],
+}))
+
+const chooser = document.getElementById("example")
 const mount = document.getElementById("editor")
 const button = document.getElementById("run")
 const status = document.getElementById("status")
@@ -56,7 +65,7 @@ const scala = await scalaTreeSitter()
 
 const view = new EditorView({
   parent: mount,
-  doc: example,
+  doc: examples[0].text,
   extensions: [
     basicSetup,
     keymap.of([
@@ -71,6 +80,21 @@ const view = new EditorView({
 prefersDark.addEventListener("change", event =>
   view.dispatch({ effects: theme.reconfigure(themeFor(event.matches)) }),
 )
+
+for (const [index, { label }] of examples.entries()) {
+  chooser.add(new Option(label, String(index)))
+}
+
+chooser.addEventListener("change", event => {
+  view.dispatch({
+    changes: { from: 0, to: view.state.doc.length, insert: examples[event.target.value].text },
+  })
+  // The old diagnostics describe the program that was just replaced.
+  output.textContent = ""
+  output.hidden = true
+  status.textContent = ""
+  view.focus()
+})
 
 button.addEventListener("click", compile)
 button.disabled = false

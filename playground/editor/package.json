@@ -4,6 +4,7 @@
   "type": "module",
   "description": "CodeMirror 6 Scala editor for the playground page of the project website.",
   "scripts": {
+    "sync-examples": "node sync-examples.mjs",
     "build": "vite build",
     "watch": "vite build --watch",
     "serve": "python3 -m http.server 8000 --directory ../../website"
