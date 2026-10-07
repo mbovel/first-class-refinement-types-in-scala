@@ -1,6 +1,6 @@
 import { EditorView, basicSetup } from "codemirror"
 import { keymap } from "@codemirror/view"
-import { Compartment } from "@codemirror/state"
+import { Compartment, Prec } from "@codemirror/state"
 import { indentWithTab } from "@codemirror/commands"
 import { scalaTreeSitter } from "./treesitter.js"
 import { githubLight, githubDark } from "./github.js"
@@ -68,10 +68,12 @@ const view = new EditorView({
   doc: examples[0].text,
   extensions: [
     basicSetup,
-    keymap.of([
-      indentWithTab,
-      { key: "Mod-Enter", preventDefault: true, run: () => (compile(), true) },
-    ]),
+    keymap.of([indentWithTab]),
+    // basicSetup binds Mod-Enter to insertBlankLine, and the earlier extension wins, so
+    // this has to outrank it rather than merely come after it.
+    Prec.highest(
+      keymap.of([{ key: "Mod-Enter", preventDefault: true, run: () => (compile(), true) }]),
+    ),
     scala,
     theme.of(themeFor(prefersDark.matches)),
   ],
