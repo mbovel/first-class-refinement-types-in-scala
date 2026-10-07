@@ -45,7 +45,11 @@ function github(c, isDark) {
     { tag: [t.function(t.variableName), t.function(t.definition(t.variableName)), t.function(t.propertyName),
             t.typeName, t.definition(t.typeName), t.className, t.namespace], color: c.entity },
     { tag: [t.local(t.variableName), t.annotation, t.meta], color: c.variable },
-    { tag: t.invalid, color: c.invalidFg, backgroundColor: c.invalidBg },
+    // No rule for t.invalid, which the tree-sitter bridge assigns to ERROR nodes. The
+    // Scala grammar predates refinement types and cannot parse `{v: Int with v > 0}`, so
+    // it reports errors all over perfectly good programs. Restore the line below once the
+    // grammar understands the syntax:
+    //   { tag: t.invalid, color: c.invalidFg, backgroundColor: c.invalidBg },
   ])
   return [theme, syntaxHighlighting(highlight)]
 }
