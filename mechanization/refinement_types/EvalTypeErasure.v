@@ -166,39 +166,11 @@ Lemma erase_ty_in_val_vbool_true : forall v,
   erase_ty_in_val v = vbool true -> v = vbool true.
 Proof. destruct v; simpl; intros H; try discriminate. injection H as ->. reflexivity. Qed.
 
-(** If sigma_tm is extensionally tvar, lifting preserves this property. *)
-Lemma up_tm_tm_tvar_ext sigma_tm :
-  (forall n, sigma_tm n = tvar n) -> forall n, up_tm_tm sigma_tm n = tvar n.
+(** The erasure of a substituted term does not depend on the type
+    substitution. *)
+Lemma erase_ty_in_tm_subst_ty : forall t sigma_ty tau_ty sigma_tm,
+  erase_ty_in_tm (subst_tm sigma_ty sigma_tm t) =
+  erase_ty_in_tm (subst_tm tau_ty sigma_tm t).
 Proof.
-  intros H n. etransitivity. apply up_tm_tm_ext. exact H. apply up_tm_tm_id.
-Qed.
-
-Lemma up_ty_tm_tvar_ext sigma_tm :
-  (forall n, sigma_tm n = tvar n) -> forall n, up_ty_tm sigma_tm n = tvar n.
-Proof.
-  intros H n. etransitivity. apply up_ty_tm_ext. exact H. apply up_ty_tm_id.
-Qed.
-
-Lemma up_tm_tm_up_tm_tm_tvar_ext sigma_tm :
-  (forall n, sigma_tm n = tvar n) -> forall n, up_tm_tm (up_tm_tm sigma_tm) n = tvar n.
-Proof.
-  intros H. apply up_tm_tm_tvar_ext. apply up_tm_tm_tvar_ext. exact H.
-Qed.
-
-(** Type substitution in a term does not affect its erasure. *)
-Lemma erase_ty_in_tm_subst_gen : forall t sigma_ty sigma_tm,
-  (forall n, sigma_tm n = tvar n) ->
-  erase_ty_in_tm (subst_tm sigma_ty sigma_tm t) = erase_ty_in_tm t.
-Proof.
-  induction t; intros sigma_ty sigma_tm Htm; simpl;
-    try rewrite (Htm v); (* tvar case *)
-    try reflexivity;
-    f_equal;
-    eauto using up_tm_tm_tvar_ext, up_ty_tm_tvar_ext, up_tm_tm_up_tm_tm_tvar_ext.
-Qed.
-
-Corollary erase_ty_in_tm_subst : forall t sigma_ty,
-  erase_ty_in_tm (subst_tm sigma_ty tvar t) = erase_ty_in_tm t.
-Proof.
-  intros. apply erase_ty_in_tm_subst_gen. reflexivity.
+  induction t; intros sigma_ty tau_ty sigma_tm; simpl; f_equal; eauto.
 Qed.

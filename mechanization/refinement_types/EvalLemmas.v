@@ -8,7 +8,8 @@
     a reference to another one, preserves evaluation results up to a
     compatibility relation on closures. The file also defines
     [eval_to_true], the predicate behind refinement types, and proves it
-    invariant under type erasure, weakening and substitution. *)
+    invariant under type erasure and under renaming and substitution of
+    the environment. *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.
@@ -107,15 +108,6 @@ Proof.
   rewrite eval_fuel_mono with (fuel1 := fuel1) (r := Some va); try lia; auto.
   rewrite eval_fuel_mono with (fuel1 := fuel2) (r := Some vb); try lia; auto.
   rewrite H1. reflexivity.
-Qed.
-
-(** Equality via eval_bin_op is defined on all pairs of first-order values. *)
-Lemma eval_bin_op_eq_fo_defined: forall va vb,
-  fo_val va -> fo_val vb ->
-  exists r, eval_bin_op OpEq va vb = Some r.
-Proof.
-  intros va vb [-> | [[b1 ->] | [z1 ->]]] [-> | [[b2 ->] | [z2 ->]]];
-  simpl; eauto.
 Qed.
 
 (** Equality is reflexive on first-order values. *)
@@ -379,80 +371,47 @@ Proof.
     intros v v' Hvv'. cbv beta. apply IH, env_rel_cons; assumption.
 Qed.
 
-(** *** Shift and variable substitution as renamings *)
+(** *** Environments related through a renaming *)
 
-(** Insert [k] slots after the first [n] variables. *)
-Definition shift_ren (n k : nat) : var -> var :=
-  fun x => if lt_dec x n then x else x + k.
+(** [env_ren env1 xi env2]: looking up [x] in [env1] and [xi x] in [env2]
+    gives the same result. This is the hypothesis shared by every
+    weakening and substitution lemma on environments, for values and for
+    semantic types alike. *)
+Definition env_ren {A : Type} (env1 : list A) (xi : var -> var) (env2 : list A) : Prop :=
+  forall x, nth_error env1 x = nth_error env2 (xi x).
 
-Lemma upn_tm_shift_ren : forall n k x,
-  upn_tm n (tm_shift k) x = tvar (shift_ren n k x).
+Lemma env_ren_cons {A : Type} : forall (a : A) env1 xi env2,
+  env_ren env1 xi env2 -> env_ren (a :: env1) (upren xi) (a :: env2).
+Proof. intros a env1 xi env2 H [|x]; [reflexivity | exact (H x)]. Qed.
+
+(** Weakening: inserting [l2] after the first [length l1] entries. *)
+Lemma env_ren_shift {A : Type} : forall (l1 l2 l3 : list A),
+  env_ren (l1 ++ l3) (shift_ren (length l1) (length l2)) (l1 ++ l2 ++ l3).
 Proof.
-  intros n k x. rewrite iter_up_tm. unfold shift_ren, tm_shift.
-  destruct (lt_dec x n); [reflexivity|]. simpl. f_equal. lia.
-Qed.
-
-Lemma subst_tm_shift_ren : forall n k t,
-  subst_tm TVar (upn_tm n (tm_shift k)) t = ren_tm id (shift_ren n k) t.
-Proof.
-  intros. rewrite ren_subst_tm. apply subst_tm_ext.
-  - reflexivity.
-  - intro x. unfold funcomp. apply upn_tm_shift_ren.
-Qed.
-
-(** Replace variable [n] by variable [n + i] (counted in the environment
-    without the removed entry) and close the gap above it. *)
-Definition subst_ren (n i : nat) : var -> var :=
-  fun x => if lt_dec x n then x
-           else match x - n with 0 => i + n | S k => k + n end.
-
-Lemma upn_tm_subst_ren : forall n i x,
-  upn_tm n (tvar i .: tvar) x = tvar (subst_ren n i x).
-Proof.
-  intros n i x. rewrite iter_up_tm. unfold subst_ren.
-  destruct (lt_dec x n); [reflexivity|].
-  destruct (x - n); reflexivity.
-Qed.
-
-Lemma subst_tm_subst_ren : forall n i t,
-  subst_tm TVar (upn_tm n (tvar i .: tvar)) t = ren_tm id (subst_ren n i) t.
-Proof.
-  intros. rewrite ren_subst_tm. apply subst_tm_ext.
-  - reflexivity.
-  - intro x. unfold funcomp. apply upn_tm_subst_ren.
-Qed.
-
-(** *** Environment lookups through the two renamings *)
-
-Lemma nth_error_shift_ren : forall (venv1 venv2 venv3 : list Value) x,
-  nth_error (venv1 ++ venv3) x =
-  nth_error (venv1 ++ venv2 ++ venv3) (shift_ren (length venv1) (length venv2) x).
-Proof.
-  intros. unfold shift_ren. destruct (lt_dec x (length venv1)).
+  intros l1 l2 l3 x. unfold shift_ren. destruct (lt_dec x (length l1)).
   - rewrite !nth_error_app1 by lia. reflexivity.
   - rewrite !nth_error_app2 by lia. f_equal. lia.
 Qed.
 
-Lemma nth_error_subst_ren : forall (venv_pre : list Value) va venv i,
-  nth_error venv i = Some va ->
-  forall x,
-  nth_error (venv_pre ++ va :: venv) x =
-  nth_error (venv_pre ++ venv) (subst_ren (length venv_pre) i x).
+(** Substitution: removing the entry at position [length l1], which is
+    also the entry [i] of the remaining suffix. *)
+Lemma env_ren_subst {A : Type} : forall (l1 : list A) a l2 i,
+  nth_error l2 i = Some a ->
+  env_ren (l1 ++ a :: l2) (subst_ren (length l1) i) (l1 ++ l2).
 Proof.
-  intros venv_pre va venv i Hnth x. unfold subst_ren.
-  destruct (lt_dec x (length venv_pre)).
+  intros l1 a l2 i Hnth x. unfold subst_ren. destruct (lt_dec x (length l1)).
   - rewrite !nth_error_app1 by lia. reflexivity.
-  - rewrite (nth_error_app2 venv_pre (va :: venv)) by lia.
-    destruct (x - length venv_pre) as [|k] eqn:E; simpl;
-      rewrite (nth_error_app2 venv_pre venv) by lia.
-    + replace (i + length venv_pre - length venv_pre) with i by lia.
-      symmetry. exact Hnth.
+  - rewrite (nth_error_app2 l1 (a :: l2)) by lia.
+    destruct (x - length l1) as [|k] eqn:E; simpl;
+      rewrite (nth_error_app2 l1 l2) by lia.
+    + replace (i + length l1 - length l1) with i by lia. symmetry. exact Hnth.
     + f_equal. lia.
 Qed.
 
 (** *** Corollaries *)
 
-(** Weakening (Lemma 3.7), in both orientations. *)
+(** Weakening (Lemma 3.7). The other orientation is the same instance with
+    the two sides swapped. *)
 Lemma eval_shift_rel : forall fuel p venv1 venv2 venv3,
   res_rel (eval fuel (venv1 ++ venv3) p)
           (eval fuel (venv1 ++ venv2 ++ venv3)
@@ -460,24 +419,11 @@ Lemma eval_shift_rel : forall fuel p venv1 venv2 venv3,
 Proof.
   intros. rewrite subst_tm_shift_ren.
   pose proof (eval_ren_rel fuel p id _ id _ (shift_ren (length venv1) (length venv2))
-    (env_rel_of_nth_eq _ _ _ _ (nth_error_shift_ren venv1 venv2 venv3))) as H.
+    (env_rel_of_nth_eq _ _ _ _ (fun x => env_ren_shift venv1 venv2 venv3 x))) as H.
   rewrite ren_tm_id in H. exact H.
 Qed.
 
-Lemma eval_shift_rel_bwd : forall fuel p venv1 venv2 venv3,
-  res_rel (eval fuel (venv1 ++ venv2 ++ venv3)
-             (subst_tm TVar (upn_tm (length venv1) (tm_shift (length venv2))) p))
-          (eval fuel (venv1 ++ venv3) p).
-Proof.
-  intros. rewrite subst_tm_shift_ren.
-  pose proof (eval_ren_rel fuel p id _ (shift_ren (length venv1) (length venv2)) _ id
-    (env_rel_of_nth_eq _ _ _ _
-      (fun x => eq_sym (nth_error_shift_ren venv1 venv2 venv3 x)))) as H.
-  rewrite ren_tm_id in H. exact H.
-Qed.
-
-(** Substitution of a variable for an environment entry (§3.6), in both
-    orientations. *)
+(** Substitution of a variable for an environment entry (§3.6). *)
 Lemma eval_subst_rel : forall fuel p venv_pre va venv i,
   nth_error venv i = Some va ->
   res_rel (eval fuel (venv_pre ++ va :: venv) p)
@@ -486,20 +432,7 @@ Lemma eval_subst_rel : forall fuel p venv_pre va venv i,
 Proof.
   intros fuel p venv_pre va venv i Hnth. rewrite subst_tm_subst_ren.
   pose proof (eval_ren_rel fuel p id _ id _ (subst_ren (length venv_pre) i)
-    (env_rel_of_nth_eq _ _ _ _ (nth_error_subst_ren venv_pre va venv i Hnth))) as H.
-  rewrite ren_tm_id in H. exact H.
-Qed.
-
-Lemma eval_subst_rel_bwd : forall fuel p venv_pre va venv i,
-  nth_error venv i = Some va ->
-  res_rel (eval fuel (venv_pre ++ venv)
-             (subst_tm TVar (upn_tm (length venv_pre) (tvar i .: tvar)) p))
-          (eval fuel (venv_pre ++ va :: venv) p).
-Proof.
-  intros fuel p venv_pre va venv i Hnth. rewrite subst_tm_subst_ren.
-  pose proof (eval_ren_rel fuel p id _ (subst_ren (length venv_pre) i) _ id
-    (env_rel_of_nth_eq _ _ _ _
-      (fun x => eq_sym (nth_error_subst_ren venv_pre va venv i Hnth x)))) as H.
+    (env_rel_of_nth_eq _ _ _ _ (fun x => env_ren_subst venv_pre va venv i Hnth x))) as H.
   rewrite ren_tm_id in H. exact H.
 Qed.
 
@@ -553,21 +486,7 @@ Proof.
   intros. apply eval_to_true_erase_eq. apply erase_ty_in_tm_ren.
 Qed.
 
-Lemma eval_to_true_subst_ty : forall venv t sigma_ty,
-  eval_to_true venv (subst_tm sigma_ty tvar t) <-> eval_to_true venv t.
-Proof.
-  intros. apply eval_to_true_erase_eq. apply erase_ty_in_tm_subst.
-Qed.
-
-Lemma eval_to_true_subst_ty_gen : forall venv t sigma_ty sigma_tm,
-  (forall n, sigma_tm n = tvar n) ->
-  eval_to_true venv (subst_tm sigma_ty sigma_tm t) <-> eval_to_true venv t.
-Proof.
-  intros venv t sigma_ty sigma_tm Htm.
-  apply eval_to_true_erase_eq. apply erase_ty_in_tm_subst_gen. exact Htm.
-Qed.
-
-(** *** Transfer along [res_rel]: weakening and substitution *)
+(** *** Transfer along [res_rel]: renaming and substitution *)
 
 Lemma res_rel_true : forall r1 r2,
   res_rel r1 r2 ->
@@ -590,23 +509,35 @@ Proof.
   apply (res_rel_true _ _ (Hrel fuel)). exact (H fuel).
 Qed.
 
-(** Weakening (Lemma 3.7). *)
-Lemma eval_to_true_shift_env : forall p venv1 venv2 venv3,
-  eval_to_true (venv1 ++ venv3) p <->
-  eval_to_true (venv1 ++ venv2 ++ venv3)
-    (subst_tm TVar (upn_tm (length venv1) (tm_shift (length venv2))) p).
+(** Renaming the term variables, with environments related through the
+    renaming. The type renaming [zeta] is irrelevant to evaluation. *)
+Lemma eval_to_true_ren : forall p zeta venv1 xi venv2,
+  env_ren venv1 xi venv2 ->
+  eval_to_true venv1 p <-> eval_to_true venv2 (ren_tm zeta xi p).
 Proof.
-  intros. split; apply eval_to_true_rel; intro fuel;
-    [apply eval_shift_rel | apply eval_shift_rel_bwd].
+  intros p zeta venv1 xi venv2 Hnth. split; intro H.
+  - apply (eval_to_true_rel venv1 (ren_tm zeta id p)).
+    + intro fuel. apply eval_ren_rel, env_rel_of_nth_eq. intro x. exact (Hnth x).
+    + apply (proj2 (eval_to_true_ren_ty venv1 p zeta)). exact H.
+  - apply (proj1 (eval_to_true_ren_ty venv1 p zeta)).
+    apply (eval_to_true_rel venv2 (ren_tm zeta xi p)).
+    + intro fuel. apply eval_ren_rel, env_rel_of_nth_eq. intro x. symmetry. exact (Hnth x).
+    + exact H.
 Qed.
 
-(** Substitution of a variable for an environment entry (§3.6). *)
-Lemma eval_to_true_subst_env : forall p venv_prefix va venv i,
-  nth_error venv i = Some va ->
-  eval_to_true (venv_prefix ++ va :: venv) p <->
-  eval_to_true (venv_prefix ++ venv)
-    (subst_tm TVar (upn_tm (length venv_prefix) (tvar i .: tvar)) p).
+(** The same under an arbitrary type substitution, which evaluation
+    ignores. *)
+Lemma eval_to_true_subst_ren : forall p sigma_ty venv1 xi venv2,
+  env_ren venv1 xi venv2 ->
+  eval_to_true venv1 p <-> eval_to_true venv2 (subst_tm sigma_ty (xi >> tvar) p).
 Proof.
-  intros. split; apply eval_to_true_rel; intro fuel;
-    [apply eval_subst_rel | apply eval_subst_rel_bwd]; assumption.
+  intros p sigma_ty venv1 xi venv2 Hnth.
+  assert (E : erase_ty_in_tm (subst_tm sigma_ty (xi >> tvar) p) =
+              erase_ty_in_tm (ren_tm id xi p)).
+  { rewrite ren_subst_tm. apply erase_ty_in_tm_subst_ty. }
+  split; intro H.
+  - apply (proj2 (eval_to_true_erase_eq venv2 _ _ E)).
+    apply (proj1 (eval_to_true_ren p id venv1 xi venv2 Hnth)). exact H.
+  - apply (proj2 (eval_to_true_ren p id venv1 xi venv2 Hnth)).
+    apply (proj1 (eval_to_true_erase_eq venv2 _ _ E)). exact H.
 Qed.

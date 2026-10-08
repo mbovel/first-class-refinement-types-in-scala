@@ -101,14 +101,8 @@ Proof.
 Qed.
 
 (** Simplify [upren id] to [id] in renamings. *)
-Lemma ren_ty_upren_id : forall xi T, ren_ty xi (upren id) T = ren_ty xi id T.
-Proof. intros. apply ren_ty_ext; [reflexivity | exact upren_id]. Qed.
-
 Lemma ren_tm_upren_id : forall xi t, ren_tm xi (upren id) t = ren_tm xi id t.
 Proof. intros. apply ren_tm_ext; [reflexivity | exact upren_id]. Qed.
-
-Lemma ren_ty_upren_upren_id : forall xi T, ren_ty xi (upren (upren id)) T = ren_ty xi id T.
-Proof. intros. apply ren_ty_ext; [reflexivity | exact upren_upren_id]. Qed.
 
 Lemma ren_tm_upren_upren_id : forall xi t, ren_tm xi (upren (upren id)) t = ren_tm xi id t.
 Proof. intros. apply ren_tm_ext; [reflexivity | exact upren_upren_id]. Qed.
@@ -153,23 +147,6 @@ Proof. intros. apply subst_ty_ext. apply up_tm_ty_id. intro; reflexivity. Qed.
 Lemma subst_tm_up_tm_ty_TVar : forall sigma_tm t,
   subst_tm (up_tm_ty TVar) sigma_tm t = subst_tm TVar sigma_tm t.
 Proof. intros. apply subst_tm_ext. apply up_tm_ty_id. intro; reflexivity. Qed.
-
-(** Convenience: subst_tm TVar (up_tm_tm tvar) t = t *)
-Lemma subst_tm_up_tm_tm_tvar : forall t,
-  subst_tm TVar (up_tm_tm tvar) t = t.
-Proof.
-  intros.
-  etransitivity; [apply subst_tm_ext; [reflexivity | apply up_tm_tm_id] |].
-  apply subst_tm_id.
-Qed.
-
-Lemma subst_tm_up_tm_tm_up_tm_tm_tvar : forall t,
-  subst_tm TVar (up_tm_tm (up_tm_tm tvar)) t = t.
-Proof.
-  intros.
-  etransitivity; [apply subst_tm_ext; [reflexivity | apply up_tm_tm_up_tm_tm_id] |].
-  apply subst_tm_id.
-Qed.
 
 (** ** Renaming-substitution connection *)
 
@@ -437,25 +414,7 @@ Proof.
                up_tm_ty_up_tm_ty_subst_comp, up_tm_tm_up_tm_tm_subst_comp.
 Qed.
 
-(** ** Iterated up_tm_tm lemmas *)
-
-Lemma upn_tm_ext : forall n f g,
-  (forall x, f x = g x) ->
-  forall x, upn_tm n f x = upn_tm n g x.
-Proof.
-  induction n; intros f g Hfg x; [apply Hfg|].
-  simpl. apply up_tm_tm_ext. apply IHn. exact Hfg.
-Qed.
-
-Lemma upn_tm_ids : forall n x,
-  upn_tm n tvar x = tvar x.
-Proof.
-  induction n; intros x; [reflexivity|].
-  simpl.
-  etransitivity.
-  - apply up_tm_tm_ext. exact IHn.
-  - apply up_tm_tm_id.
-Qed.
+(** ** Iterated lifting *)
 
 Lemma iter_up_tm : forall (m x : nat) (f : var -> Term),
   upn_tm m f x = if lt_dec x m then tvar x
@@ -479,90 +438,89 @@ Proof.
         intro k. unfold funcomp. lia.
 Qed.
 
-(** ** Term-only shift substitution *)
+(** ** Shift and variable substitution as renamings
 
-(** Helper: term-only substitution with shift-by-k *)
+    [tm_shift k] shifts term variables by [k]. Lifted under [n] binders,
+    it and [tvar i .: tvar] (replace variable [0] by a reference to
+    variable [i]) act on variables as the renamings [shift_ren] and
+    [subst_ren]. This is the form in which the evaluation and
+    interpretation lemmas consume them. *)
+
 Definition tm_shift (k : nat) : var -> Term := fun n => tvar (n + k).
 
-(** Simplification: shift-by-0 substitution is identity *)
-Lemma tm_shift_0_eq : forall m, tm_shift 0 m = tvar m.
-Proof. intro m. unfold tm_shift. f_equal. apply Nat.add_0_r. Qed.
+(** Insert [k] slots after the first [n] variables. *)
+Definition shift_ren (n k : nat) : var -> var :=
+  fun x => if lt_dec x n then x else x + k.
 
-Lemma upn_tm_shift0_ids : forall n x,
-  upn_tm n (tm_shift 0) x = tvar x.
+Lemma upn_tm_shift_ren : forall n k x,
+  upn_tm n (tm_shift k) x = tvar (shift_ren n k x).
 Proof.
-  intros n x.
-  etransitivity; [apply upn_tm_ext; exact tm_shift_0_eq |].
-  apply upn_tm_ids.
+  intros n k x. rewrite iter_up_tm. unfold shift_ren, tm_shift.
+  destruct (lt_dec x n); [reflexivity|]. simpl. f_equal. lia.
 Qed.
 
-Lemma subst_tm_upn_shift0 : forall n t,
-  subst_tm TVar (upn_tm n (tm_shift 0)) t = t.
+Lemma subst_ty_shift_ren : forall n k T,
+  subst_ty TVar (upn_tm n (tm_shift k)) T = ren_ty id (shift_ren n k) T.
 Proof.
-  intros n t.
-  etransitivity.
-  - apply subst_tm_ext; [reflexivity | exact (upn_tm_shift0_ids n)].
-  - apply subst_tm_id.
+  intros. rewrite ren_subst_ty. apply subst_ty_ext.
+  - reflexivity.
+  - intro x. unfold funcomp. apply upn_tm_shift_ren.
 Qed.
 
-Lemma up_tm_tm_shift0_id : forall x, up_tm_tm (tm_shift 0) x = tvar x.
+Lemma subst_tm_shift_ren : forall n k t,
+  subst_tm TVar (upn_tm n (tm_shift k)) t = ren_tm id (shift_ren n k) t.
 Proof.
-  intro x. etransitivity; [apply up_tm_tm_ext; exact tm_shift_0_eq |].
-  apply up_tm_tm_id.
+  intros. rewrite ren_subst_tm. apply subst_tm_ext.
+  - reflexivity.
+  - intro x. unfold funcomp. apply upn_tm_shift_ren.
 Qed.
 
-Lemma subst_tm_shift0 : forall t,
-  subst_tm TVar (tm_shift 0) t = t.
+(** Replace variable [n] by variable [n + i] (counted in the environment
+    without the removed entry) and close the gap above it. *)
+Definition subst_ren (n i : nat) : var -> var :=
+  fun x => if lt_dec x n then x
+           else match x - n with 0 => i + n | S k => k + n end.
+
+Lemma upn_tm_subst_ren : forall n i x,
+  upn_tm n (tvar i .: tvar) x = tvar (subst_ren n i x).
 Proof.
-  intro t.
-  etransitivity; [apply subst_tm_ext; [reflexivity | exact tm_shift_0_eq] |].
-  apply subst_tm_id.
+  intros n i x. rewrite iter_up_tm. unfold subst_ren.
+  destruct (lt_dec x n); [reflexivity|].
+  destruct (x - n); reflexivity.
 Qed.
 
-Lemma subst_tm_up_upn_shift0 : forall n t,
-  subst_tm TVar (up_tm_tm (upn_tm n (tm_shift 0))) t = t.
+Lemma subst_ty_subst_ren : forall n i T,
+  subst_ty TVar (upn_tm n (tvar i .: tvar)) T = ren_ty id (subst_ren n i) T.
 Proof.
-  intros n t.
-  etransitivity.
-  - apply subst_tm_ext; [reflexivity |].
-    intro x. etransitivity; [apply up_tm_tm_ext; exact (upn_tm_shift0_ids n) |].
-    apply up_tm_tm_id.
-  - apply subst_tm_id.
+  intros. rewrite ren_subst_ty. apply subst_ty_ext.
+  - reflexivity.
+  - intro x. unfold funcomp. apply upn_tm_subst_ren.
 Qed.
 
-(** When sigma_ty = TVar, the "up" operations under binders simplify away.
-    For term binders: up_tm_ty TVar = TVar (already above).
-    For type binders: up_ty_ty TVar = TVar (already above).
-    For type binders on term-only shift substitutions: *)
-Lemma up_ty_tm_upn_tm_shift : forall m k n,
-  up_ty_tm (upn_tm m (tm_shift k)) n = upn_tm m (tm_shift k) n.
+Lemma subst_tm_subst_ren : forall n i t,
+  subst_tm TVar (upn_tm n (tvar i .: tvar)) t = ren_tm id (subst_ren n i) t.
 Proof.
-  intros m k n. unfold up_ty_tm, funcomp.
-  rewrite iter_up_tm.
-  destruct (lt_dec n m); simpl; reflexivity.
+  intros. rewrite ren_subst_tm. apply subst_tm_ext.
+  - reflexivity.
+  - intro x. unfold funcomp. apply upn_tm_subst_ren.
 Qed.
 
-(** Convenience: rewrite subst under type binders when sigma = upn_tm shift *)
-Lemma subst_tm_up_ty_TVar_shift : forall m k t,
-  subst_tm (up_ty_ty TVar) (up_ty_tm (upn_tm m (tm_shift k))) t =
-  subst_tm TVar (upn_tm m (tm_shift k)) t.
-Proof. intros. apply subst_tm_ext. apply up_ty_ty_id. apply up_ty_tm_upn_tm_shift. Qed.
+(** ** Lifting a term renaming under binders, in substitution form *)
 
-Lemma subst_ty_up_ty_TVar_shift : forall m k T,
-  subst_ty (up_ty_ty TVar) (up_ty_tm (upn_tm m (tm_shift k))) T =
-  subst_ty TVar (upn_tm m (tm_shift k)) T.
-Proof. intros. apply subst_ty_ext. apply up_ty_ty_id. apply up_ty_tm_upn_tm_shift. Qed.
+Lemma subst_ty_up_tm_ren : forall sigma xi T,
+  subst_ty (up_tm_ty sigma) (up_tm_tm (xi >> tvar)) T =
+  subst_ty (up_tm_ty sigma) (upren xi >> tvar) T.
+Proof. intros. apply subst_ty_ext; [reflexivity | apply up_tm_tm_ren]. Qed.
 
-(** Helper: up_ty_tm preserves upn_tm-based scons substitutions *)
-Lemma up_ty_tm_upn_tm_scons_tvar : forall m i n,
-  up_ty_tm (upn_tm m (tvar i .: tvar)) n = upn_tm m (tvar i .: tvar) n.
-Proof.
-  intros. unfold up_ty_tm, funcomp.
-  rewrite iter_up_tm.
-  destruct (lt_dec n m).
-  - simpl. reflexivity.
-  - destruct (n - m) as [|k]; simpl; reflexivity.
-Qed.
+Lemma subst_tm_up_tm_ren : forall sigma xi t,
+  subst_tm (up_tm_ty sigma) (up_tm_tm (xi >> tvar)) t =
+  subst_tm (up_tm_ty sigma) (upren xi >> tvar) t.
+Proof. intros. apply subst_tm_ext; [reflexivity | apply up_tm_tm_ren]. Qed.
+
+Lemma subst_ty_up_ty_ren : forall sigma xi T,
+  subst_ty (up_ty_ty sigma) (up_ty_tm (xi >> tvar)) T =
+  subst_ty (up_ty_ty sigma) (xi >> tvar) T.
+Proof. intros. apply subst_ty_ext; [reflexivity | apply up_ty_tm_ren]. Qed.
 
 (** abstract_term_var composed with its inverse is the identity. *)
 Lemma abstract_term_var_cancel: forall i T,

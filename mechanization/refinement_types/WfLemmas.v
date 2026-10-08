@@ -16,7 +16,7 @@ Require Import RefinementTypes.Subst.
 Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Eval.
 Require Import RefinementTypes.Interp.
-Require Import RefinementTypes.InterpShiftLemmas.
+Require Import RefinementTypes.InterpLemmas.
 Require Import RefinementTypes.Wf.
 
 (** ** Lemmas about wf_env *)

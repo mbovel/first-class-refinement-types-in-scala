@@ -23,7 +23,7 @@ Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Eval.
 Require Import RefinementTypes.EvalLemmas.
 Require Import RefinementTypes.Interp.
-Require Import RefinementTypes.InterpShiftLemmas.
+Require Import RefinementTypes.InterpLemmas.
 Require Import RefinementTypes.Avoid.
 Require Import RefinementTypes.Positivity.
 Require Import RefinementTypes.PositivityLemmas.

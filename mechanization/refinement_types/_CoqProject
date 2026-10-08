@@ -9,8 +9,7 @@ Tactics.v
 EvalTypeErasure.v
 EvalLemmas.v
 Interp.v
-InterpShiftLemmas.v
-InterpSubstLemmas.v
+InterpLemmas.v
 Wf.v
 WfLemmas.v
 Positivity.v

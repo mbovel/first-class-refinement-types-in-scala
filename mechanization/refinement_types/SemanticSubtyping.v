@@ -11,8 +11,7 @@ Require Import RefinementTypes.Syntax.
 Require Import RefinementTypes.Subst.
 Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Interp.
-Require Import RefinementTypes.InterpShiftLemmas.
-Require Import RefinementTypes.InterpSubstLemmas.
+Require Import RefinementTypes.InterpLemmas.
 Require Import RefinementTypes.Wf.
 Require Import RefinementTypes.WfLemmas.
 Require Import RefinementTypes.Positivity.
