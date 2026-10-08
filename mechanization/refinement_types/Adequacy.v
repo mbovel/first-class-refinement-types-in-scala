@@ -11,9 +11,9 @@ Require Import RefinementTypes.SyntacticSubtyping.
 Require Import RefinementTypes.SyntacticTyping.
 
 (** Adequacy of subtyping (Theorem 3.2). *)
-Theorem syn_subtype_adequate : forall tbounds tenv facts A B,
-  syn_subtype tbounds tenv facts A B ->
-  sem_subtype tbounds tenv facts A B.
+Theorem syn_subtype_adequate : forall G A B,
+  syn_subtype G A B ->
+  sem_subtype G A B.
 Proof.
   intros * H. induction H.
   - apply sem_subtype_refl.
@@ -38,9 +38,9 @@ Proof.
 Qed.
 
 (** Adequacy of typing (Theorem 3.1). *)
-Theorem syn_typed_adequate : forall tbounds tenv facts t T,
-  syn_typed tbounds tenv facts t T ->
-  sem_typed tbounds tenv facts t T.
+Theorem syn_typed_adequate : forall G t T,
+  syn_typed G t T ->
+  sem_typed G t T.
 Proof.
   intros * H. induction H.
   - apply sem_typed_diverge.
@@ -55,7 +55,7 @@ Proof.
   - eapply sem_typed_let; eassumption.
   - eapply sem_typed_bin_op; eassumption.
   - apply sem_typed_if; assumption.
-  - exact (sem_typed_loop _ _ _ _ _ _ _ H H0 IHsyn_typed1 IHsyn_typed2).
+  - exact (sem_typed_loop _ _ _ _ _ H H0 IHsyn_typed1 IHsyn_typed2).
   - apply sem_typed_selfify; assumption.
   - eapply sem_typed_sub.
     + exact IHsyn_typed.

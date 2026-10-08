@@ -1,8 +1,9 @@
 (** * Well-Formed Environments (Figure 8)
 
-    The well-formedness predicate wf(δ, Γ, ρ) of the paper, split into its
-    three components: [wf_env] for term bindings, [wf_benv] for type
-    variable bounds, and [wf_facts] for equality facts. *)
+    Typing contexts Γ and the well-formedness predicate wf(δ, Γ, ρ) of the
+    paper, defined from its three components: [wf_env] for term bindings,
+    [wf_benv] for type variable bounds, and [wf_facts] for equality
+    facts. *)
 
 From Stdlib Require Import Lists.List.
 Import ListNotations.
@@ -73,3 +74,54 @@ Fixpoint wf_benv (tvars: list SemTy) (tbounds: TBounds) (venv: list Value) : Pro
 (** Shift bounds to account for a new term variable in scope. *)
 Definition tbounds_shift_term (tb: TBounds) : TBounds :=
   map (fun '(L, U) => (ren_ty id S L, ren_ty id S U)) tb.
+
+(** ** Typing contexts Γ
+
+    A context has three kinds of entries (Figure 5): term bindings
+    [x : A], type variable bounds [X :> L <: U] and equality facts
+    [a1 ~ a2]. The mechanization keeps the three kinds in separate lists,
+    each indexed by its own de Bruijn indices. Types stored in the context
+    are kept relative to the current scope: pushing a term binding shifts
+    the bounds, and pushing a type variable shifts the term bindings. *)
+
+Definition Fact : Type := ((nat * Term) * (nat * Term))%type.
+
+Record Ctx := mkCtx {
+  ctx_tenv : list Ty;
+  ctx_tbounds : TBounds;
+  ctx_facts : list Fact
+}.
+
+Definition ctx_empty : Ctx :=
+  {| ctx_tenv := []; ctx_tbounds := []; ctx_facts := [] |}.
+
+(** Number of term bindings in scope; the depth tag of facts. *)
+Definition ctx_len (G : Ctx) : nat := length (ctx_tenv G).
+
+Definition tenv_shift_type (types : list Ty) : list Ty :=
+  List.map (ren_ty S id) types.
+
+(** Γ, x : A *)
+Definition ctx_cons_term (G : Ctx) (A : Ty) : Ctx :=
+  {| ctx_tenv := A :: ctx_tenv G;
+     ctx_tbounds := tbounds_shift_term (ctx_tbounds G);
+     ctx_facts := ctx_facts G |}.
+
+(** Γ, X :> L <: U *)
+Definition ctx_cons_type (G : Ctx) (L U : Ty) : Ctx :=
+  {| ctx_tenv := tenv_shift_type (ctx_tenv G);
+     ctx_tbounds := (L, U) :: ctx_tbounds G;
+     ctx_facts := ctx_facts G |}.
+
+(** Γ, a1 ~ a2 *)
+Definition ctx_add_fact (G : Ctx) (f : Fact) : Ctx :=
+  {| ctx_tenv := ctx_tenv G;
+     ctx_tbounds := ctx_tbounds G;
+     ctx_facts := f :: ctx_facts G |}.
+
+(** ** Context well-formedness wf(δ, Γ, ρ) (Figure 8) *)
+
+Definition wf_ctx (tvars : list SemTy) (G : Ctx) (venv : list Value) : Prop :=
+  wf_env tvars (ctx_tenv G) venv /\
+  wf_benv tvars (ctx_tbounds G) venv /\
+  wf_facts venv (ctx_facts G).

@@ -21,13 +21,6 @@ Require Import RefinementTypes.Wf.
 
 (** ** Lemmas about wf_env *)
 
-(** Extending the environment is trivial with suffix-based wf_env. *)
-Lemma wf_env_cons: forall tvars T tenv v venv,
-  interp tvars venv T v ->
-  wf_env tvars tenv venv ->
-  wf_env tvars (T :: tenv) (v :: venv).
-Proof. intros. simpl. auto. Qed.
-
 Lemma wf_env_length: forall tvars tenv venv,
   wf_env tvars tenv venv -> length tenv = length venv.
 Proof.
@@ -56,10 +49,6 @@ Proof.
     + simpl. eapply IH; eauto.
 Qed.
 
-(** Shifting the type variable environment. *)
-Definition tenv_shift_type (types: list Ty): list Ty :=
-  List.map (ren_ty S id) types.
-
 Lemma env_incr_wf: forall tvars tenv venv T',
   wf_env tvars tenv venv -> wf_env (T'::tvars) (tenv_shift_type tenv) venv.
 Proof.
@@ -71,12 +60,6 @@ Proof.
   - rewrite <- interp_env_ren_type. exact Hinterp.
   - apply IH. exact Hwf'.
 Qed.
-
-(** Shifting the interpretation of a type when prepending a value to the
-    environment. *)
-Lemma interp_env_shift_term: forall T tvars venv v,
-  interp tvars venv T = interp tvars (v::venv) (ren_ty id S T).
-Proof. intros. apply interp_env_ren_term. Qed.
 
 (** ** Lemmas about wf_facts *)
 
@@ -106,13 +89,6 @@ Qed.
 
 (** ** Lemmas about wf_benv *)
 
-Lemma wf_benv_cons: forall tvars tbounds venv A L U,
-  (forall w, interp tvars venv L w -> A w) ->
-  (forall w, A w -> interp tvars venv U w) ->
-  wf_benv tvars tbounds venv ->
-  wf_benv (A :: tvars) ((L, U) :: tbounds) venv.
-Proof. intros. simpl. auto. Qed.
-
 Lemma wf_benv_shift_term: forall tvars tbounds venv val,
   wf_benv tvars tbounds venv ->
   wf_benv tvars (tbounds_shift_term tbounds) (val :: venv).
@@ -131,13 +107,6 @@ Proof.
       rewrite <- (interp_env_ren_term U tvars' venv val).
       apply HU. exact Hw.
     + apply IH. exact Hwf'.
-Qed.
-
-Lemma wf_benv_double_shift_term: forall tvars tbounds venv v1 v2,
-  wf_benv tvars tbounds venv ->
-  wf_benv tvars (tbounds_shift_term (tbounds_shift_term tbounds)) (v2 :: v1 :: venv).
-Proof.
-  intros. apply wf_benv_shift_term. apply wf_benv_shift_term. exact H.
 Qed.
 
 Lemma wf_benv_lookup: forall tvars tbounds venv i L U,
@@ -187,4 +156,103 @@ Proof.
   intros venv d1 t1 d2 t2 facts Hle1 Hle2 Heval Hfacts.
   unfold wf_facts in *. constructor; [| exact Hfacts].
   repeat split; assumption.
+Qed.
+
+(** ** Lemmas about wf_ctx *)
+
+Lemma wf_ctx_length: forall tvars G venv,
+  wf_ctx tvars G venv -> ctx_len G = length venv.
+Proof. intros tvars G venv [Henv _]. apply (wf_env_length tvars). exact Henv. Qed.
+
+Lemma wf_ctx_lookup_term: forall tvars G venv i T,
+  wf_ctx tvars G venv ->
+  nth_error (ctx_tenv G) i = Some T ->
+  exists v, nth_error venv i = Some v /\ interp tvars (skipn (S i) venv) T v.
+Proof. intros tvars G venv i T [Henv _] Hnth. exact (wf_env_lookup _ _ _ _ _ Henv Hnth). Qed.
+
+Lemma wf_ctx_lookup_type: forall tvars G venv i L U,
+  wf_ctx tvars G venv ->
+  nth_error (ctx_tbounds G) i = Some (L, U) ->
+  exists X,
+    nth_error tvars i = Some X /\
+    (forall w, interp (skipn (S i) tvars) venv L w -> X w) /\
+    (forall w, X w -> interp (skipn (S i) tvars) venv U w).
+Proof. intros tvars G venv i L U [_ [Hbenv _]] Hnth. exact (wf_benv_lookup _ _ _ _ _ _ Hbenv Hnth). Qed.
+
+(** Γ, x : A *)
+Lemma wf_ctx_cons_term: forall tvars G venv A v,
+  interp tvars venv A v ->
+  wf_ctx tvars G venv ->
+  wf_ctx tvars (ctx_cons_term G A) (v :: venv).
+Proof.
+  intros tvars G venv A v Hv [Henv [Hbenv Hfacts]]. split; [|split]; simpl.
+  - exact (conj Hv Henv).
+  - apply wf_benv_shift_term. exact Hbenv.
+  - apply wf_facts_extend. exact Hfacts.
+Qed.
+
+(** Γ, X :> L <: U *)
+Lemma wf_ctx_cons_type: forall tvars G venv L U X,
+  (forall w, interp tvars venv L w -> X w) ->
+  (forall w, X w -> interp tvars venv U w) ->
+  wf_ctx tvars G venv ->
+  wf_ctx (X :: tvars) (ctx_cons_type G L U) venv.
+Proof.
+  intros tvars G venv L U X HL HU [Henv [Hbenv Hfacts]]. split; [|split]; simpl.
+  - apply env_incr_wf. exact Henv.
+  - exact (conj HL (conj HU Hbenv)).
+  - exact Hfacts.
+Qed.
+
+(** The equality facts recorded by the typing rules. For [if]: the
+    condition equals the taken branch's boolean. *)
+Lemma wf_ctx_fact_if: forall tvars G venv c b fuel,
+  wf_ctx tvars G venv ->
+  eval fuel venv c = Some (Some (vbool b)) ->
+  wf_ctx tvars (ctx_add_fact G ((ctx_len G, c), (ctx_len G, tbool b))) venv.
+Proof.
+  intros tvars G venv c b fuel Hwf Heval.
+  pose proof (wf_ctx_length _ _ _ Hwf) as Hlen. unfold ctx_len in *.
+  destruct Hwf as [Henv [Hbenv Hfacts]]. split; [|split]; simpl; [exact Henv | exact Hbenv |].
+  apply wf_facts_cons; [lia | lia | | exact Hfacts].
+  rewrite Hlen, Nat.sub_diag. simpl.
+  exists (vbool b), fuel, 1. split; [exact Heval | reflexivity].
+Qed.
+
+(** For [let]: the bound variable equals its definition. *)
+Lemma wf_ctx_fact_let: forall tvars G venv A e v fuel,
+  wf_ctx tvars G venv ->
+  interp tvars venv A v ->
+  eval fuel venv e = Some (Some v) ->
+  wf_ctx tvars (ctx_add_fact (ctx_cons_term G A) ((S (ctx_len G), tvar 0), (ctx_len G, e)))
+    (v :: venv).
+Proof.
+  intros tvars G venv A e v fuel Hwf Hv Heval.
+  pose proof (wf_ctx_length _ _ _ Hwf) as Hlen. unfold ctx_len in *.
+  destruct (wf_ctx_cons_term _ _ _ _ _ Hv Hwf) as [Henv' [Hbenv' Hfacts']].
+  split; [|split]; simpl; [exact Henv' | exact Hbenv' |].
+  apply wf_facts_cons; [simpl; lia | simpl; lia | | exact Hfacts'].
+  change (length (v :: venv)) with (S (length venv)). rewrite Hlen, Nat.sub_diag.
+  replace (S (length venv) - length venv) with 1 by lia. simpl.
+  exists v, 1, fuel. split; [reflexivity | exact Heval].
+Qed.
+
+(** For [match]: the scrutinee equals the matched pattern, a term over the
+    newly bound variable. *)
+Lemma wf_ctx_fact_match: forall tvars G venv A e t u w fuel fuel',
+  wf_ctx tvars G venv ->
+  interp tvars venv A w ->
+  eval fuel venv e = Some (Some u) ->
+  eval fuel' (w :: venv) t = Some (Some u) ->
+  wf_ctx tvars (ctx_add_fact (ctx_cons_term G A) ((ctx_len G, e), (S (ctx_len G), t)))
+    (w :: venv).
+Proof.
+  intros tvars G venv A e t u w fuel fuel' Hwf Hw Heval Heval'.
+  pose proof (wf_ctx_length _ _ _ Hwf) as Hlen. unfold ctx_len in *.
+  destruct (wf_ctx_cons_term _ _ _ _ _ Hw Hwf) as [Henv' [Hbenv' Hfacts']].
+  split; [|split]; simpl; [exact Henv' | exact Hbenv' |].
+  apply wf_facts_cons; [simpl; lia | simpl; lia | | exact Hfacts'].
+  change (length (w :: venv)) with (S (length venv)). rewrite Hlen.
+  replace (S (length venv) - length venv) with 1 by lia. rewrite Nat.sub_diag. simpl.
+  exists u, fuel, fuel'. split; [exact Heval | exact Heval'].
 Qed.

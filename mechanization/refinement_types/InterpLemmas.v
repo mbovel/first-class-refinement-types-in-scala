@@ -138,15 +138,6 @@ Qed.
 
 (** ** Term weakening (Lemma 3.3) *)
 
-Lemma interp_weaken_term: forall T tenv venv1 venv2 venv3,
-  interp tenv (venv1 ++ venv3) T =
-  interp tenv (venv1 ++ venv2 ++ venv3)
-    (subst_ty TVar (upn_tm (length venv1) (tm_shift (length venv2))) T).
-Proof.
-  intros. rewrite subst_ty_shift_ren.
-  apply interp_ren; [intro x; reflexivity | apply env_ren_shift].
-Qed.
-
 Lemma interp_env_ren_term: forall T tenv venv v,
   interp tenv venv T = interp tenv (v::venv) (ren_ty id S T).
 Proof. intros. apply interp_ren; intro x; reflexivity. Qed.

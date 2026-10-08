@@ -28,13 +28,6 @@ Require Import RefinementTypes.Avoid.
 Require Import RefinementTypes.Positivity.
 Require Import RefinementTypes.PositivityLemmas.
 
-(** Helper: evaluating [false] never gives [true] *)
-Lemma eval_false_not_true: forall fuel venv,
-  eval fuel venv (tbool false) <> Some (Some (vbool true)).
-Proof.
-  intros fuel venv. destruct fuel; simpl; discriminate.
-Qed.
-
 (** ** Avoidance preserves positivity *)
 
 (** If spos/ty_var_absent is true for T, it remains true for avoid pol j T.
@@ -346,16 +339,6 @@ Proof.
     rewrite Hsigma; [reflexivity | lia].
 Qed.
 
-(** Helper: up_tm_tm preserves the "identity except at i" property *)
-Lemma up_tm_tm_not_i : forall sigma i,
-  (forall n, n <> i -> sigma n = tvar n) ->
-  forall n, n <> S i -> up_tm_tm sigma n = tvar n.
-Proof.
-  intros sigma i Hsigma [|m] Hneq.
-  - reflexivity.
-  - unfold up_tm_tm, scons, funcomp. rewrite Hsigma; [reflexivity | lia].
-Qed.
-
 (** The composition shift-after-scons is identity except at position i *)
 Lemma shift_scons_comp_id : forall i z,
   let comp := fun n => subst_tm TVar (upn_tm i (fun m => tvar (S m)))
@@ -421,12 +404,21 @@ Proof.
   exact (avoid_subst_shift_id_gen T Pos 0 z).
 Qed.
 
-(** Semantic corollary: avoided types are invariant under subst-then-shift. *)
-Lemma interp_avoid_shift: forall T tvars venv z,
-  interp tvars venv (avoid_var0 T) =
-  interp tvars venv
-    (subst_ty TVar (fun n => tvar (S n))
-      (subst_ty TVar (z .: tvar) (avoid_var0 T))).
+(** Removing the variable bound by a let or match from the type of its
+    body: avoid it, then leave the binding's scope. Since the avoided
+    variable no longer occurs, any [z] may be substituted for it. *)
+Lemma interp_avoid_var0_subst: forall T tvars venv v z w,
+  interp tvars (v :: venv) T w ->
+  interp tvars venv (subst_ty TVar (z .: tvar) (avoid_var0 T)) w.
 Proof.
-  intros. rewrite avoid_subst_shift_id. reflexivity.
+  intros T tvars venv v z w H.
+  apply interp_avoid_var0 in H.
+  rewrite (interp_env_ren_term _ tvars venv v).
+  replace (ren_ty id S (subst_ty TVar (z .: tvar) (avoid_var0 T)))
+    with (avoid_var0 T); [exact H|].
+  rewrite ren_subst_ty.
+  transitivity (subst_ty TVar (fun n => tvar (S n))
+                  (subst_ty TVar (z .: tvar) (avoid_var0 T))).
+  - symmetry. exact (avoid_subst_shift_id T z).
+  - apply subst_ty_ext; intro n; unfold funcomp; reflexivity.
 Qed.

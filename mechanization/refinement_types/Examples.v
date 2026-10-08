@@ -105,13 +105,13 @@ Compute (eval 1000 [] test_maximum_singleton).
 (** ** Subtyping derivations *)
 
 (** U <: T via upper bound *)
-Lemma U_sub_T : forall tbounds tenv facts,
-  nth_error tbounds 0 = Some (TBot, TVar 0) ->
-  syn_subtype tbounds tenv facts (TVar 0) (TVar 1).
+Lemma U_sub_T : forall G,
+  nth_error (ctx_tbounds G) 0 = Some (TBot, TVar 0) ->
+  syn_subtype G (TVar 0) (TVar 1).
 Proof.
   intros * H.
   replace (TVar 1) with (ren_ty (fun n => n + 1) id (TVar 0)) by reflexivity.
-  exact (SSub_TVar_Upper _ _ _ 0 TBot (TVar 0) H).
+  exact (SSub_TVar_Upper _ 0 TBot (TVar 0) H).
 Qed.
 
 Lemma tbounds_shift_term_hd : forall tb,
@@ -123,8 +123,8 @@ Proof.
 Qed.
 
 (** List unfold: List[U] <: Unit + (U, List[U]) *)
-Lemma list_unfold_sub : forall tbounds tenv facts,
-  syn_subtype tbounds tenv facts (ListTy 0) ListTy_unfolded.
+Lemma list_unfold_sub : forall G,
+  syn_subtype G (ListTy 0) ListTy_unfolded.
 Proof.
   intros. unfold ListTy, ListTy_unfolded.
   replace (TSum TUnit (TSigma (TVar 0) (TMuAll (TSum TUnit (TSigma (TVar 1) (TVar 0))))))
@@ -134,21 +134,21 @@ Proof.
 Qed.
 
 (** Ordering[T] <: Ordering[U] by function contravariance and U <: T *)
-Lemma ordering_sub : forall tbounds tenv facts,
-  nth_error tbounds 0 = Some (TBot, TVar 0) ->
-  syn_subtype tbounds tenv facts (OrderingTy 1) (OrderingTy 0).
+Lemma ordering_sub : forall G,
+  nth_error (ctx_tbounds G) 0 = Some (TBot, TVar 0) ->
+  syn_subtype G (OrderingTy 1) (OrderingTy 0).
 Proof.
   intros * Hb. unfold OrderingTy.
   apply SSub_Fun.
   - apply U_sub_T. exact Hb.
   - apply SSub_Fun.
-    + apply U_sub_T. apply tbounds_shift_term_hd. exact Hb.
+    + apply U_sub_T. simpl. apply tbounds_shift_term_hd. exact Hb.
     + apply SSub_Refl.
 Qed.
 
 (** TOr T T <: T *)
-Lemma or_same_sub : forall tbounds tenv facts T,
-  syn_subtype tbounds tenv facts (TOr T T) T.
+Lemma or_same_sub : forall G T,
+  syn_subtype G (TOr T T) T.
 Proof. intros. apply SSub_Or; apply SSub_Refl. Qed.
 
 (** ** Typing derivation *)
@@ -162,13 +162,13 @@ Proof. intros. apply SSub_Or; apply SSub_Refl. Qed.
     this is convertible to [T], so [change] succeeds. *)
 Ltac type_var :=
   match goal with
-  | |- syn_typed ?tb ?te ?f (tvar ?i) ?T =>
+  | |- syn_typed ?G (tvar ?i) ?T =>
     change T with (subst_ty TVar (tm_shift (S i)) T);
-    exact (ST_Var tb te f i T eq_refl)
+    exact (ST_Var G i T eq_refl)
   end.
 
 Theorem maximum_typed :
-  syn_typed [] [] [] maximum_tm maximum_ty.
+  syn_typed ctx_empty maximum_tm maximum_ty.
 Proof.
   unfold maximum_tm, maximum_ty.
   apply ST_TAbs. apply ST_TAbs. apply ST_Abs. apply ST_Abs. simpl.

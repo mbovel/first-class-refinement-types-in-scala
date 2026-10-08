@@ -100,15 +100,13 @@ Qed.
     cannot be semantically typed at [Bot]. *)
 
 Theorem no_converging_term_has_bot :
-  forall tbounds tenv facts t tvars venv fuel v,
-    wf_env tvars tenv venv ->
-    wf_benv tvars tbounds venv ->
-    wf_facts venv facts ->
+  forall G t tvars venv fuel v,
+    wf_ctx tvars G venv ->
     eval fuel venv t = Some (Some v) ->
-    ~ sem_typed tbounds tenv facts t TBot.
+    ~ sem_typed G t TBot.
 Proof.
-  intros * Hwf Hbwf Hfwf Heval Htyped.
-  specialize (Htyped tvars venv Hwf Hbwf Hfwf fuel (Some v) Heval).
+  intros * Hwf Heval Htyped.
+  specialize (Htyped tvars venv Hwf fuel (Some v) Heval).
   destruct Htyped as [v' [_ []]].
 Qed.
 
@@ -143,10 +141,10 @@ Qed.
     degenerate: a diverging predicate is not equivalent to [false]. *)
 
 Theorem diverge_not_sub_false :
-  ~ sem_subtype [] [] [] (TRefine TUnit tdiverge) (TRefine TUnit (tbool false)).
+  ~ sem_subtype ctx_empty (TRefine TUnit tdiverge) (TRefine TUnit (tbool false)).
 Proof.
   intros Hsub.
-  specialize (Hsub [] [] I I (Forall_nil _) vunit).
+  specialize (Hsub [] [] (conj I (conj I (Forall_nil _))) vunit).
   destruct Hsub as [_ Heval].
   - (* [vunit] inhabits {Unit | diverge}: it has base type [Unit] and the
        diverging predicate vacuously satisfies eval_to_true. *)
@@ -166,12 +164,12 @@ Qed.
     have been" [false] under a more eager semantics. *)
 
 Theorem diverge_and_false_not_sub_false :
-  ~ sem_subtype [] [] []
+  ~ sem_subtype ctx_empty
       (TRefine TUnit (tbin_op OpAnd tdiverge (tbool false)))
       (TRefine TUnit (tbool false)).
 Proof.
   intros Hsub.
-  specialize (Hsub [] [] I I (Forall_nil _) vunit).
+  specialize (Hsub [] [] (conj I (conj I (Forall_nil _))) vunit).
   destruct Hsub as [_ Heval].
   - (* [vunit] inhabits {Unit | diverge && false}: evaluation of the
        binop tries its left operand [diverge] first, which loops, so the
@@ -218,10 +216,10 @@ Qed.
     [t && true] diverges too, and both sides hold vacuously). *)
 
 Theorem sem_implies_and_true :
-  forall tbounds tenv facts t,
-    sem_implies tbounds tenv facts (tbin_op OpAnd t (tbool true)) t.
+  forall G t,
+    sem_implies G (tbin_op OpAnd t (tbool true)) t.
 Proof.
-  intros tbounds tenv facts t tvars venv _ _ _ Hconj fuel r Heval.
+  intros G t tvars venv _ Hconj fuel r Heval.
   (* Suppose [t] terminates with result [r] at some fuel. *)
   assert (Hev' := eval_and_bool _ _ _ true _ Heval).
   (* If [r] is stuck or not a boolean, [t && true] is stuck, contradicting
@@ -243,7 +241,7 @@ Qed.
     that the termination hypothesis of Lemma 2.2 is necessary. *)
 
 Theorem diverge_and_false_not_implies_false :
-  ~ sem_implies [] [] [] (tbin_op OpAnd tdiverge (tbool false)) (tbool false).
+  ~ sem_implies ctx_empty (tbin_op OpAnd tdiverge (tbool false)) (tbool false).
 Proof.
   intros Himp.
   (* [diverge && false] diverges, so it vacuously satisfies eval_to_true. *)
@@ -251,7 +249,7 @@ Proof.
   { intros [|fuel] r Hev; [discriminate|].
     simpl in Hev. rewrite eval_tdiverge in Hev. discriminate. }
   (* But [false] evaluates to [false], not [true]. *)
-  specialize (Himp [] [] I I (Forall_nil _) Hvac 1 (Some (vbool false)) eq_refl).
+  specialize (Himp [] [] (conj I (conj I (Forall_nil _))) Hvac 1 (Some (vbool false)) eq_refl).
   destruct Himp as [v [Heq Htrue]]. injection Heq as <-. discriminate.
 Qed.
 
@@ -261,12 +259,9 @@ Qed.
     A term [t] semantically terminates in a context if it evaluates to a
     value in every well-formed environment. *)
 
-Definition sem_terminates (tbounds: TBounds) (tenv: list Ty)
-    (facts: list ((nat * Term) * (nat * Term))) (t: Term) : Prop :=
+Definition sem_terminates (G: Ctx) (t: Term) : Prop :=
   forall tvars venv,
-    wf_env tvars tenv venv ->
-    wf_benv tvars tbounds venv ->
-    wf_facts venv facts ->
+    wf_ctx tvars G venv ->
     exists fuel v, eval fuel venv t = Some (Some v).
 
 (** If [t] terminates, the entailment is recovered: [t && false] then
@@ -274,12 +269,12 @@ Definition sem_terminates (tbounds: TBounds) (tenv: list Ty)
     contradictory. *)
 
 Theorem sem_implies_and_false_terminating :
-  forall tbounds tenv facts t,
-    sem_terminates tbounds tenv facts t ->
-    sem_implies tbounds tenv facts (tbin_op OpAnd t (tbool false)) (tbool false).
+  forall G t,
+    sem_terminates G t ->
+    sem_implies G (tbin_op OpAnd t (tbool false)) (tbool false).
 Proof.
-  intros tbounds tenv facts t Hterm tvars venv Henv Hbenv Hfacts Hconj.
-  destruct (Hterm tvars venv Henv Hbenv Hfacts) as [fuel [v Heval]].
+  intros G t Hterm tvars venv Hwf Hconj.
+  destruct (Hterm tvars venv Hwf) as [fuel [v Heval]].
   exfalso.
   (* [t && false] terminates at one more unit of fuel, and its result is
      [false] (if [v] is a boolean) or stuck (otherwise), contradicting the
@@ -322,18 +317,18 @@ Qed.
     ([<:>], two-way subtyping) in any context. *)
 
 Corollary sem_subtype_refine_diverge_true :
-  forall tbounds tenv facts A,
-    sem_subtype tbounds tenv facts (TRefine A tdiverge) (TRefine A (tbool true)).
+  forall G A,
+    sem_subtype G (TRefine A tdiverge) (TRefine A (tbool true)).
 Proof.
-  intros tbounds tenv facts A tvars venv _ _ _ v Hv.
+  intros G A tvars venv _ v Hv.
   exact (proj1 (refine_diverge_eq_refine_true A tvars venv v) Hv).
 Qed.
 
 Corollary sem_subtype_refine_true_diverge :
-  forall tbounds tenv facts A,
-    sem_subtype tbounds tenv facts (TRefine A (tbool true)) (TRefine A tdiverge).
+  forall G A,
+    sem_subtype G (TRefine A (tbool true)) (TRefine A tdiverge).
 Proof.
-  intros tbounds tenv facts A tvars venv _ _ _ v Hv.
+  intros G A tvars venv _ v Hv.
   exact (proj2 (refine_diverge_eq_refine_true A tvars venv v) Hv).
 Qed.
 
@@ -357,35 +352,35 @@ Qed.
     subtypes of each other, in any context. *)
 
 Corollary sem_subtype_refine_true_base :
-  forall tbounds tenv facts A,
-    sem_subtype tbounds tenv facts (TRefine A (tbool true)) A.
+  forall G A,
+    sem_subtype G (TRefine A (tbool true)) A.
 Proof.
-  intros tbounds tenv facts A tvars venv _ _ _ v Hv.
+  intros G A tvars venv _ v Hv.
   exact (proj1 (refine_true_eq_base A tvars venv v) Hv).
 Qed.
 
 Corollary sem_subtype_base_refine_true :
-  forall tbounds tenv facts A,
-    sem_subtype tbounds tenv facts A (TRefine A (tbool true)).
+  forall G A,
+    sem_subtype G A (TRefine A (tbool true)).
 Proof.
-  intros tbounds tenv facts A tvars venv _ _ _ v Hv.
+  intros G A tvars venv _ v Hv.
   exact (proj2 (refine_true_eq_base A tvars venv v) Hv).
 Qed.
 
 Corollary sem_subtype_refine_diverge_base :
-  forall tbounds tenv facts A,
-    sem_subtype tbounds tenv facts (TRefine A tdiverge) A.
+  forall G A,
+    sem_subtype G (TRefine A tdiverge) A.
 Proof.
-  intros tbounds tenv facts A tvars venv _ _ _ v Hv.
+  intros G A tvars venv _ v Hv.
   apply (proj1 (refine_true_eq_base A tvars venv v)).
   exact (proj1 (refine_diverge_eq_refine_true A tvars venv v) Hv).
 Qed.
 
 Corollary sem_subtype_base_refine_diverge :
-  forall tbounds tenv facts A,
-    sem_subtype tbounds tenv facts A (TRefine A tdiverge).
+  forall G A,
+    sem_subtype G A (TRefine A tdiverge).
 Proof.
-  intros tbounds tenv facts A tvars venv _ _ _ v Hv.
+  intros G A tvars venv _ v Hv.
   apply (proj2 (refine_diverge_eq_refine_true A tvars venv v)).
   exact (proj2 (refine_true_eq_base A tvars venv v) Hv).
 Qed.
@@ -398,15 +393,13 @@ Qed.
     [{x: A | false}]. *)
 
 Theorem no_converging_term_has_refine_false :
-  forall tbounds tenv facts t A tvars venv fuel v,
-    wf_env tvars tenv venv ->
-    wf_benv tvars tbounds venv ->
-    wf_facts venv facts ->
+  forall G t A tvars venv fuel v,
+    wf_ctx tvars G venv ->
     eval fuel venv t = Some (Some v) ->
-    ~ sem_typed tbounds tenv facts t (TRefine A (tbool false)).
+    ~ sem_typed G t (TRefine A (tbool false)).
 Proof.
-  intros * Henv Hbenv Hfacts Heval Htyped.
-  specialize (Htyped tvars venv Henv Hbenv Hfacts fuel (Some v) Heval).
+  intros * Hwf Heval Htyped.
+  specialize (Htyped tvars venv Hwf fuel (Some v) Heval).
   destruct Htyped as [v' [Heq [_ Hp]]].
   (* The value [v] would have to satisfy the [false] predicate, which
      evaluates to [false], contradicting eval_to_true. *)
