@@ -5,6 +5,7 @@
     implementation, predicate entailment is delegated to the solver. *)
 
 Require Import RefinementTypes.Syntax.
+Require Import RefinementTypes.EvalLemmas.
 Require Import RefinementTypes.Interp.
 Require Import RefinementTypes.Wf.
 

@@ -21,6 +21,7 @@ Require Import RefinementTypes.Syntax.
 Require Import RefinementTypes.Subst.
 Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Eval.
+Require Import RefinementTypes.EvalLemmas.
 Require Import RefinementTypes.Interp.
 Require Import RefinementTypes.InterpShiftLemmas.
 Require Import RefinementTypes.Avoid.
@@ -174,7 +175,7 @@ Proof.
   - destruct (term_mentions (S i) p) eqn:Hm.
     + simpl. destruct H as [HA Hp]. split.
       * exact (proj1 (IHA tvars venv val i) HA).
-      * unfold eval_to_true, term_has_semtype.
+      * unfold eval_to_true.
         intros fuel r Heval. destruct fuel; simpl in Heval; [discriminate|].
         inversion Heval; subst. exists (vbool true). auto.
     + simpl. destruct H as [HA Hp]. split.
@@ -183,7 +184,7 @@ Proof.
   (* TRefine - neg *)
   - destruct (term_mentions (S i) p) eqn:Hm.
     + simpl in H. destruct H as [_ Hp]. exfalso.
-      unfold eval_to_true, term_has_semtype in Hp.
+      unfold eval_to_true in Hp.
       assert (Hprem: eval 1 (val :: venv) (tbool false) = Some (Some (vbool false))).
       { simpl. reflexivity. }
       destruct (Hp 1 (Some (vbool false)) Hprem) as [v [Hv Htrue]].

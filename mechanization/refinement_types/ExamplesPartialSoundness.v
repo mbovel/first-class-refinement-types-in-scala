@@ -33,6 +33,7 @@ From Stdlib Require Import Lists.List.
 Import ListNotations.
 Require Import RefinementTypes.Syntax.
 Require Import RefinementTypes.Eval.
+Require Import RefinementTypes.EvalLemmas.
 Require Import RefinementTypes.Interp.
 Require Import RefinementTypes.Wf.
 Require Import RefinementTypes.SemanticImplies.

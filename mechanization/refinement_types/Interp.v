@@ -69,8 +69,11 @@ Definition interp_forall (L U: SemTy) (F: SemTy -> SemTy) (v: Value) : Prop :=
       (forall w, A w -> U w) ->
       term_has_semtype env body (F A).
 
-Definition eval_to_true (venv: list Value) (t: Term) : Prop :=
-  term_has_semtype venv t (fun v => v = vbool true).
+(** [eval_to_true] (defined with the evaluator in [EvalLemmas]) is the term
+    interpretation at the singleton semantic type {true}. *)
+Lemma eval_to_true_semtype : forall venv t,
+  eval_to_true venv t <-> term_has_semtype venv t (fun v => v = vbool true).
+Proof. intros. split; intro H; exact H. Qed.
 
 (** Refinement type: v satisfies A and the predicate p evaluates to true
     when v is prepended to the environment. *)

@@ -15,7 +15,6 @@ Require Import RefinementTypes.Syntax.
 Require Import RefinementTypes.Subst.
 Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Tactics.
-Require Import RefinementTypes.EvalShiftLemmas.
 Require Import RefinementTypes.Avoid.
 Require Import RefinementTypes.Wf.
 Require Import RefinementTypes.Positivity.

@@ -7,10 +7,8 @@ SubstLemmas.v
 SubstExamples.v
 Tactics.v
 ListLemmas.v
-EvalLemmas.v
-EvalShiftLemmas.v
-EvalSubstLemmas.v
 EvalTypeErasure.v
+EvalLemmas.v
 Interp.v
 InterpShiftLemmas.v
 InterpSubstLemmas.v

@@ -19,7 +19,6 @@ Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Eval.
 Require Import RefinementTypes.ListLemmas.
 Require Import RefinementTypes.EvalLemmas.
-Require Import RefinementTypes.EvalShiftLemmas.
 Require Import RefinementTypes.Interp.
 Require Import RefinementTypes.InterpShiftLemmas.
 Require Import RefinementTypes.InterpSubstLemmas.
@@ -400,27 +399,23 @@ Proof.
   (* Step 1: tvar 0 evaluates to v in 1 step *)
   assert (Heval_var: eval 1 (v :: venv) (tvar 0) = Some (Some v)).
   { reflexivity. }
-  (* Step 2: ren_tm id S e evaluates to v' with val_weaken_compat v v' *)
+  (* Step 2: by weakening (Lemma 3.7), ren_tm id S e evaluates in v :: venv to a
+     value related to v, hence to v itself since v is first-order *)
   assert (Hren_eq: ren_tm id S e = subst_tm TVar (tm_shift 1) e).
   { rewrite ren_subst_tm. apply subst_tm_ext.
     - intro n. reflexivity.
     - intro n. unfold funcomp, tm_shift. f_equal. lia. }
-  pose proof (eval_shift_env_fwd fuel e [] [v] venv _ Heval) as [r' [Hrc Hr']].
-  simpl in Hr'.
-  (* r' is compatible with Some (Some v) *)
-  assert (Hr'_eq: r' = Some (Some v)).
-  { inversion Hrc; subst.
-    f_equal. f_equal.
-    destruct Hfov as [-> | [[b ->] | [z ->]]];
-      inversion H0; subst; reflexivity. }
-  subst r'. rewrite <- Hren_eq in Hr'_eq.
+  pose proof (eval_shift_rel fuel e [] [v] venv) as Hrc.
+  simpl in Hrc. rewrite Heval in Hrc.
+  pose proof (res_rel_fo _ _ Hfov Hrc) as Hr'_eq.
+  rewrite <- Hren_eq in Hr'_eq.
   (* Step 3: eval_bin_op OpEq v v = Some (vbool true) *)
   pose proof (eval_bin_op_eq_refl v Hfov) as Hop.
   (* Combine: eval (S (1 + fuel)) (v :: venv) (tbin_op ...) = Some (Some (vbool true)) *)
   pose proof (eval_tbin_op 1 fuel (v :: venv) OpEq (tvar 0) (ren_tm id S e)
     v v (vbool true) Heval_var Hr'_eq Hop) as Heval_binop.
   (* Now show eval_to_true *)
-  unfold eval_to_true, term_has_semtype.
+  unfold eval_to_true.
   intros fuel2 r2 Heval2.
   (* By determinism: any successful evaluation gives the same result *)
   destruct (Nat.le_ge_cases fuel2 (S (1 + fuel))) as [Hle | Hge].

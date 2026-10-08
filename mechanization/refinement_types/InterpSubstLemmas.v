@@ -18,43 +18,11 @@ Require Import RefinementTypes.Subst.
 Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Eval.
 Require Import RefinementTypes.Tactics.
-Require Import RefinementTypes.EvalSubstLemmas.
-Require Import RefinementTypes.EvalTypeErasure.
+Require Import RefinementTypes.EvalLemmas.
 Require Import RefinementTypes.Interp.
-Require Import RefinementTypes.EvalShiftLemmas.
 Require Import RefinementTypes.InterpShiftLemmas.
 
 (** ** Term substitution (Lemma 3.4) *)
-
-(** Helper: eval_to_true is preserved by environment substitution *)
-Lemma eval_to_true_subst_env : forall p venv_prefix va venv i,
-  nth_error venv i = Some va ->
-  eval_to_true (venv_prefix ++ va :: venv) p <->
-  eval_to_true (venv_prefix ++ venv)
-    (subst_tm TVar (upn_tm (length venv_prefix) (tvar i .: tvar)) p).
-Proof.
-  intros p venv_prefix va venv i Hnth.
-  unfold eval_to_true, term_has_semtype.
-  split; intros H fuel r Heval.
-  - (* forward: H about big env, Heval about small env *)
-    destruct (eval_subst_env_bwd fuel p venv_prefix va venv i _ Hnth Heval) as [r' [Hrc Hr']].
-    destruct r' as [[v'|]|]; [| | inversion Hrc].
-    + inversion Hrc as [| | ? ? Hvc]; subst.
-      destruct (H fuel (Some v') Hr') as [w [Hw Heq]].
-      inversion Hw; subst. inversion Hvc; subst.
-      exists (vbool true). auto.
-    + inversion Hrc; subst.
-      destruct (H fuel None Hr') as [w [Hw _]]. discriminate.
-  - (* backward: H about small env, Heval about big env *)
-    destruct (eval_subst_env_fwd fuel p venv_prefix va venv i _ Hnth Heval) as [r' [Hrc Hr']].
-    destruct r' as [[v'|]|]; [| | inversion Hrc].
-    + inversion Hrc as [| | ? ? Hvc]; subst.
-      destruct (H fuel (Some v') Hr') as [w [Hw Heq]].
-      inversion Hw; subst. inversion Hvc; subst.
-      exists (vbool true). auto.
-    + inversion Hrc; subst.
-      destruct (H fuel None Hr') as [w [Hw _]]. discriminate.
-Qed.
 
 Lemma interp_subst_up_term: forall T tvars venv_prefix va venv i,
   nth_error venv i = Some va ->
