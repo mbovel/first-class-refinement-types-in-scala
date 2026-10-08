@@ -6,7 +6,6 @@ Subst.v
 SubstLemmas.v
 SubstExamples.v
 Tactics.v
-ListLemmas.v
 EvalTypeErasure.v
 EvalLemmas.v
 Interp.v

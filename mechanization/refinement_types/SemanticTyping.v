@@ -17,7 +17,6 @@ Require Import RefinementTypes.Syntax.
 Require Import RefinementTypes.Subst.
 Require Import RefinementTypes.SubstLemmas.
 Require Import RefinementTypes.Eval.
-Require Import RefinementTypes.ListLemmas.
 Require Import RefinementTypes.EvalLemmas.
 Require Import RefinementTypes.Interp.
 Require Import RefinementTypes.InterpShiftLemmas.
