@@ -96,32 +96,32 @@ Definition ctx_empty : Ctx :=
   {| ctx_tenv := []; ctx_tbounds := []; ctx_facts := [] |}.
 
 (** Number of term bindings in scope; the depth tag of facts. *)
-Definition ctx_len (G : Ctx) : nat := length (ctx_tenv G).
+Definition ctx_len (gamma : Ctx) : nat := length (ctx_tenv gamma).
 
 Definition tenv_shift_type (types : list Ty) : list Ty :=
   List.map (ren_ty S id) types.
 
 (** Γ, x : A *)
-Definition ctx_cons_term (G : Ctx) (A : Ty) : Ctx :=
-  {| ctx_tenv := A :: ctx_tenv G;
-     ctx_tbounds := tbounds_shift_term (ctx_tbounds G);
-     ctx_facts := ctx_facts G |}.
+Definition ctx_cons_term (gamma : Ctx) (A : Ty) : Ctx :=
+  {| ctx_tenv := A :: ctx_tenv gamma;
+     ctx_tbounds := tbounds_shift_term (ctx_tbounds gamma);
+     ctx_facts := ctx_facts gamma |}.
 
 (** Γ, X :> L <: U *)
-Definition ctx_cons_type (G : Ctx) (L U : Ty) : Ctx :=
-  {| ctx_tenv := tenv_shift_type (ctx_tenv G);
-     ctx_tbounds := (L, U) :: ctx_tbounds G;
-     ctx_facts := ctx_facts G |}.
+Definition ctx_cons_type (gamma : Ctx) (L U : Ty) : Ctx :=
+  {| ctx_tenv := tenv_shift_type (ctx_tenv gamma);
+     ctx_tbounds := (L, U) :: ctx_tbounds gamma;
+     ctx_facts := ctx_facts gamma |}.
 
 (** Γ, a1 ~ a2 *)
-Definition ctx_add_fact (G : Ctx) (f : Fact) : Ctx :=
-  {| ctx_tenv := ctx_tenv G;
-     ctx_tbounds := ctx_tbounds G;
-     ctx_facts := f :: ctx_facts G |}.
+Definition ctx_add_fact (gamma : Ctx) (f : Fact) : Ctx :=
+  {| ctx_tenv := ctx_tenv gamma;
+     ctx_tbounds := ctx_tbounds gamma;
+     ctx_facts := f :: ctx_facts gamma |}.
 
 (** ** Context well-formedness wf(δ, Γ, ρ) (Figure 8) *)
 
-Definition wf_ctx (tvars : list SemTy) (G : Ctx) (venv : list Value) : Prop :=
-  wf_env tvars (ctx_tenv G) venv /\
-  wf_benv tvars (ctx_tbounds G) venv /\
-  wf_facts venv (ctx_facts G).
+Definition wf_ctx (tvars : list SemTy) (gamma : Ctx) (venv : list Value) : Prop :=
+  wf_env tvars (ctx_tenv gamma) venv /\
+  wf_benv tvars (ctx_tbounds gamma) venv /\
+  wf_facts venv (ctx_facts gamma).

@@ -36,9 +36,9 @@ Require Import RefinementTypes.SemanticSubtyping.
 (** Semantic typing: a term [t] has type [T] if, in any well-formed
     environment, whenever the evaluation of [t] terminates, it produces a
     value in the interpretation of [T] (partial correctness). *)
-Definition sem_typed (G: Ctx) (t: Term) (T: Ty) : Prop :=
+Definition sem_typed (gamma: Ctx) (t: Term) (T: Ty) : Prop :=
   forall tvars venv,
-    wf_ctx tvars G venv ->
+    wf_ctx tvars gamma venv ->
     term_has_semtype venv t (interp tvars venv T).
 
 (** ** Proof tactics *)
@@ -70,29 +70,29 @@ Local Ltac sem_step He e v Hv Hev :=
 (** [tdiverge] never terminates, so it vacuously has every type. (No
     counterpart in Figure 9: the paper's core syntax leaves "diverge"
     informal.) *)
-Lemma sem_typed_diverge: forall G T, sem_typed G tdiverge T.
+Lemma sem_typed_diverge: forall gamma T, sem_typed gamma tdiverge T.
 Proof.
-  intros G T tvars venv Hwf fuel r Heval. destruct fuel; discriminate.
+  intros gamma T tvars venv Hwf fuel r Heval. destruct fuel; discriminate.
 Qed.
 
 (** T-Unit *)
-Lemma sem_typed_unit: forall G, sem_typed G tunit TUnit.
+Lemma sem_typed_unit: forall gamma, sem_typed gamma tunit TUnit.
 Proof.
-  intros G tvars venv Hwf fuel r Heval. fuel_step. injection Heval as <-.
+  intros gamma tvars venv Hwf fuel r Heval. fuel_step. injection Heval as <-.
   exists vunit. simpl. auto.
 Qed.
 
 (** T-True/T-False (merged: booleans have type [TBool]) *)
-Lemma sem_typed_bool: forall G b, sem_typed G (tbool b) TBool.
+Lemma sem_typed_bool: forall gamma b, sem_typed gamma (tbool b) TBool.
 Proof.
-  intros G b tvars venv Hwf fuel r Heval. fuel_step. injection Heval as <-.
+  intros gamma b tvars venv Hwf fuel r Heval. fuel_step. injection Heval as <-.
   exists (vbool b). simpl. split; [reflexivity|]. exists b. reflexivity.
 Qed.
 
 (** T-Int *)
-Lemma sem_typed_int32: forall G z, sem_typed G (tint32 z) TInt32.
+Lemma sem_typed_int32: forall gamma z, sem_typed gamma (tint32 z) TInt32.
 Proof.
-  intros G z tvars venv Hwf fuel r Heval. fuel_step. injection Heval as <-.
+  intros gamma z tvars venv Hwf fuel r Heval. fuel_step. injection Heval as <-.
   exists (vint32 z). simpl. split; [reflexivity|]. exists z. reflexivity.
 Qed.
 
@@ -100,11 +100,11 @@ Qed.
 
 (** T-Var: the looked-up type is shifted past the [S i] bindings introduced
     after it. *)
-Lemma sem_typed_var: forall G i T,
-  nth_error (ctx_tenv G) i = Some T ->
-  sem_typed G (tvar i) (subst_ty TVar (tm_shift (S i)) T).
+Lemma sem_typed_var: forall gamma i T,
+  nth_error (ctx_tenv gamma) i = Some T ->
+  sem_typed gamma (tvar i) (subst_ty TVar (tm_shift (S i)) T).
 Proof.
-  intros G i T Hnth tvars venv Hwf.
+  intros gamma i T Hnth tvars venv Hwf.
   destruct (wf_ctx_lookup_term _ _ _ _ _ Hwf Hnth) as [v [Hvnth Hinterp]].
   intros fuel r Heval. fuel_step. rewrite Hvnth in Heval. injection Heval as <-.
   exists v. split; [reflexivity|].
@@ -117,11 +117,11 @@ Proof.
 Qed.
 
 (** T-Abs *)
-Lemma sem_typed_abs: forall G A b B,
-  sem_typed (ctx_cons_term G A) b B ->
-  sem_typed G (tabs A b) (TFun A B).
+Lemma sem_typed_abs: forall gamma A b B,
+  sem_typed (ctx_cons_term gamma A) b B ->
+  sem_typed gamma (tabs A b) (TFun A B).
 Proof.
-  intros G A b B Hbody tvars venv Hwf fuel r Heval. fuel_step. injection Heval as <-.
+  intros gamma A b B Hbody tvars venv Hwf fuel r Heval. fuel_step. injection Heval as <-.
   exists (vabs venv b). split; [reflexivity|].
   simpl. unfold interp_fun. exists venv, b. split; [reflexivity|].
   intros arg Harg. apply (Hbody tvars (arg :: venv)). apply wf_ctx_cons_term; assumption.
@@ -129,12 +129,12 @@ Qed.
 
 (** T-App (ANF: the argument must be a variable, which is substituted for
     the bound variable in the dependent result type). *)
-Lemma sem_typed_app_anf: forall G fn i A B,
-  sem_typed G fn (TFun A B) ->
-  sem_typed G (tvar i) A ->
-  sem_typed G (tapp fn (tvar i)) (subst_ty TVar (tvar i .: tvar) B).
+Lemma sem_typed_app_anf: forall gamma fn i A B,
+  sem_typed gamma fn (TFun A B) ->
+  sem_typed gamma (tvar i) A ->
+  sem_typed gamma (tapp fn (tvar i)) (subst_ty TVar (tvar i .: tvar) B).
 Proof.
-  intros G fn i A B Hfn Ha tvars venv Hwf.
+  intros gamma fn i A B Hfn Ha tvars venv Hwf.
   specialize (Hfn tvars venv Hwf). specialize (Ha tvars venv Hwf).
   intros fuel r Heval. fuel_step.
   sem_step Hfn fn vf Hinterpf Hevalfn.
@@ -148,24 +148,24 @@ Proof.
 Qed.
 
 (** T-TAbs *)
-Lemma sem_typed_tabs: forall G L U b A,
-  sem_typed (ctx_cons_type G L U) b A ->
-  sem_typed G (ttabs L U b) (TForall L U A).
+Lemma sem_typed_tabs: forall gamma L U b A,
+  sem_typed (ctx_cons_type gamma L U) b A ->
+  sem_typed gamma (ttabs L U b) (TForall L U A).
 Proof.
-  intros G L U b A Hbody tvars venv Hwf fuel r Heval. fuel_step. injection Heval as <-.
+  intros gamma L U b A Hbody tvars venv Hwf fuel r Heval. fuel_step. injection Heval as <-.
   exists (vtabs venv b). split; [reflexivity|].
   simpl. unfold interp_forall. exists venv, b. split; [reflexivity|].
   intros X HL HU. apply (Hbody (X :: tvars) venv). apply wf_ctx_cons_type; assumption.
 Qed.
 
 (** T-TApp: type application uses semantic substitution. *)
-Lemma sem_typed_tapp: forall G fn L U A B,
-  sem_typed G fn (TForall L U B) ->
-  sem_subtype G L A ->
-  sem_subtype G A U ->
-  sem_typed G (ttapp fn A) (ty_subst B A).
+Lemma sem_typed_tapp: forall gamma fn L U A B,
+  sem_typed gamma fn (TForall L U B) ->
+  sem_subtype gamma L A ->
+  sem_subtype gamma A U ->
+  sem_typed gamma (ttapp fn A) (ty_subst B A).
 Proof.
-  intros G fn L U A B Hfn HsubL HsubU tvars venv Hwf.
+  intros gamma fn L U A B Hfn HsubL HsubU tvars venv Hwf.
   specialize (Hfn tvars venv Hwf).
   intros fuel r Heval. fuel_step.
   sem_step Hfn fn vf Hinterpf Hevalfn.
@@ -178,12 +178,12 @@ Qed.
 
 (** T-Let: the body is typed with the equality fact [x ~ e]; the bound
     variable is removed from the result type by [avoid_var0]. *)
-Lemma sem_typed_let: forall G e A b B z,
-  sem_typed G e A ->
-  sem_typed (ctx_add_fact (ctx_cons_term G A) ((S (ctx_len G), tvar 0), (ctx_len G, e))) b B ->
-  sem_typed G (tlet A e b) (subst_ty TVar (z .: tvar) (avoid_var0 B)).
+Lemma sem_typed_let: forall gamma e A b B z,
+  sem_typed gamma e A ->
+  sem_typed (ctx_add_fact (ctx_cons_term gamma A) ((S (ctx_len gamma), tvar 0), (ctx_len gamma, e))) b B ->
+  sem_typed gamma (tlet A e b) (subst_ty TVar (z .: tvar) (avoid_var0 B)).
 Proof.
-  intros G e A b B z He Hb tvars venv Hwf.
+  intros gamma e A b B z He Hb tvars venv Hwf.
   specialize (He tvars venv Hwf).
   intros fuel r Heval. fuel_step.
   sem_step He e ve Hinterpe Hevale.
@@ -194,13 +194,13 @@ Proof.
 Qed.
 
 (** T-BinOp *)
-Lemma sem_typed_bin_op: forall G op a b T,
-  sem_typed G a T ->
-  sem_typed G b T ->
+Lemma sem_typed_bin_op: forall gamma op a b T,
+  sem_typed gamma a T ->
+  sem_typed gamma b T ->
   bin_op_ty_compat op T = true ->
-  sem_typed G (tbin_op op a b) (bin_op_result_ty op T).
+  sem_typed gamma (tbin_op op a b) (bin_op_result_ty op T).
 Proof.
-  intros G op a b T Ha Hb Hcompat tvars venv Hwf.
+  intros gamma op a b T Ha Hb Hcompat tvars venv Hwf.
   specialize (Ha tvars venv Hwf). specialize (Hb tvars venv Hwf).
   intros fuel r Heval. fuel_step.
   sem_step Ha a va Hinterpa Hevala.
@@ -214,13 +214,13 @@ Qed.
 
 (** T-If: each branch is typed with an equality fact recording the value of
     the condition. *)
-Lemma sem_typed_if: forall G c t e T1 T2,
-  sem_typed G c TBool ->
-  sem_typed (ctx_add_fact G ((ctx_len G, c), (ctx_len G, tbool true))) t T1 ->
-  sem_typed (ctx_add_fact G ((ctx_len G, c), (ctx_len G, tbool false))) e T2 ->
-  sem_typed G (tif c t e) (TOr T1 T2).
+Lemma sem_typed_if: forall gamma c t e T1 T2,
+  sem_typed gamma c TBool ->
+  sem_typed (ctx_add_fact gamma ((ctx_len gamma, c), (ctx_len gamma, tbool true))) t T1 ->
+  sem_typed (ctx_add_fact gamma ((ctx_len gamma, c), (ctx_len gamma, tbool false))) e T2 ->
+  sem_typed gamma (tif c t e) (TOr T1 T2).
 Proof.
-  intros G c t e T1 T2 Hc Ht He tvars venv Hwf.
+  intros gamma c t e T1 T2 Hc Ht He tvars venv Hwf.
   specialize (Hc tvars venv Hwf).
   intros fuel r Heval. fuel_step.
   sem_step Hc c vc Hinterpc Hevalc.
@@ -234,14 +234,14 @@ Qed.
 (** T-Loop. The conditions [HclA] and [HclB] require that [A] and [B] have no
     free term variables, so that [interp] is invariant under environment
     extension. *)
-Lemma sem_typed_loop: forall G a A body B,
+Lemma sem_typed_loop: forall gamma a A body B,
   ren_ty id S A = A ->
   ren_ty id S B = B ->
-  sem_typed G a A ->
-  sem_typed (ctx_cons_term G A) body (TSum A B) ->
-  sem_typed G (tloop a body) B.
+  sem_typed gamma a A ->
+  sem_typed (ctx_cons_term gamma A) body (TSum A B) ->
+  sem_typed gamma (tloop a body) B.
 Proof.
-  intros G a A body B HclA HclB Ha Hbody tvars venv Hwf.
+  intros gamma a A body B HclA HclB Ha Hbody tvars venv Hwf.
   specialize (Ha tvars venv Hwf).
   intros fuel r Heval. fuel_step.
   sem_step Ha a va Hinterpa Hevala.
@@ -259,12 +259,12 @@ Qed.
 
 (** T-Self (selfification): if e has first-order type T, then e also has
     the singleton type {x: T | x == e}. *)
-Lemma sem_typed_selfify: forall G e T,
-  sem_typed G e T ->
+Lemma sem_typed_selfify: forall gamma e T,
+  sem_typed gamma e T ->
   fo T = true ->
-  sem_typed G e (TRefine T (tbin_op OpEq (tvar 0) (ren_tm id S e))).
+  sem_typed gamma e (TRefine T (tbin_op OpEq (tvar 0) (ren_tm id S e))).
 Proof.
-  intros G e T Htyped Hfo tvars venv Hwf.
+  intros gamma e T Htyped Hfo tvars venv Hwf.
   specialize (Htyped tvars venv Hwf).
   intros fuel r Heval.
   destruct (Htyped fuel r Heval) as [v [-> Hinterp]].
@@ -294,12 +294,12 @@ Proof.
 Qed.
 
 (** T-Sub *)
-Lemma sem_typed_sub: forall G t A B,
-  sem_typed G t A ->
-  sem_subtype G A B ->
-  sem_typed G t B.
+Lemma sem_typed_sub: forall gamma t A B,
+  sem_typed gamma t A ->
+  sem_subtype gamma A B ->
+  sem_typed gamma t B.
 Proof.
-  intros G t A B Htyped Hsub tvars venv Hwf.
+  intros gamma t A B Htyped Hsub tvars venv Hwf.
   eapply term_has_semtype_mono; [apply (Hsub tvars venv Hwf) | exact (Htyped tvars venv Hwf)].
 Qed.
 
@@ -307,12 +307,12 @@ Qed.
 
 (** T-Pair (ANF: the first component must be a variable, which is
     abstracted out of the second component's type). *)
-Lemma sem_typed_pair_anf: forall G i e2 A B,
-  sem_typed G (tvar i) A ->
-  sem_typed G e2 B ->
-  sem_typed G (tpair (tvar i) e2) (TSigma A (subst_ty TVar (abstract_term_var i) B)).
+Lemma sem_typed_pair_anf: forall gamma i e2 A B,
+  sem_typed gamma (tvar i) A ->
+  sem_typed gamma e2 B ->
+  sem_typed gamma (tpair (tvar i) e2) (TSigma A (subst_ty TVar (abstract_term_var i) B)).
 Proof.
-  intros G i e2 A B Ha Hb tvars venv Hwf.
+  intros gamma i e2 A B Ha Hb tvars venv Hwf.
   specialize (Ha tvars venv Hwf). specialize (Hb tvars venv Hwf).
   intros fuel r Heval. fuel_step.
   sem_step Ha (tvar i) va Hinterpa Hevala.
@@ -327,13 +327,13 @@ Proof.
 Qed.
 
 (** T-MatchPair *)
-Lemma sem_typed_match_pair: forall G e A B body C z1 z2,
-  sem_typed G e (TSigma A B) ->
-  sem_typed (ctx_cons_term (ctx_cons_term G A) B) body C ->
-  sem_typed G (tmatch_pair e body)
+Lemma sem_typed_match_pair: forall gamma e A B body C z1 z2,
+  sem_typed gamma e (TSigma A B) ->
+  sem_typed (ctx_cons_term (ctx_cons_term gamma A) B) body C ->
+  sem_typed gamma (tmatch_pair e body)
     (subst_ty TVar (z2 .: tvar) (avoid_var0 (subst_ty TVar (z1 .: tvar) (avoid_var0 C)))).
 Proof.
-  intros G e A B body C z1 z2 He Hbody tvars venv Hwf.
+  intros gamma e A B body C z1 z2 He Hbody tvars venv Hwf.
   specialize (He tvars venv Hwf).
   intros fuel r Heval. fuel_step.
   sem_step He e ve Hinterpe Hevale.
@@ -348,11 +348,11 @@ Proof.
 Qed.
 
 (** T-Inl *)
-Lemma sem_typed_inl: forall G e A B,
-  sem_typed G e A ->
-  sem_typed G (tinl B e) (TSum A B).
+Lemma sem_typed_inl: forall gamma e A B,
+  sem_typed gamma e A ->
+  sem_typed gamma (tinl B e) (TSum A B).
 Proof.
-  intros G e A B He tvars venv Hwf.
+  intros gamma e A B He tvars venv Hwf.
   specialize (He tvars venv Hwf).
   intros fuel r Heval. fuel_step.
   sem_step He e ve Hinterpe Hevale.
@@ -361,11 +361,11 @@ Proof.
 Qed.
 
 (** T-Inr *)
-Lemma sem_typed_inr: forall G e A B,
-  sem_typed G e B ->
-  sem_typed G (tinr A e) (TSum A B).
+Lemma sem_typed_inr: forall gamma e A B,
+  sem_typed gamma e B ->
+  sem_typed gamma (tinr A e) (TSum A B).
 Proof.
-  intros G e A B He tvars venv Hwf.
+  intros gamma e A B He tvars venv Hwf.
   specialize (He tvars venv Hwf).
   intros fuel r Heval. fuel_step.
   sem_step He e ve Hinterpe Hevale.
@@ -375,17 +375,17 @@ Qed.
 
 (** T-MatchSum: each branch is typed with an equality fact recording the
     scrutinee's shape. *)
-Lemma sem_typed_match_sum: forall G e A B body_l body_r C1 C2 zl zr,
-  sem_typed G e (TSum A B) ->
-  sem_typed (ctx_add_fact (ctx_cons_term G A) ((ctx_len G, e), (S (ctx_len G), tinl B (tvar 0))))
+Lemma sem_typed_match_sum: forall gamma e A B body_l body_r C1 C2 zl zr,
+  sem_typed gamma e (TSum A B) ->
+  sem_typed (ctx_add_fact (ctx_cons_term gamma A) ((ctx_len gamma, e), (S (ctx_len gamma), tinl B (tvar 0))))
     body_l C1 ->
-  sem_typed (ctx_add_fact (ctx_cons_term G B) ((ctx_len G, e), (S (ctx_len G), tinr A (tvar 0))))
+  sem_typed (ctx_add_fact (ctx_cons_term gamma B) ((ctx_len gamma, e), (S (ctx_len gamma), tinr A (tvar 0))))
     body_r C2 ->
-  sem_typed G (tmatch_sum e body_l body_r)
+  sem_typed gamma (tmatch_sum e body_l body_r)
     (TOr (subst_ty TVar (zl .: tvar) (avoid_var0 C1))
          (subst_ty TVar (zr .: tvar) (avoid_var0 C2))).
 Proof.
-  intros G e A B body_l body_r C1 C2 zl zr He Hbl Hbr tvars venv Hwf.
+  intros gamma e A B body_l body_r C1 C2 zl zr He Hbl Hbr tvars venv Hwf.
   specialize (He tvars venv Hwf).
   intros fuel r Heval. fuel_step.
   sem_step He e ve Hinterpe Hevale.

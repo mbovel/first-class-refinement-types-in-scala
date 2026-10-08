@@ -105,9 +105,9 @@ Compute (eval 1000 [] test_maximum_singleton).
 (** ** Subtyping derivations *)
 
 (** U <: T via upper bound *)
-Lemma U_sub_T : forall G,
-  nth_error (ctx_tbounds G) 0 = Some (TBot, TVar 0) ->
-  syn_subtype G (TVar 0) (TVar 1).
+Lemma U_sub_T : forall gamma,
+  nth_error (ctx_tbounds gamma) 0 = Some (TBot, TVar 0) ->
+  syn_subtype gamma (TVar 0) (TVar 1).
 Proof.
   intros * H.
   replace (TVar 1) with (ren_ty (fun n => n + 1) id (TVar 0)) by reflexivity.
@@ -123,8 +123,8 @@ Proof.
 Qed.
 
 (** List unfold: List[U] <: Unit + (U, List[U]) *)
-Lemma list_unfold_sub : forall G,
-  syn_subtype G (ListTy 0) ListTy_unfolded.
+Lemma list_unfold_sub : forall gamma,
+  syn_subtype gamma (ListTy 0) ListTy_unfolded.
 Proof.
   intros. unfold ListTy, ListTy_unfolded.
   replace (TSum TUnit (TSigma (TVar 0) (TMuAll (TSum TUnit (TSigma (TVar 1) (TVar 0))))))
@@ -134,9 +134,9 @@ Proof.
 Qed.
 
 (** Ordering[T] <: Ordering[U] by function contravariance and U <: T *)
-Lemma ordering_sub : forall G,
-  nth_error (ctx_tbounds G) 0 = Some (TBot, TVar 0) ->
-  syn_subtype G (OrderingTy 1) (OrderingTy 0).
+Lemma ordering_sub : forall gamma,
+  nth_error (ctx_tbounds gamma) 0 = Some (TBot, TVar 0) ->
+  syn_subtype gamma (OrderingTy 1) (OrderingTy 0).
 Proof.
   intros * Hb. unfold OrderingTy.
   apply SSub_Fun.
@@ -147,8 +147,8 @@ Proof.
 Qed.
 
 (** TOr T T <: T *)
-Lemma or_same_sub : forall G T,
-  syn_subtype G (TOr T T) T.
+Lemma or_same_sub : forall gamma T,
+  syn_subtype gamma (TOr T T) T.
 Proof. intros. apply SSub_Or; apply SSub_Refl. Qed.
 
 (** ** Typing derivation *)
@@ -162,9 +162,9 @@ Proof. intros. apply SSub_Or; apply SSub_Refl. Qed.
     this is convertible to [T], so [change] succeeds. *)
 Ltac type_var :=
   match goal with
-  | |- syn_typed ?G (tvar ?i) ?T =>
+  | |- syn_typed ?gamma (tvar ?i) ?T =>
     change T with (subst_ty TVar (tm_shift (S i)) T);
-    exact (ST_Var G i T eq_refl)
+    exact (ST_Var gamma i T eq_refl)
   end.
 
 Theorem maximum_typed :

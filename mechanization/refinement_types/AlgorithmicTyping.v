@@ -24,27 +24,27 @@ Require Import RefinementTypes.FirstOrder.
 
 (** ** Algorithmic typing *)
 
-Fixpoint typeof (G: Ctx) (t: Term) : option Ty :=
+Fixpoint typeof (gamma: Ctx) (t: Term) : option Ty :=
   match t with
   | tunit => Some TUnit
   | tbool _ => Some TBool
   | tint32 _ => Some TInt32
   | tvar i =>
-      match nth_error (ctx_tenv G) i with
+      match nth_error (ctx_tenv gamma) i with
       | Some T => Some (subst_ty TVar (tm_shift (S i)) T)
       | None => None
       end
   | tabs A b =>
-      match typeof (ctx_cons_term G A) b with
+      match typeof (ctx_cons_term gamma A) b with
       | Some B => Some (TFun A B)
       | _ => None
       end
   | tapp f a =>
       match a with
       | tvar i =>
-        match typeof G f with
+        match typeof gamma f with
         | Some (TFun A B) =>
-            match typeof G a with
+            match typeof gamma a with
             | Some A' => if ty_eq_dec A A' then Some (subst_ty TVar (tvar i .: tvar) B) else None
             | _ => None
             end
@@ -53,20 +53,20 @@ Fixpoint typeof (G: Ctx) (t: Term) : option Ty :=
         | _ => None
       end
   | ttabs L U b =>
-      match typeof (ctx_cons_type G L U) b with
+      match typeof (ctx_cons_type gamma L U) b with
       | Some B => Some (TForall L U B)
       | _ => None
       end
   | ttapp f A =>
-      match typeof G f with
+      match typeof gamma f with
       | Some (TForall TBot TTop B) => Some (ty_subst B A)
       | _ => None
       end
   | tlet A e b =>
-      match typeof G e with
+      match typeof gamma e with
       | Some A' =>
           if ty_eq_dec A A' then
-            match typeof (ctx_add_fact (ctx_cons_term G A) ((S (ctx_len G), tvar 0), (ctx_len G, e))) b with
+            match typeof (ctx_add_fact (ctx_cons_term gamma A) ((S (ctx_len gamma), tvar 0), (ctx_len gamma, e))) b with
             | Some B => Some (subst_ty TVar (tbool true .: tvar) (avoid_var0 B))
             | _ => None
             end
@@ -76,16 +76,16 @@ Fixpoint typeof (G: Ctx) (t: Term) : option Ty :=
   | tpair e1 e2 =>
       match e1 with
       | tvar i =>
-          match typeof G e1, typeof G e2 with
+          match typeof gamma e1, typeof gamma e2 with
           | Some A, Some B => Some (TSigma A (subst_ty TVar (abstract_term_var i) B))
           | _, _ => None
           end
       | _ => None
       end
   | tmatch_pair e body =>
-      match typeof G e with
+      match typeof gamma e with
       | Some (TSigma A B) =>
-          match typeof (ctx_cons_term (ctx_cons_term G A) B) body with
+          match typeof (ctx_cons_term (ctx_cons_term gamma A) B) body with
           | Some C => Some (subst_ty TVar (tbool true .: tvar)
                              (avoid_var0 (subst_ty TVar (tbool true .: tvar) (avoid_var0 C))))
           | None => None
@@ -93,20 +93,20 @@ Fixpoint typeof (G: Ctx) (t: Term) : option Ty :=
       | _ => None
       end
   | tinl B e =>
-      match typeof G e with
+      match typeof gamma e with
       | Some A => Some (TSum A B)
       | None => None
       end
   | tinr A e =>
-      match typeof G e with
+      match typeof gamma e with
       | Some B => Some (TSum A B)
       | None => None
       end
   | tmatch_sum e body_l body_r =>
-      match typeof G e with
+      match typeof gamma e with
       | Some (TSum A B) =>
-          match typeof (ctx_add_fact (ctx_cons_term G A) ((ctx_len G, e), (S (ctx_len G), tinl B (tvar 0)))) body_l,
-                typeof (ctx_add_fact (ctx_cons_term G B) ((ctx_len G, e), (S (ctx_len G), tinr A (tvar 0)))) body_r with
+          match typeof (ctx_add_fact (ctx_cons_term gamma A) ((ctx_len gamma, e), (S (ctx_len gamma), tinl B (tvar 0)))) body_l,
+                typeof (ctx_add_fact (ctx_cons_term gamma B) ((ctx_len gamma, e), (S (ctx_len gamma), tinr A (tvar 0)))) body_r with
           | Some C1, Some C2 =>
               Some (TOr (subst_ty TVar (tbool true .: tvar) (avoid_var0 C1))
                         (subst_ty TVar (tbool true .: tvar) (avoid_var0 C2)))
@@ -115,7 +115,7 @@ Fixpoint typeof (G: Ctx) (t: Term) : option Ty :=
       | _ => None
       end
   | tbin_op op a b =>
-      match typeof G a, typeof G b with
+      match typeof gamma a, typeof gamma b with
       | Some Ta, Some Tb =>
           match ty_eq_dec Ta Tb with
           | left _ => if bin_op_ty_compat op Ta then Some (bin_op_result_ty op Ta) else None
@@ -124,10 +124,10 @@ Fixpoint typeof (G: Ctx) (t: Term) : option Ty :=
       | _, _ => None
       end
   | tif c t e =>
-      match typeof G c with
+      match typeof gamma c with
       | Some TBool =>
-          match typeof (ctx_add_fact G ((ctx_len G, c), (ctx_len G, tbool true))) t,
-                typeof (ctx_add_fact G ((ctx_len G, c), (ctx_len G, tbool false))) e with
+          match typeof (ctx_add_fact gamma ((ctx_len gamma, c), (ctx_len gamma, tbool true))) t,
+                typeof (ctx_add_fact gamma ((ctx_len gamma, c), (ctx_len gamma, tbool false))) e with
           | Some T1, Some T2 => Some (TOr T1 T2)
           | _, _ => None
           end
@@ -135,9 +135,9 @@ Fixpoint typeof (G: Ctx) (t: Term) : option Ty :=
       end
   | tdiverge => Some TBot
   | tloop a body =>
-      match typeof G a with
+      match typeof gamma a with
       | Some A =>
-          match typeof (ctx_cons_term G A) body with
+          match typeof (ctx_cons_term gamma A) body with
           | Some (TSum A' B) =>
               if ty_eq_dec A A' then
                 if ty_eq_dec (ren_ty id S A) A then
@@ -152,10 +152,10 @@ Fixpoint typeof (G: Ctx) (t: Term) : option Ty :=
       end
   end.
 
-Theorem full_safety: forall t T G,
-  typeof G t = Some T -> sem_typed G t T.
+Theorem full_safety: forall t T gamma,
+  typeof gamma t = Some T -> sem_typed gamma t T.
 Proof.
-  induction t; intros T G; intros; simpl in *; injects; repeat prune_branches; subst.
+  induction t; intros T gamma; intros; simpl in *; injects; repeat prune_branches; subst.
   - (* tunit *) eauto using sem_typed_unit.
   - (* tbool *) eauto using sem_typed_bool.
   - (* tint32 *) eauto using sem_typed_int32.
@@ -172,9 +172,9 @@ Proof.
   - (* tmatch_sum *)
     eapply sem_typed_match_sum; eauto.
   - (* tbin_op *) eauto using sem_typed_bin_op.
-  - (* tif   *) destruct (typeof G t1) eqn:?,
-                         (typeof (ctx_add_fact G ((ctx_len G, t1), (ctx_len G, tbool true))) t2) eqn:?,
-                         (typeof (ctx_add_fact G ((ctx_len G, t1), (ctx_len G, tbool false))) t3) eqn:?;
+  - (* tif   *) destruct (typeof gamma t1) eqn:?,
+                         (typeof (ctx_add_fact gamma ((ctx_len gamma, t1), (ctx_len gamma, tbool true))) t2) eqn:?,
+                         (typeof (ctx_add_fact gamma ((ctx_len gamma, t1), (ctx_len gamma, tbool false))) t3) eqn:?;
                repeat prune_branches; try discriminate; injects; eauto using sem_typed_if.
   - (* tdiverge *) eauto using sem_typed_diverge.
   - (* tloop *) eapply sem_typed_loop; [exact e0 | exact e1 | eauto | eauto].

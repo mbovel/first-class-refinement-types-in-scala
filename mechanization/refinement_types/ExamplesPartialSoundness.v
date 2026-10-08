@@ -100,10 +100,10 @@ Qed.
     cannot be semantically typed at [Bot]. *)
 
 Theorem no_converging_term_has_bot :
-  forall G t tvars venv fuel v,
-    wf_ctx tvars G venv ->
+  forall gamma t tvars venv fuel v,
+    wf_ctx tvars gamma venv ->
     eval fuel venv t = Some (Some v) ->
-    ~ sem_typed G t TBot.
+    ~ sem_typed gamma t TBot.
 Proof.
   intros * Hwf Heval Htyped.
   specialize (Htyped tvars venv Hwf fuel (Some v) Heval).
@@ -216,10 +216,10 @@ Qed.
     [t && true] diverges too, and both sides hold vacuously). *)
 
 Theorem sem_implies_and_true :
-  forall G t,
-    sem_implies G (tbin_op OpAnd t (tbool true)) t.
+  forall gamma t,
+    sem_implies gamma (tbin_op OpAnd t (tbool true)) t.
 Proof.
-  intros G t tvars venv _ Hconj fuel r Heval.
+  intros gamma t tvars venv _ Hconj fuel r Heval.
   (* Suppose [t] terminates with result [r] at some fuel. *)
   assert (Hev' := eval_and_bool _ _ _ true _ Heval).
   (* If [r] is stuck or not a boolean, [t && true] is stuck, contradicting
@@ -259,9 +259,9 @@ Qed.
     A term [t] semantically terminates in a context if it evaluates to a
     value in every well-formed environment. *)
 
-Definition sem_terminates (G: Ctx) (t: Term) : Prop :=
+Definition sem_terminates (gamma: Ctx) (t: Term) : Prop :=
   forall tvars venv,
-    wf_ctx tvars G venv ->
+    wf_ctx tvars gamma venv ->
     exists fuel v, eval fuel venv t = Some (Some v).
 
 (** If [t] terminates, the entailment is recovered: [t && false] then
@@ -269,11 +269,11 @@ Definition sem_terminates (G: Ctx) (t: Term) : Prop :=
     contradictory. *)
 
 Theorem sem_implies_and_false_terminating :
-  forall G t,
-    sem_terminates G t ->
-    sem_implies G (tbin_op OpAnd t (tbool false)) (tbool false).
+  forall gamma t,
+    sem_terminates gamma t ->
+    sem_implies gamma (tbin_op OpAnd t (tbool false)) (tbool false).
 Proof.
-  intros G t Hterm tvars venv Hwf Hconj.
+  intros gamma t Hterm tvars venv Hwf Hconj.
   destruct (Hterm tvars venv Hwf) as [fuel [v Heval]].
   exfalso.
   (* [t && false] terminates at one more unit of fuel, and its result is
@@ -317,18 +317,18 @@ Qed.
     ([<:>], two-way subtyping) in any context. *)
 
 Corollary sem_subtype_refine_diverge_true :
-  forall G A,
-    sem_subtype G (TRefine A tdiverge) (TRefine A (tbool true)).
+  forall gamma A,
+    sem_subtype gamma (TRefine A tdiverge) (TRefine A (tbool true)).
 Proof.
-  intros G A tvars venv _ v Hv.
+  intros gamma A tvars venv _ v Hv.
   exact (proj1 (refine_diverge_eq_refine_true A tvars venv v) Hv).
 Qed.
 
 Corollary sem_subtype_refine_true_diverge :
-  forall G A,
-    sem_subtype G (TRefine A (tbool true)) (TRefine A tdiverge).
+  forall gamma A,
+    sem_subtype gamma (TRefine A (tbool true)) (TRefine A tdiverge).
 Proof.
-  intros G A tvars venv _ v Hv.
+  intros gamma A tvars venv _ v Hv.
   exact (proj2 (refine_diverge_eq_refine_true A tvars venv v) Hv).
 Qed.
 
@@ -352,35 +352,35 @@ Qed.
     subtypes of each other, in any context. *)
 
 Corollary sem_subtype_refine_true_base :
-  forall G A,
-    sem_subtype G (TRefine A (tbool true)) A.
+  forall gamma A,
+    sem_subtype gamma (TRefine A (tbool true)) A.
 Proof.
-  intros G A tvars venv _ v Hv.
+  intros gamma A tvars venv _ v Hv.
   exact (proj1 (refine_true_eq_base A tvars venv v) Hv).
 Qed.
 
 Corollary sem_subtype_base_refine_true :
-  forall G A,
-    sem_subtype G A (TRefine A (tbool true)).
+  forall gamma A,
+    sem_subtype gamma A (TRefine A (tbool true)).
 Proof.
-  intros G A tvars venv _ v Hv.
+  intros gamma A tvars venv _ v Hv.
   exact (proj2 (refine_true_eq_base A tvars venv v) Hv).
 Qed.
 
 Corollary sem_subtype_refine_diverge_base :
-  forall G A,
-    sem_subtype G (TRefine A tdiverge) A.
+  forall gamma A,
+    sem_subtype gamma (TRefine A tdiverge) A.
 Proof.
-  intros G A tvars venv _ v Hv.
+  intros gamma A tvars venv _ v Hv.
   apply (proj1 (refine_true_eq_base A tvars venv v)).
   exact (proj1 (refine_diverge_eq_refine_true A tvars venv v) Hv).
 Qed.
 
 Corollary sem_subtype_base_refine_diverge :
-  forall G A,
-    sem_subtype G A (TRefine A tdiverge).
+  forall gamma A,
+    sem_subtype gamma A (TRefine A tdiverge).
 Proof.
-  intros G A tvars venv _ v Hv.
+  intros gamma A tvars venv _ v Hv.
   apply (proj2 (refine_diverge_eq_refine_true A tvars venv v)).
   exact (proj2 (refine_true_eq_base A tvars venv v) Hv).
 Qed.
@@ -393,10 +393,10 @@ Qed.
     [{x: A | false}]. *)
 
 Theorem no_converging_term_has_refine_false :
-  forall G t A tvars venv fuel v,
-    wf_ctx tvars G venv ->
+  forall gamma t A tvars venv fuel v,
+    wf_ctx tvars gamma venv ->
     eval fuel venv t = Some (Some v) ->
-    ~ sem_typed G t (TRefine A (tbool false)).
+    ~ sem_typed gamma t (TRefine A (tbool false)).
 Proof.
   intros * Hwf Heval Htyped.
   specialize (Htyped tvars venv Hwf fuel (Some v) Heval).

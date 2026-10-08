@@ -160,45 +160,45 @@ Qed.
 
 (** ** Lemmas about wf_ctx *)
 
-Lemma wf_ctx_length: forall tvars G venv,
-  wf_ctx tvars G venv -> ctx_len G = length venv.
-Proof. intros tvars G venv [Henv _]. apply (wf_env_length tvars). exact Henv. Qed.
+Lemma wf_ctx_length: forall tvars gamma venv,
+  wf_ctx tvars gamma venv -> ctx_len gamma = length venv.
+Proof. intros tvars gamma venv [Henv _]. apply (wf_env_length tvars). exact Henv. Qed.
 
-Lemma wf_ctx_lookup_term: forall tvars G venv i T,
-  wf_ctx tvars G venv ->
-  nth_error (ctx_tenv G) i = Some T ->
+Lemma wf_ctx_lookup_term: forall tvars gamma venv i T,
+  wf_ctx tvars gamma venv ->
+  nth_error (ctx_tenv gamma) i = Some T ->
   exists v, nth_error venv i = Some v /\ interp tvars (skipn (S i) venv) T v.
-Proof. intros tvars G venv i T [Henv _] Hnth. exact (wf_env_lookup _ _ _ _ _ Henv Hnth). Qed.
+Proof. intros tvars gamma venv i T [Henv _] Hnth. exact (wf_env_lookup _ _ _ _ _ Henv Hnth). Qed.
 
-Lemma wf_ctx_lookup_type: forall tvars G venv i L U,
-  wf_ctx tvars G venv ->
-  nth_error (ctx_tbounds G) i = Some (L, U) ->
+Lemma wf_ctx_lookup_type: forall tvars gamma venv i L U,
+  wf_ctx tvars gamma venv ->
+  nth_error (ctx_tbounds gamma) i = Some (L, U) ->
   exists X,
     nth_error tvars i = Some X /\
     (forall w, interp (skipn (S i) tvars) venv L w -> X w) /\
     (forall w, X w -> interp (skipn (S i) tvars) venv U w).
-Proof. intros tvars G venv i L U [_ [Hbenv _]] Hnth. exact (wf_benv_lookup _ _ _ _ _ _ Hbenv Hnth). Qed.
+Proof. intros tvars gamma venv i L U [_ [Hbenv _]] Hnth. exact (wf_benv_lookup _ _ _ _ _ _ Hbenv Hnth). Qed.
 
 (** Γ, x : A *)
-Lemma wf_ctx_cons_term: forall tvars G venv A v,
+Lemma wf_ctx_cons_term: forall tvars gamma venv A v,
   interp tvars venv A v ->
-  wf_ctx tvars G venv ->
-  wf_ctx tvars (ctx_cons_term G A) (v :: venv).
+  wf_ctx tvars gamma venv ->
+  wf_ctx tvars (ctx_cons_term gamma A) (v :: venv).
 Proof.
-  intros tvars G venv A v Hv [Henv [Hbenv Hfacts]]. split; [|split]; simpl.
+  intros tvars gamma venv A v Hv [Henv [Hbenv Hfacts]]. split; [|split]; simpl.
   - exact (conj Hv Henv).
   - apply wf_benv_shift_term. exact Hbenv.
   - apply wf_facts_extend. exact Hfacts.
 Qed.
 
 (** Γ, X :> L <: U *)
-Lemma wf_ctx_cons_type: forall tvars G venv L U X,
+Lemma wf_ctx_cons_type: forall tvars gamma venv L U X,
   (forall w, interp tvars venv L w -> X w) ->
   (forall w, X w -> interp tvars venv U w) ->
-  wf_ctx tvars G venv ->
-  wf_ctx (X :: tvars) (ctx_cons_type G L U) venv.
+  wf_ctx tvars gamma venv ->
+  wf_ctx (X :: tvars) (ctx_cons_type gamma L U) venv.
 Proof.
-  intros tvars G venv L U X HL HU [Henv [Hbenv Hfacts]]. split; [|split]; simpl.
+  intros tvars gamma venv L U X HL HU [Henv [Hbenv Hfacts]]. split; [|split]; simpl.
   - apply env_incr_wf. exact Henv.
   - exact (conj HL (conj HU Hbenv)).
   - exact Hfacts.
@@ -206,12 +206,12 @@ Qed.
 
 (** The equality facts recorded by the typing rules. For [if]: the
     condition equals the taken branch's boolean. *)
-Lemma wf_ctx_fact_if: forall tvars G venv c b fuel,
-  wf_ctx tvars G venv ->
+Lemma wf_ctx_fact_if: forall tvars gamma venv c b fuel,
+  wf_ctx tvars gamma venv ->
   eval fuel venv c = Some (Some (vbool b)) ->
-  wf_ctx tvars (ctx_add_fact G ((ctx_len G, c), (ctx_len G, tbool b))) venv.
+  wf_ctx tvars (ctx_add_fact gamma ((ctx_len gamma, c), (ctx_len gamma, tbool b))) venv.
 Proof.
-  intros tvars G venv c b fuel Hwf Heval.
+  intros tvars gamma venv c b fuel Hwf Heval.
   pose proof (wf_ctx_length _ _ _ Hwf) as Hlen. unfold ctx_len in *.
   destruct Hwf as [Henv [Hbenv Hfacts]]. split; [|split]; simpl; [exact Henv | exact Hbenv |].
   apply wf_facts_cons; [lia | lia | | exact Hfacts].
@@ -220,14 +220,14 @@ Proof.
 Qed.
 
 (** For [let]: the bound variable equals its definition. *)
-Lemma wf_ctx_fact_let: forall tvars G venv A e v fuel,
-  wf_ctx tvars G venv ->
+Lemma wf_ctx_fact_let: forall tvars gamma venv A e v fuel,
+  wf_ctx tvars gamma venv ->
   interp tvars venv A v ->
   eval fuel venv e = Some (Some v) ->
-  wf_ctx tvars (ctx_add_fact (ctx_cons_term G A) ((S (ctx_len G), tvar 0), (ctx_len G, e)))
+  wf_ctx tvars (ctx_add_fact (ctx_cons_term gamma A) ((S (ctx_len gamma), tvar 0), (ctx_len gamma, e)))
     (v :: venv).
 Proof.
-  intros tvars G venv A e v fuel Hwf Hv Heval.
+  intros tvars gamma venv A e v fuel Hwf Hv Heval.
   pose proof (wf_ctx_length _ _ _ Hwf) as Hlen. unfold ctx_len in *.
   destruct (wf_ctx_cons_term _ _ _ _ _ Hv Hwf) as [Henv' [Hbenv' Hfacts']].
   split; [|split]; simpl; [exact Henv' | exact Hbenv' |].
@@ -239,15 +239,15 @@ Qed.
 
 (** For [match]: the scrutinee equals the matched pattern, a term over the
     newly bound variable. *)
-Lemma wf_ctx_fact_match: forall tvars G venv A e t u w fuel fuel',
-  wf_ctx tvars G venv ->
+Lemma wf_ctx_fact_match: forall tvars gamma venv A e t u w fuel fuel',
+  wf_ctx tvars gamma venv ->
   interp tvars venv A w ->
   eval fuel venv e = Some (Some u) ->
   eval fuel' (w :: venv) t = Some (Some u) ->
-  wf_ctx tvars (ctx_add_fact (ctx_cons_term G A) ((ctx_len G, e), (S (ctx_len G), t)))
+  wf_ctx tvars (ctx_add_fact (ctx_cons_term gamma A) ((ctx_len gamma, e), (S (ctx_len gamma), t)))
     (w :: venv).
 Proof.
-  intros tvars G venv A e t u w fuel fuel' Hwf Hw Heval Heval'.
+  intros tvars gamma venv A e t u w fuel fuel' Hwf Hw Heval Heval'.
   pose proof (wf_ctx_length _ _ _ Hwf) as Hlen. unfold ctx_len in *.
   destruct (wf_ctx_cons_term _ _ _ _ _ Hw Hwf) as [Henv' [Hbenv' Hfacts']].
   split; [|split]; simpl; [exact Henv' | exact Hbenv' |].

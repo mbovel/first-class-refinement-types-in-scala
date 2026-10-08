@@ -23,27 +23,27 @@ Require Import RefinementTypes.SemanticImplies.
 (** [A] is a semantic subtype of [B] if, in every well-formed environment,
     every value in the interpretation of [A] is in the interpretation of
     [B]. *)
-Definition sem_subtype (G: Ctx) (A B: Ty) : Prop :=
+Definition sem_subtype (gamma: Ctx) (A B: Ty) : Prop :=
   forall tvars venv,
-    wf_ctx tvars G venv ->
+    wf_ctx tvars gamma venv ->
     forall v, interp tvars venv A v -> interp tvars venv B v.
 
 (** ** Reflexivity and transitivity *)
 
 (** S-Refl *)
-Lemma sem_subtype_refl: forall G A,
-  sem_subtype G A A.
+Lemma sem_subtype_refl: forall gamma A,
+  sem_subtype gamma A A.
 Proof.
-  intros G A tvars venv Hwf v Hinterp. exact Hinterp.
+  intros gamma A tvars venv Hwf v Hinterp. exact Hinterp.
 Qed.
 
 (** S-Trans *)
-Lemma sem_subtype_trans: forall G A B C,
-  sem_subtype G A B ->
-  sem_subtype G B C ->
-  sem_subtype G A C.
+Lemma sem_subtype_trans: forall gamma A B C,
+  sem_subtype gamma A B ->
+  sem_subtype gamma B C ->
+  sem_subtype gamma A C.
 Proof.
-  intros G A B C HsubAB HsubBC tvars venv Hwf v HinterpA.
+  intros gamma A B C HsubAB HsubBC tvars venv Hwf v HinterpA.
   apply (HsubBC tvars venv Hwf).
   apply (HsubAB tvars venv Hwf).
   exact HinterpA.
@@ -52,12 +52,12 @@ Qed.
 (** ** Function and universal type subtyping rules *)
 
 (** S-Fun: contravariant in domain, covariant in codomain. *)
-Lemma sem_subtype_fun: forall G A1 A2 B1 B2,
-  sem_subtype G B1 A1 ->
-  sem_subtype (ctx_cons_term G A1) A2 B2 ->
-  sem_subtype G (TFun A1 A2) (TFun B1 B2).
+Lemma sem_subtype_fun: forall gamma A1 A2 B1 B2,
+  sem_subtype gamma B1 A1 ->
+  sem_subtype (ctx_cons_term gamma A1) A2 B2 ->
+  sem_subtype gamma (TFun A1 A2) (TFun B1 B2).
 Proof.
-  intros G A1 A2 B1 B2 HsubBA HsubAB tvars venv Hwf v Hinterp.
+  intros gamma A1 A2 B1 B2 HsubBA HsubAB tvars venv Hwf v Hinterp.
   simpl in *. unfold interp_fun in *.
   destruct Hinterp as (venv' & body & Heq & Hbody).
   exists venv', body. split; [exact Heq|].
@@ -69,13 +69,13 @@ Qed.
 
 (** S-Forall: contravariant in lower bound, covariant in upper bound and body.
     The body subtyping is checked with the type variable bounded by [L2..U2]. *)
-Lemma sem_subtype_forall: forall G L1 U1 L2 U2 A B,
-  sem_subtype G L1 L2 ->
-  sem_subtype G U2 U1 ->
-  sem_subtype (ctx_cons_type G L2 U2) A B ->
-  sem_subtype G (TForall L1 U1 A) (TForall L2 U2 B).
+Lemma sem_subtype_forall: forall gamma L1 U1 L2 U2 A B,
+  sem_subtype gamma L1 L2 ->
+  sem_subtype gamma U2 U1 ->
+  sem_subtype (ctx_cons_type gamma L2 U2) A B ->
+  sem_subtype gamma (TForall L1 U1 A) (TForall L2 U2 B).
 Proof.
-  intros G L1 U1 L2 U2 A B HsubL HsubU HsubAB tvars venv Hwf v Hinterp.
+  intros gamma L1 U1 L2 U2 A B HsubL HsubU HsubAB tvars venv Hwf v Hinterp.
   simpl in *. unfold interp_forall in *.
   destruct Hinterp as (env' & body & Heq & Hbody).
   exists env', body. split; [exact Heq|].
@@ -91,12 +91,12 @@ Qed.
 (** ** Sigma type subtyping rule *)
 
 (** S-Sigma: covariant in both components *)
-Lemma sem_subtype_sigma: forall G A1 A2 B1 B2,
-  sem_subtype G A1 B1 ->
-  sem_subtype (ctx_cons_term G A1) A2 B2 ->
-  sem_subtype G (TSigma A1 A2) (TSigma B1 B2).
+Lemma sem_subtype_sigma: forall gamma A1 A2 B1 B2,
+  sem_subtype gamma A1 B1 ->
+  sem_subtype (ctx_cons_term gamma A1) A2 B2 ->
+  sem_subtype gamma (TSigma A1 A2) (TSigma B1 B2).
 Proof.
-  intros G A1 A2 B1 B2 HsubA HsubB tvars venv Hwf v Hinterp.
+  intros gamma A1 A2 B1 B2 HsubA HsubB tvars venv Hwf v Hinterp.
   simpl in *. unfold interp_sigma in *.
   destruct Hinterp as (v1 & v2 & Heq & Ha & Hb).
   exists v1, v2. split; [exact Heq|]. split.
@@ -107,26 +107,26 @@ Qed.
 (** ** Union type subtyping rules *)
 
 (** S-OrL: A <: A \/ B *)
-Lemma sem_subtype_or_l: forall G A B,
-  sem_subtype G A (TOr A B).
+Lemma sem_subtype_or_l: forall gamma A B,
+  sem_subtype gamma A (TOr A B).
 Proof.
-  intros G A B tvars venv Hwf v Hinterp. simpl. unfold interp_or. left. exact Hinterp.
+  intros gamma A B tvars venv Hwf v Hinterp. simpl. unfold interp_or. left. exact Hinterp.
 Qed.
 
 (** S-OrR: B <: A \/ B *)
-Lemma sem_subtype_or_r: forall G A B,
-  sem_subtype G B (TOr A B).
+Lemma sem_subtype_or_r: forall gamma A B,
+  sem_subtype gamma B (TOr A B).
 Proof.
-  intros G A B tvars venv Hwf v Hinterp. simpl. unfold interp_or. right. exact Hinterp.
+  intros gamma A B tvars venv Hwf v Hinterp. simpl. unfold interp_or. right. exact Hinterp.
 Qed.
 
 (** S-Or: If A <: C and B <: C, then A \/ B <: C *)
-Lemma sem_subtype_or: forall G A B C,
-  sem_subtype G A C ->
-  sem_subtype G B C ->
-  sem_subtype G (TOr A B) C.
+Lemma sem_subtype_or: forall gamma A B C,
+  sem_subtype gamma A C ->
+  sem_subtype gamma B C ->
+  sem_subtype gamma (TOr A B) C.
 Proof.
-  intros G A B C HsubA HsubB tvars venv Hwf v [Ha | Hb].
+  intros gamma A B C HsubA HsubB tvars venv Hwf v [Ha | Hb].
   - apply (HsubA tvars venv Hwf). exact Ha.
   - apply (HsubB tvars venv Hwf). exact Hb.
 Qed.
@@ -134,26 +134,26 @@ Qed.
 (** ** Intersection type subtyping rules *)
 
 (** S-AndL: A /\ B <: A *)
-Lemma sem_subtype_and_l: forall G A B,
-  sem_subtype G (TAnd A B) A.
+Lemma sem_subtype_and_l: forall gamma A B,
+  sem_subtype gamma (TAnd A B) A.
 Proof.
-  intros G A B tvars venv Hwf v [Ha _]. exact Ha.
+  intros gamma A B tvars venv Hwf v [Ha _]. exact Ha.
 Qed.
 
 (** S-AndR: A /\ B <: B *)
-Lemma sem_subtype_and_r: forall G A B,
-  sem_subtype G (TAnd A B) B.
+Lemma sem_subtype_and_r: forall gamma A B,
+  sem_subtype gamma (TAnd A B) B.
 Proof.
-  intros G A B tvars venv Hwf v [_ Hb]. exact Hb.
+  intros gamma A B tvars venv Hwf v [_ Hb]. exact Hb.
 Qed.
 
 (** S-And: If C <: A and C <: B, then C <: A /\ B *)
-Lemma sem_subtype_and: forall G A B C,
-  sem_subtype G C A ->
-  sem_subtype G C B ->
-  sem_subtype G C (TAnd A B).
+Lemma sem_subtype_and: forall gamma A B C,
+  sem_subtype gamma C A ->
+  sem_subtype gamma C B ->
+  sem_subtype gamma C (TAnd A B).
 Proof.
-  intros G A B C HsubA HsubB tvars venv Hwf v Hinterp. split.
+  intros gamma A B C HsubA HsubB tvars venv Hwf v Hinterp. split.
   - apply (HsubA tvars venv Hwf). exact Hinterp.
   - apply (HsubB tvars venv Hwf). exact Hinterp.
 Qed.
@@ -162,19 +162,19 @@ Qed.
 
 (** S-RefineBase: {x : A | p} <: A.
     A refinement type is a subtype of its base type. *)
-Lemma sem_subtype_refine_base: forall G A p,
-  sem_subtype G (TRefine A p) A.
+Lemma sem_subtype_refine_base: forall gamma A p,
+  sem_subtype gamma (TRefine A p) A.
 Proof.
-  intros G A p tvars venv Hwf v [Ha _]. exact Ha.
+  intros gamma A p tvars venv Hwf v [Ha _]. exact Ha.
 Qed.
 
 (** S-Refine: {x : A | p1} <: {x : B | p2} when A <: B and p1 implies p2. *)
-Lemma sem_subtype_refine: forall G A B p1 p2,
-  sem_subtype G A B ->
-  sem_implies (ctx_cons_term G A) p1 p2 ->
-  sem_subtype G (TRefine A p1) (TRefine B p2).
+Lemma sem_subtype_refine: forall gamma A B p1 p2,
+  sem_subtype gamma A B ->
+  sem_implies (ctx_cons_term gamma A) p1 p2 ->
+  sem_subtype gamma (TRefine A p1) (TRefine B p2).
 Proof.
-  intros G A B p1 p2 HsubAB Himpl tvars venv Hwf v [Ha Hp1]. split.
+  intros gamma A B p1 p2 HsubAB Himpl tvars venv Hwf v [Ha Hp1]. split.
   - apply (HsubAB tvars venv Hwf). exact Ha.
   - apply (Himpl tvars (v :: venv)); [apply wf_ctx_cons_term; assumption | exact Hp1].
 Qed.
@@ -182,17 +182,17 @@ Qed.
 (** ** Top and Bottom type subtyping rules *)
 
 (** S-Top: A <: Top for all A *)
-Lemma sem_subtype_top: forall G A,
-  sem_subtype G A TTop.
+Lemma sem_subtype_top: forall gamma A,
+  sem_subtype gamma A TTop.
 Proof.
-  intros G A tvars venv Hwf v Hinterp. exact I.
+  intros gamma A tvars venv Hwf v Hinterp. exact I.
 Qed.
 
 (** S-Bot: Bot <: A for all A *)
-Lemma sem_subtype_bot: forall G A,
-  sem_subtype G TBot A.
+Lemma sem_subtype_bot: forall gamma A,
+  sem_subtype gamma TBot A.
 Proof.
-  intros G A tvars venv Hwf v Hinterp. contradiction.
+  intros gamma A tvars venv Hwf v Hinterp. contradiction.
 Qed.
 
 (** ** Type variable bound extraction rules *)
@@ -200,11 +200,11 @@ Qed.
 (** S-TVar-Upper: if type variable [i] has upper bound [U], then
     [TVar i <: shift U]. The bound is shifted by [S i] to account
     for the type variables introduced after it. *)
-Lemma sem_subtype_tvar_upper: forall G i L U,
-  nth_error (ctx_tbounds G) i = Some (L, U) ->
-  sem_subtype G (TVar i) (ren_ty (fun n => n + S i) id U).
+Lemma sem_subtype_tvar_upper: forall gamma i L U,
+  nth_error (ctx_tbounds gamma) i = Some (L, U) ->
+  sem_subtype gamma (TVar i) (ren_ty (fun n => n + S i) id U).
 Proof.
-  intros G i L U Hnth tvars venv Hwf v Hinterp.
+  intros gamma i L U Hnth tvars venv Hwf v Hinterp.
   destruct (wf_ctx_lookup_type _ _ _ _ _ _ Hwf Hnth) as [X [HnthX [HL HU]]].
   simpl in Hinterp. unfold interp_var in Hinterp. rewrite HnthX in Hinterp.
   apply HU in Hinterp.
@@ -215,11 +215,11 @@ Qed.
 
 (** S-TVar-Lower: if type variable [i] has lower bound [L], then
     [shift L <: TVar i]. *)
-Lemma sem_subtype_tvar_lower: forall G i L U,
-  nth_error (ctx_tbounds G) i = Some (L, U) ->
-  sem_subtype G (ren_ty (fun n => n + S i) id L) (TVar i).
+Lemma sem_subtype_tvar_lower: forall gamma i L U,
+  nth_error (ctx_tbounds gamma) i = Some (L, U) ->
+  sem_subtype gamma (ren_ty (fun n => n + S i) id L) (TVar i).
 Proof.
-  intros G i L U Hnth tvars venv Hwf v Hinterp.
+  intros gamma i L U Hnth tvars venv Hwf v Hinterp.
   destruct (wf_ctx_lookup_type _ _ _ _ _ _ Hwf Hnth) as [X [HnthX [HL HU]]].
   simpl. unfold interp_var. rewrite HnthX.
   apply HL.
@@ -232,11 +232,11 @@ Qed.
 
 (** S-Mu-Unfold: TMuAll A <: A[X := TMuAll A].
     Unfolding a positive recursive type yields a subtype. *)
-Lemma sem_subtype_mu_unfold: forall G A,
+Lemma sem_subtype_mu_unfold: forall gamma A,
   spos 0 A = true ->
-  sem_subtype G (TMuAll A) (ty_subst A (TMuAll A)).
+  sem_subtype gamma (TMuAll A) (ty_subst A (TMuAll A)).
 Proof.
-  intros G A Hspos tvars venv Hwf v Hinterp.
+  intros gamma A Hspos tvars venv Hwf v Hinterp.
   simpl in Hinterp.
   set (F := fun (X: SemTy) => interp (X :: tvars) venv A) in *.
   rewrite <- interp_subst. fold F.
@@ -247,11 +247,11 @@ Qed.
 
 (** S-Mu-Fold: A[X := TMuAll A] <: TMuAll A.
     Folding back into a positive recursive type yields a subtype. *)
-Lemma sem_subtype_mu_fold: forall G A,
+Lemma sem_subtype_mu_fold: forall gamma A,
   spos 0 A = true ->
-  sem_subtype G (ty_subst A (TMuAll A)) (TMuAll A).
+  sem_subtype gamma (ty_subst A (TMuAll A)) (TMuAll A).
 Proof.
-  intros G A Hspos tvars venv Hwf v Hinterp.
+  intros gamma A Hspos tvars venv Hwf v Hinterp.
   simpl.
   set (F := fun (X: SemTy) => interp (X :: tvars) venv A).
   rewrite <- interp_subst in Hinterp. fold F in Hinterp.

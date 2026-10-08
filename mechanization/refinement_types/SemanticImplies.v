@@ -12,8 +12,8 @@ Require Import RefinementTypes.Wf.
 (** Semantic implication: in all well-formed environments, if [p1] evaluates
     to true then [p2] evaluates to true (both read partially: a diverging
     predicate counts as true). *)
-Definition sem_implies (G: Ctx) (p1 p2: Term) : Prop :=
+Definition sem_implies (gamma: Ctx) (p1 p2: Term) : Prop :=
   forall tvars venv,
-    wf_ctx tvars G venv ->
+    wf_ctx tvars gamma venv ->
     eval_to_true venv p1 ->
     eval_to_true venv p2.

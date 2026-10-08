@@ -11,9 +11,9 @@ Require Import RefinementTypes.SyntacticSubtyping.
 Require Import RefinementTypes.SyntacticTyping.
 
 (** Adequacy of subtyping (Theorem 3.2). *)
-Theorem syn_subtype_adequate : forall G A B,
-  syn_subtype G A B ->
-  sem_subtype G A B.
+Theorem syn_subtype_adequate : forall gamma A B,
+  syn_subtype gamma A B ->
+  sem_subtype gamma A B.
 Proof.
   intros * H. induction H.
   - apply sem_subtype_refl.
@@ -38,9 +38,9 @@ Proof.
 Qed.
 
 (** Adequacy of typing (Theorem 3.1). *)
-Theorem syn_typed_adequate : forall G t T,
-  syn_typed G t T ->
-  sem_typed G t T.
+Theorem syn_typed_adequate : forall gamma t T,
+  syn_typed gamma t T ->
+  sem_typed gamma t T.
 Proof.
   intros * H. induction H.
   - apply sem_typed_diverge.
