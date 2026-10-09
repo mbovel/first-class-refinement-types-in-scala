@@ -1,8 +1,5 @@
 # First-Class Refinement Types in Scala
 
-Implementation, mechanization, and evaluation for the paper *First-Class
-Refinement Types in Scala*.
-
 - Project page (paper, slides, rendered proofs):
   [matt.bovel.net/scala-refinement-types](https://matt.bovel.net/scala-refinement-types/)
 - Paper: [ACM Digital Library](https://dl.acm.org/doi/10.1145/3839541),
