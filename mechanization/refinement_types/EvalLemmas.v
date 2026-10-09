@@ -233,13 +233,15 @@ Qed.
 
 Lemma val_rel_refl : forall v, val_rel v v.
 Proof.
-  induction v as [| b | z | v1 v2 IH1 IH2 | v IH | v IH | venv body IH | venv body IH]
-    using Value_ind_nested; try (constructor; assumption).
+  induction v as [| b | z | v1 v2 IH1 IH2 | v IH | v IH | venv IH body | venv IH body];
+    try (constructor; assumption).
+  (* The nested hypothesis on closure environments is a [list_all]; turn it
+     into the [Forall] that [env_rel_refl] expects. *)
   - replace body with (ren_tm id (upren id) body)
       by (rewrite ren_tm_upren_id; apply ren_tm_id).
-    apply vr_abs. exact (env_rel_refl venv IH).
+    apply vr_abs, env_rel_refl. induction IH; constructor; assumption.
   - replace body with (ren_tm id id body) by apply ren_tm_id.
-    apply vr_tabs. exact (env_rel_refl venv IH).
+    apply vr_tabs, env_rel_refl. induction IH; constructor; assumption.
 Qed.
 
 (** Pointwise equal lookups give related environments. This is where the

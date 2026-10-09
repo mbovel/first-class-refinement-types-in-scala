@@ -101,40 +101,6 @@ Inductive Value : Type :=
   | vabs  : list Value -> Term -> Value    (* term abstraction closure *)
   | vtabs : list Value -> Term -> Value.  (* type abstraction closure *)
 
-(** ** Custom induction principle for values
-
-    Because [Value] contains nested lists, we need a custom induction
-    principle that properly handles the list structure. *)
-Section Value_ind_nested.
-  Variable P : Value -> Prop.
-  Hypothesis Hunit : P vunit.
-  Hypothesis Hbool : forall b, P (vbool b).
-  Hypothesis Hint32 : forall z, P (vint32 z).
-  Hypothesis Hpair : forall v1 v2, P v1 -> P v2 -> P (vpair v1 v2).
-  Hypothesis Hinl : forall v, P v -> P (vinl v).
-  Hypothesis Hinr : forall v, P v -> P (vinr v).
-  Hypothesis Habs : forall venv body, Forall P venv -> P (vabs venv body).
-  Hypothesis Htabs : forall venv body, Forall P venv -> P (vtabs venv body).
-
-  Fixpoint Value_ind_nested (v : Value) : P v :=
-    let fix env_ind (l : list Value) : Forall P l :=
-      match l with
-      | [] => Forall_nil P
-      | v :: vs => Forall_cons v (Value_ind_nested v) (env_ind vs)
-      end
-    in
-    match v with
-    | vunit => Hunit
-    | vbool b => Hbool b
-    | vint32 z => Hint32 z
-    | vpair v1 v2 => Hpair v1 v2 (Value_ind_nested v1) (Value_ind_nested v2)
-    | vinl v => Hinl v (Value_ind_nested v)
-    | vinr v => Hinr v (Value_ind_nested v)
-    | vabs venv body => Habs venv body (env_ind venv)
-    | vtabs venv body => Htabs venv body (env_ind venv)
-    end.
-End Value_ind_nested.
-
 (** ** Decidable equality for types and terms *)
 Fixpoint ty_eq_dec (x y: Ty) : {x = y} + {x <> y}
 with term_eq_dec (x y: Term) : {x = y} + {x <> y}.
